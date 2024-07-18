@@ -5,4 +5,5 @@ const appRouter = Router();
 appRouter.use("/user", userRoutes); //domain/api/v1/user
 appRouter.use("/chats", chatRoutes); //domain/api/v1/chats
 export default appRouter;
+//test comment
 //# sourceMappingURL=index.js.map
