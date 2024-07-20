@@ -1,5 +1,7 @@
 import User from "../models/User.js";
 import { hash, compare } from 'bcrypt'; //hash is used to encrypt password
+import { createToken } from "../utils/token-manager.js";
+import { COOKIE_NAME } from "../utils/constants.js";
 export const getAllUsers = async (req, res, next) => {
     try {
         //get all users
@@ -21,6 +23,22 @@ export const userSignup = async (req, res, next) => {
         const hashedPassword = await hash(password, 10); //awaits this action before moving->password encryption  
         const user = new User({ name, email, password: hashedPassword });
         await user.save();
+        //create token and store cookie
+        res.clearCookie(COOKIE_NAME, {
+            httpOnly: true,
+            domain: "localhost",
+            signed: true,
+            path: "/",
+        });
+        const token = createToken(user._id.toString(), user.email, "7d");
+        const expires = new Date();
+        expires.setDate(expires.getDate() + 7);
+        res.cookie(COOKIE_NAME, token, { path: "/",
+            domain: "localhost", //localhost could be replaced with actual domain when it is publically hosted
+            expires,
+            httpOnly: true,
+            signed: true,
+        });
         return res.status(201).json({ message: "OK", id: user._id.toString() });
     }
     catch (error) {
@@ -40,6 +58,22 @@ export const userLogin = async (req, res, next) => {
         if (!isPasswordCorrect) {
             return res.status(403).send("Incorrect Password");
         }
+        //Create token and store cookie
+        res.clearCookie(COOKIE_NAME, {
+            httpOnly: true,
+            domain: "localhost",
+            signed: true,
+            path: "/",
+        });
+        const token = createToken(user._id.toString(), user.email, "7d");
+        const expires = new Date();
+        expires.setDate(expires.getDate() + 7);
+        res.cookie(COOKIE_NAME, token, { path: "/",
+            domain: "localhost", //localhost could be replaced with actual domain when it is publically hosted
+            expires,
+            httpOnly: true,
+            signed: true,
+        });
         return res.status(201).json({ message: "OK", id: user._id.toString() });
     }
     catch (error) {
