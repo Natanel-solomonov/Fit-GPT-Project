@@ -10,7 +10,7 @@ const Login = () => {
                 alignSelf="flex-start"
                 style={{ marginBottom: "16px" }}
             >
-                <img src="/FitGPTLogo.png" alt="openai" style={{ width: "400px", marginLeft: "-90px", marginTop: "175px" }} />
+                <img src="/FitGPTLogo.png" alt="openai" style={{ width: "400px", marginLeft: "-90px", marginTop: "200px" }} />
             </Box>
             <Box 
                 display={"flex"} 
