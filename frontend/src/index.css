@@ -8,3 +8,17 @@ html,body{
   font-family:"Roboto Slab",serif;
 
 }
+.image_inverted{
+  filter: inverted(100%);
+}
+.nav-link{
+  font-weight: 600;
+  text-transform: uppercase;
+  margin: right 10px;
+  margin-left: 10px;
+  padding:8px 20px;
+  border-radius:  10px;
+  text-decoration: none;
+  letter-spacing: 1px;
+
+}
