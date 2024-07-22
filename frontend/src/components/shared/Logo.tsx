@@ -16,20 +16,21 @@ const Logo = () => {
         <img
           src="Dumbell_Icon.png"
           alt="openai"
-          width={"50px"}
-          height={"50px"}
+          width={"75px"}
+          height={"75px"}
           className="image-inverted"
         />
       </Link>
       <Typography
         sx={{
           display: { md: "block", sm: "none", xs: "none" },
-          ml: "40px", // Adjust this value to move the text more to the right
+          ml: "55px", // Adjust this value to move the text more to the right
           fontWeight: "800",
           textShadow: "2px 2px 20px #000",
+          mt: "5px"
         }}
       >
-        <span style={{ fontSize: "20px" }}>FIT</span>-GPT
+        <span style={{ fontSize: "30px" }}>FIT- GPT</span>
       </Typography>
     </div>
   );
