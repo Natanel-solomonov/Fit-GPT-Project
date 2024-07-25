@@ -1,9 +1,10 @@
 import { Avatar, Box, Typography, Button, IconButton } from '@mui/material';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import ChatItem from '../components/chat/ChatItem';
 import { IoMdSend } from 'react-icons/io';
-import { sendChatRequest } from '../helpers/api-communicator';
+import { deleteUserChats, getUserChats, sendChatRequest } from '../helpers/api-communicator';
+import toast from 'react-hot-toast';
 type Message = {
     role:"user"|"assistant";
     content:string;
@@ -22,9 +23,34 @@ const Chat = () => {
         const newMessage: Message = {role:"user",content};
         setChatMessages((prev)=>[...prev,newMessage]);
         const chatData = await sendChatRequest(content);
-        setChatMessages((prev)=>[...chatData.chats]);
+        setChatMessages([...chatData.chats]);
         //
     };
+
+    const handleDeleteChats=async () => {
+        try {
+            toast.loading("Deleting Chats", {id:"deletechats"});
+            await deleteUserChats();
+            setChatMessages([]);
+            toast.success("Deleted Chats Successfully", {id:"deletechats"});
+        } catch (error) {
+            console.log(error);
+            toast.error("Deleted Chats failed", {id:"deletechats"});
+        }
+     }
+    useLayoutEffect(()=> {
+        if(auth?.isLoggedIn&&auth?.user){
+          toast.loading("Loading Chats", {id: "loadchats"});
+          getUserChats()
+          .then((data)=>{
+            setChatMessages([...data.chats]);
+            toast.success("Successfully loaded chats", {id: "loadchats"});
+          }).catch(err=>{
+            console.log(err)
+            toast.error("Loading failed", {id: "loadchats"});
+        });
+        }
+    }, [auth])
     return (
         <Box
             sx={{
@@ -98,6 +124,7 @@ const Chat = () => {
                         </div>
                     </Typography>
                     <Button
+                    onClick={handleDeleteChats}
                         sx={{
                             width: '200px',
                             my: 'auto',
