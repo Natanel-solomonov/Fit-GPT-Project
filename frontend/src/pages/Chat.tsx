@@ -22,7 +22,7 @@ const Chat = () => {
         const newMessage: Message = {role:"user",content};
         setChatMessages((prev)=>[...prev,newMessage]);
         const chatData = await sendChatRequest(content);
-        setChatMessages([...chatData.chats]);
+        setChatMessages((prev)=>[...chatData.chats]);
         //
     };
     return (
@@ -194,4 +194,4 @@ const Chat = () => {
     );
 };
 
-export default Chat;
+export default Chat
