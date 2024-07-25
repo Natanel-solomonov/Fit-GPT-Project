@@ -15,18 +15,21 @@ const Chat = () => {
     const inputRef = useRef<HTMLInputElement|null>(null);
     const auth = useAuth();
     const[chatMessages,setChatMessages] = useState<Message[]>([])
-    const handleSubmit = async()=>{
+    const handleSubmit = async () => {
         const content = inputRef.current?.value as string;
-        if(inputRef && inputRef.current){
-            inputRef.current.value=="";
+        if (inputRef && inputRef.current) {
+          inputRef.current.value = "";
         }
-        const newMessage: Message = {role:"user",content};
-        setChatMessages((prev)=>[...prev,newMessage]);
-        const chatData = await sendChatRequest(content);
-        setChatMessages([...chatData.chats]);
-        //
-    };
-
+        const newMessage: Message = { role: "user", content };
+        setChatMessages((prev) => [...prev, newMessage]);
+      
+        try {
+          const chatData = await sendChatRequest(content);
+          setChatMessages([...chatData.chats]);
+        } catch (error) {
+          toast.error("Failed to send message");
+        }
+      };
     const handleDeleteChats=async () => {
         try {
             toast.loading("Deleting Chats", {id:"deletechats"});
@@ -117,7 +120,7 @@ const Chat = () => {
                             color: 'white' 
                         }}
                     >
-                        You can ask any questions related to Nutrition, Fitness, Health and Wellness
+                        You can ask any questions related to Nutrition, Fitness, Health, Welness, Sports etc
                         <br />
                         <div style={{ textAlign: 'center' }}>
                             Example: How do I do a proper push-up?
