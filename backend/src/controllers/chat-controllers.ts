@@ -175,6 +175,8 @@ const fitnessKeywords = [
   "Non-essential nutrients", "Trace elements", "Macrominerals", "Hydration", "Nutrient density", 
   "Metabolism", "Thermic effect of food", "Insulin sensitivity", "Glycemic index", "Dietary fiber"
 ];
+
+
 export const generateChatCompletion = async (
   req: Request,
   res: Response,
@@ -192,19 +194,24 @@ export const generateChatCompletion = async (
     const chats = user.chats.map(({ role, content }) => ({
       role,
       content,
-    })) as ChatCompletionMessageParam[]
+    })) as ChatCompletionMessageParam[];
     chats.push({ content: message, role: "user" });
     user.chats.push({ content: message, role: "user" });
 
-    // Check if message contains any fitness-related keywords
-    const containsFitnessKeyword = fitnessKeywords.some(keyword => 
-      message.toLowerCase().includes(keyword)
+    // Preprocess the message and keywords
+    const preprocess = (text: string) => text.toLowerCase().replace(/[-\s]/g, '');
+
+    const preprocessedMessage = preprocess(message);
+
+    // Check if the preprocessed message contains any fitness-related keywords
+    const containsFitnessKeyword = fitnessKeywords.some(keyword =>
+      preprocessedMessage.includes(preprocess(keyword))
     );
 
     if (!containsFitnessKeyword) {
       const warningMessage = {
         role: "assistant",
-        content: "Hmmm, I am not trained to answer your question as it does not seem to be related to fitness or health, if this is a mistake I apolgize. Try asking something else. "
+        content: "Hmmm, I am not trained to answer your question as it does not seem to be related to fitness or health. If this is a mistake, I apologize. Try asking something else."
       };
       user.chats.push(warningMessage);
       await user.save();
@@ -230,55 +237,51 @@ export const generateChatCompletion = async (
 };
 
 export const sendChatstoUser = async (
-  req:Request,
-  res:Response,
-  next:NextFunction
-)=>{
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-  //user token check 
-  const user = await User.findById(res.locals.jwtData.id );
-  if(!user){
-     return res.status(401).send("User not registered or Token Malfunction");
-  }
-  console.log(user._id.toString(),res.locals.jwtData.id);
-  if(user._id.toString()!==res.locals.jwtData.id){
-     return res.status(401).send("Permissons Did not Match");
-  }
- 
- 
- 
+    //user token check 
+    const user = await User.findById(res.locals.jwtData.id);
+    if (!user) {
+      return res.status(401).send("User not registered or Token Malfunction");
+    }
+    console.log(user._id.toString(), res.locals.jwtData.id);
+    if (user._id.toString() !== res.locals.jwtData.id) {
+      return res.status(401).send("Permissions Did not Match");
+    }
 
-   return res
-   .status(201).json({message: "OK",chats:user.chats });
+    return res
+      .status(201).json({ message: "OK", chats: user.chats });
   } catch (error) {
-     console.log(error);
-     return res.status(200).json({message: "ERROR",cause:error.message});
+    console.log(error);
+    return res.status(200).json({ message: "ERROR", cause: error.message });
   }
 };
 
-
 export const deleteChats = async (
-  req:Request,
-  res:Response,
-  next:NextFunction
-)=>{
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-  //user token check 
-  const user = await User.findById(res.locals.jwtData.id );
-  if(!user){
-     return res.status(401).send("User not registered or Token Malfunction");
-  }
-  console.log(user._id.toString(),res.locals.jwtData.id);
-  if(user._id.toString()!==res.locals.jwtData.id){
-     return res.status(401).send("Permissons Did not Match");
-  }
-  //@ts-ignore
-  user.chats = [];
-  await user.save();
-   return res
-   .status(201).json({message: "OK",});
+    //user token check 
+    const user = await User.findById(res.locals.jwtData.id);
+    if (!user) {
+      return res.status(401).send("User not registered or Token Malfunction");
+    }
+    console.log(user._id.toString(), res.locals.jwtData.id);
+    if (user._id.toString() !== res.locals.jwtData.id) {
+      return res.status(401).send("Permissions Did not Match");
+    }
+    // @ts-ignore
+    user.chats = [];
+    await user.save();
+    return res
+      .status(201).json({ message: "OK" });
   } catch (error) {
-     console.log(error);
-     return res.status(200).json({message: "ERROR",cause:error.message});
+    console.log(error);
+    return res.status(200).json({ message: "ERROR", cause: error.message });
   }
 };

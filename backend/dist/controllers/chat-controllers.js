@@ -188,12 +188,15 @@ export const generateChatCompletion = async (req, res, next) => {
         }));
         chats.push({ content: message, role: "user" });
         user.chats.push({ content: message, role: "user" });
-        // Check if message contains any fitness-related keywords
-        const containsFitnessKeyword = fitnessKeywords.some(keyword => message.toLowerCase().includes(keyword));
+        // Preprocess the message and keywords
+        const preprocess = (text) => text.toLowerCase().replace(/[-\s]/g, '');
+        const preprocessedMessage = preprocess(message);
+        // Check if the preprocessed message contains any fitness-related keywords
+        const containsFitnessKeyword = fitnessKeywords.some(keyword => preprocessedMessage.includes(preprocess(keyword)));
         if (!containsFitnessKeyword) {
             const warningMessage = {
                 role: "assistant",
-                content: "Hmmm, I am not trained to answer your question as it does not seem to be related to fitness or health, if this is a mistake I apolgize. Try asking something else. "
+                content: "Hmmm, I am not trained to answer your question as it does not seem to be related to fitness or health. If this is a mistake, I apologize. Try asking something else."
             };
             user.chats.push(warningMessage);
             await user.save();
@@ -224,7 +227,7 @@ export const sendChatstoUser = async (req, res, next) => {
         }
         console.log(user._id.toString(), res.locals.jwtData.id);
         if (user._id.toString() !== res.locals.jwtData.id) {
-            return res.status(401).send("Permissons Did not Match");
+            return res.status(401).send("Permissions Did not Match");
         }
         return res
             .status(201).json({ message: "OK", chats: user.chats });
@@ -243,13 +246,13 @@ export const deleteChats = async (req, res, next) => {
         }
         console.log(user._id.toString(), res.locals.jwtData.id);
         if (user._id.toString() !== res.locals.jwtData.id) {
-            return res.status(401).send("Permissons Did not Match");
+            return res.status(401).send("Permissions Did not Match");
         }
-        //@ts-ignore
+        // @ts-ignore
         user.chats = [];
         await user.save();
         return res
-            .status(201).json({ message: "OK", });
+            .status(201).json({ message: "OK" });
     }
     catch (error) {
         console.log(error);
