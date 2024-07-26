@@ -162,7 +162,7 @@ const fitnessKeywords = [
     "Dragon flag", "Front lever", "Back lever", "Human flag", "Planche",
     "Windshield wipers", "Skin the cat", "Tuck planche", "Straddle planche", "Wide grip pull-up",
     "One arm push-up", "One arm pull-up", "Pike push-up", "Knee tuck", "Scissor kick",
-    "Bodyweight row", "Calories", "Caloric intake", "Caloric deficit", "Caloric surplus", "Macronutrients",
+    "Bodyweight row", "Calories", "Caloric intake", "Caloric deficit", "Calorie Surpluss", "Calorie Deficit", "Caloric surplus", "Macronutrients",
     "Protein", "Carbohydrates", "Fats", "Fiber", "Sugars",
     "Micronutrients", "Vitamins", "Minerals", "Vitamin A", "Vitamin B",
     "Vitamin C", "Vitamin D", "Vitamin E", "Vitamin K", "Calcium",
