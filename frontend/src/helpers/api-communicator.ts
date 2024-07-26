@@ -31,13 +31,17 @@ export const checkAuthStatus= async () => {
 };
 
 export const sendChatRequest= async (message:string) => {
-    const res = await axios.post("/chat/new", {message});
-    if(res.status!==201&&res.status!==200){
-        throw new Error("Unable to send chat");
+    try {
+        const res = await axios.post("/chat/new", {message});
+        if(res.status!==201&&res.status!==200){
+            throw new Error("Unable to send chat");
+        }
+        const data= await res.data;
+        return data;
+    } catch (error) {
+        console.error("Error in sendChatRequest:", error);
+        throw error;
     }
-    const data= await res.data;
-    return data;
-
 };
 
 export const getUserChats= async () => {
@@ -69,4 +73,3 @@ export const logoutUser= async () => {
     return data;
 
 };
-

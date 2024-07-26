@@ -13,13 +13,28 @@ const ChatItem = ({
   const auth = useAuth();
   const typewriterText = useTypewriter(content, 50); // Adjust speed as needed
 
+  const renderContent = (text: string) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = text.split(urlRegex);
+
+    return parts.map((part, index) =>
+      urlRegex.test(part) ? (
+        <a href={part} key={index} target="_blank" rel="noopener noreferrer" style={{ color: 'skyblue', textDecoration: 'underline' }}>
+          {part}
+        </a>
+      ) : (
+        <span key={index}>{part}</span>
+      )
+    );
+  };
+
   return role === 'assistant' ? (
     <Box sx={{ display: 'flex', p: 2, bgcolor: '#004d5612', my: 2, gap: 2, ml: -1, borderRadius: 2 }}>
       <Avatar sx={{ m1: '0' }}>
         <img src="Dumbell_Icon.png" alt="Dumbell_Icon" width={"30px"} />
       </Avatar>
       <Box>
-        <Typography fontSize={"20px"}>{typewriterText}</Typography>
+        <Typography fontSize={"20px"}>{renderContent(typewriterText)}</Typography>
       </Box>
     </Box>
   ) : (
@@ -29,7 +44,7 @@ const ChatItem = ({
         {auth?.user?.name.split(' ')[1][0]}
       </Avatar>
       <Box>
-        <Typography fontSize={"20px"} sx={{ color: 'black' }}>{content}</Typography>
+        <Typography fontSize={"20px"} sx={{ color: 'black' }}>{renderContent(content)}</Typography>
       </Box>
     </Box>
   );

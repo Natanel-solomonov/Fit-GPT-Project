@@ -22,7 +22,10 @@
     "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.4.2",
     "morgan": "^1.10.0",
-    "openai": "^4.52.7"
+    "node-fetch": "^2.6.7",
+    "openai": "^4.52.7",
+    "xmldom": "^0.6.0",
+    "youtube-transcript": "^1.2.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
