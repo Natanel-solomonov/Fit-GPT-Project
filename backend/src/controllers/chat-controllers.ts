@@ -114,7 +114,7 @@ const fitnessKeywords = [
   "pre-natal fitness", "post-natal fitness", "rehabilitative exercises", "corrective exercises", "injury prevention", "injury management", "injury rehabilitation", 
   "post-surgery recovery", "post-injury recovery", "sports injuries", "overuse injuries", "acute injuries", "chronic injuries", "muscle strains", "muscle sprains", 
   "ligament sprains", "tendon strains", "tendonitis", "bursitis", "joint pain", "arthritis", "osteoarthritis", "rheumatoid arthritis", "fibromyalgia", "chronic fatigue syndrome", 
-  "CFS", "myalgic encephalomyelitis", "ME", "autoimmune conditions", "immune system health", "immune support", "immune boosters", "immune modulation", "anti-inflammatory", 
+  "CFS", "myalgic encephalomyelitis",  "autoimmune conditions", "immune system health", "immune support", "immune boosters", "immune modulation", "anti-inflammatory", 
   "antioxidant support", "cellular health", "mitochondrial health", "detoxification", "liver health", "kidney health", "digestive health", "gut health", "microbiome", "probiotics", 
   "prebiotics", "fiber", "digestive enzymes", "gut-brain axis", "mental health", "emotional health", "stress management", "anxiety management", "depression management", 
   "mental resilience", "emotional resilience", "stress resilience", "adaptogens", "cognitive function", "brain health", "neuroplasticity", "neurogenesis", "brain training", 

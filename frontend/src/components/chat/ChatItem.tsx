@@ -13,7 +13,7 @@ const ChatItem = ({
   videoId?: string;
 }) => {
   const auth = useAuth();
-  const typewriterText = useTypewriter(content, 10); // Adjust speed as needed
+  const typewriterText = useTypewriter(content, 2); // Adjust speed as needed
   const [isTextComplete, setIsTextComplete] = useState(false);
 
   useEffect(() => {
