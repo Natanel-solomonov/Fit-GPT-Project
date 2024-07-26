@@ -22,3 +22,8 @@ html,body{
   letter-spacing: 1px;
 
 }
+
+.golden-border {
+  border: 1px solid gold;
+  border-radius: 1px;
+}

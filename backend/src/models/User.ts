@@ -16,6 +16,9 @@ const chatSchema = new mongoose.Schema({
         required:true,
 
 
+    }, 
+    videoId:{
+        type:String
     }
 })
 const userSchema = new mongoose.Schema({

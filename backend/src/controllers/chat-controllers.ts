@@ -24,7 +24,7 @@ const fitnessKeywords = [
   "swim", "rowing", "row", "jump rope", "jump roping", "boxing", "box", "kickboxing", "kickbox", "martial arts", "martial artist", 
   "tai chi", "jiu-jitsu", "karate", "taekwondo", "self-defense", "defending yourself", "dance fitness", "zumba", "barre", "belly dancing", 
   "ballet", "tap dance", "jazz dance", "hip hop dance", "street dance", "contemporary dance", "modern dance", "aerial yoga", "hot yoga", 
-  "restorative yoga", "vinyasa yoga", "ashtanga yoga", "hatha yoga", "kundalini yoga", "power yoga", "prenatal yoga", "postnatal yoga", 
+  "restorative yoga","Rowing Machine", "vinyasa yoga", "ashtanga yoga", "hatha yoga", "kundalini yoga", "power yoga", "prenatal yoga", "postnatal yoga", 
   "yoga therapy", "meditation", "meditating", "mindfulness", "mindful", "breathing exercises", "breathing exercise", "guided meditation", 
   "mental health", "mental wellness", "stress relief", "relieving stress", "anxiety relief", "relieving anxiety", "depression management", 
   "managing depression", "sleep health", "sleep hygiene", "sleep cycle", "circadian rhythm", "insomnia", "sleep apnea", "restful sleep", 
@@ -181,26 +181,22 @@ const fitnessKeywords = [
 export const generateChatCompletion = async (req: Request, res: Response, next: NextFunction) => {
   const { message } = req.body;
   try {
-    console.log('Fetching user data...');
     const user = await User.findById(res.locals.jwtData.id);
     if (!user) {
-      console.error("User not found or Token malfunctioned");
       return res.status(401).json({ message: "User not registered OR Token malfunctioned" });
     }
 
-    // Grab chats of user
-    const chats = user.chats.map(({ role, content }) => ({
+    const chats = user.chats.map(({ role, content, videoId }) => ({
       role,
       content,
+      videoId
     })) as ChatCompletionMessageParam[];
     chats.push({ content: message, role: "user" });
     user.chats.push({ content: message, role: "user" });
 
-    // Preprocess the message and keywords
     const preprocess = (text: string) => text.toLowerCase().replace(/[-\s]/g, '');
     const preprocessedMessage = preprocess(message);
 
-    console.log('Checking for fitness-related keywords...');
     const containsFitnessKeyword = fitnessKeywords.some(keyword =>
       preprocessedMessage.includes(preprocess(keyword))
     );
@@ -215,8 +211,6 @@ export const generateChatCompletion = async (req: Request, res: Response, next: 
       return res.status(200).json({ chats: user.chats });
     }
 
-    // Send all chats with new one to OpenAI API
-    console.log('Sending message to OpenAI API...');
     const openai = configureOpenAI();
 
     const chatResponse = await openai.chat.completions.create({
@@ -224,48 +218,39 @@ export const generateChatCompletion = async (req: Request, res: Response, next: 
       messages: chats,
     });
 
-    console.log('Received response from OpenAI API:', chatResponse);
     user.chats.push(chatResponse.choices[0].message);
 
-    // YouTube API Integration
     const matchedKeyword = fitnessKeywords.find(keyword => preprocessedMessage.includes(preprocess(keyword)));
 
     if (matchedKeyword) {
-      console.log('Searching YouTube for:', matchedKeyword);
-      try {
-        const videos = await searchYouTube(matchedKeyword);
-        console.log('YouTube search results:', videos);
-        if (videos.length > 0) {
-          // Directly use the first video found in the search results
-          const videoId = videos[0].id.videoId;
-          const videoLink = `https://www.youtube.com/watch?v=${videoId}`;
-          const youtubeMessage = {
-            role: "assistant",
-            content: `I found a video that explains how to do a ${matchedKeyword}. Check it out: ${videoLink}`
-          };
-          user.chats.push(youtubeMessage);
-        } else {
-          const noVideoMessage = {
-            role: "assistant",
-            content: "I couldn't find any videos related to your query."
-          };
-          user.chats.push(noVideoMessage);
-        }
-      } catch (youtubeError) {
-        console.error('YouTube API error:', youtubeError);
-        const errorMessage = {
+      const videos = await searchYouTube(matchedKeyword);
+      if (videos.length > 0) {
+        const videoId = videos[0].id.videoId;
+        const youtubeMessage = {
           role: "assistant",
-          content: "I encountered an issue while trying to find a relevant YouTube video. Please try again later."
+          content: `I found a video that explains how to do a ${matchedKeyword}. Check it out below:`,
+          videoId // Include the videoId in the message
         };
-        user.chats.push(errorMessage);
+        user.chats.push(youtubeMessage);
+
+        // Log youtubeMessage to verify it contains videoId
+        console.log('youtubeMessage:', youtubeMessage);
+      } else {
+        const noVideoMessage = {
+          role: "assistant",
+          content: "I couldn't find any videos related to your query."
+        };
+        user.chats.push(noVideoMessage);
       }
     }
 
     await user.save();
-    console.log('Successfully processed the request.');
+
+    // Log the updated user chats to verify
+    console.log('Updated user chats:', user.chats);
+
     return res.status(200).json({ chats: user.chats });
   } catch (error) {
-    console.error('Error processing request:', error);
     return res.status(500).json({ message: "Something went wrong", error: error.message });
   }
 };

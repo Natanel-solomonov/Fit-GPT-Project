@@ -1,5 +1,5 @@
-import { Avatar, Box, Typography, Button, IconButton } from '@mui/material';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Avatar, Box, Typography, Button, IconButton } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
 import ChatItem from '../components/chat/ChatItem';
 import { IoMdSend } from 'react-icons/io';
@@ -10,6 +10,7 @@ import toast from 'react-hot-toast';
 type Message = {
   role: "user" | "assistant";
   content: string;
+  videoId?: string;
 };
 
 const Chat = () => {
@@ -194,11 +195,25 @@ const Chat = () => {
             scrollBehavior: "smooth",
             backgroundColor: '#2E2E2E',
             padding: 2,
-            border: '2px solid white',  // Add white border radius around the entire box
+            border: '2px solid white',
           }}
         >
           {chatMessages.map((chat, index) => (
-            <ChatItem content={chat.content} role={chat.role} key={index} />
+            <React.Fragment key={index}>
+              <ChatItem content={chat.content} role={chat.role} />
+              {chat.videoId && (
+                <Box sx={{ marginTop: '20px', textAlign: 'center' }}>
+                  <iframe 
+                    width="560" 
+                    height="315" 
+                    src={`https://www.youtube.com/embed/${chat.videoId}`} 
+                    frameBorder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowFullScreen
+                  ></iframe>
+                </Box>
+              )}
+            </React.Fragment>
           ))}
         </Box>
         <Box
@@ -209,8 +224,8 @@ const Chat = () => {
             backgroundColor: "#2C2C2C",
             display: "flex",
             margin: "auto",
-            mt: 2,  // Add margin top to move the input box slightly down
-            border: '2px solid gold',  // Add golden border radius
+            mt: 2,
+            border: '2px solid gold',
           }}
         >
           <input
