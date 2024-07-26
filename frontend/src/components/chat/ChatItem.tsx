@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar, Box, Typography } from '@mui/material';
 import { useAuth } from '../../context/AuthContext';
 import useTypewriter from '../../hooks/useTypeWriter';
@@ -14,9 +14,18 @@ const ChatItem = ({
 }) => {
   const auth = useAuth();
   const typewriterText = useTypewriter(content, 10); // Adjust speed as needed
+  const [isTextComplete, setIsTextComplete] = useState(false);
 
-  // Log props to verify videoId
-  console.log("ChatItem props:", { content, role, videoId });
+  useEffect(() => {
+    const textCompleteCheck = setInterval(() => {
+      if (typewriterText === content) {
+        setIsTextComplete(true);
+        clearInterval(textCompleteCheck);
+      }
+    }, 100);
+
+    return () => clearInterval(textCompleteCheck);
+  }, [typewriterText, content]);
 
   const renderContent = (text: string) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -42,7 +51,7 @@ const ChatItem = ({
           </Avatar>
           <Box>
               <Typography fontSize={"20px"}>{renderContent(typewriterText)}</Typography>
-              {videoId && (
+              {isTextComplete && videoId && (
                 <Box 
                   sx={{ 
                     marginTop: '20px', 
