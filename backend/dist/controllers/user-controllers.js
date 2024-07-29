@@ -123,4 +123,60 @@ export const userlogout = async (req, res, next) => {
         return res.status(200).json({ message: "ERROR", cause: error.message });
     }
 };
+// Controller to fetch saved videos
+export const getSavedVideos = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select('savedVideos');
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.json({ videos: user.savedVideos });
+    }
+    catch (error) {
+        res.status(500).json({ message: 'Error fetching saved videos' });
+    }
+};
+export const getVideoDetails = async (videoId) => {
+    try {
+        const apiKey = process.env.YOUTUBE_API_KEY; // Make sure you have your YouTube API key in environment variables
+        const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet&key=${apiKey}`);
+        const data = await response.json();
+        if (data.items.length === 0) {
+            throw new Error('Video not found');
+        }
+        const video = data.items[0].snippet;
+        return {
+            title: video.title,
+            url: `https://www.youtube.com/watch?v=${videoId}`
+        };
+    }
+    catch (error) {
+        console.error('Error fetching video details:', error);
+        throw new Error('Failed to fetch video details');
+    }
+};
+// Controller to add a saved video
+export const addSavedVideo = async (req, res) => {
+    const { videoId } = req.body;
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        const videoExists = user.savedVideos.some(video => video.url.includes(videoId));
+        if (videoExists) {
+            return res.status(400).json({ message: 'Video already saved' });
+        }
+        const videoDetails = await getVideoDetails(videoId);
+        user.savedVideos.push({
+            title: videoDetails.title,
+            url: videoDetails.url
+        });
+        await user.save();
+        res.status(201).json({ message: 'Video saved successfully' });
+    }
+    catch (error) {
+        res.status(500).json({ message: 'Error saving video' });
+    }
+};
 //# sourceMappingURL=user-controllers.js.map

@@ -5,6 +5,7 @@ import Logo from "./shared/Logo";
 import { useAuth } from "../context/AuthContext";
 import NavigationLink from "./shared/NavigationLink";
 
+
 const Header = () => {
   const auth = useAuth();
   return (
@@ -17,7 +18,13 @@ const Header = () => {
           {auth?.isLoggedIn ? (
             <>
               <NavigationLink
-                bg="yellow"
+                bg="gold"
+                to="/saved-videos"
+                text="Saved Videos"
+                textColor="black"
+              />
+              <NavigationLink
+                bg="gold"
                 to="/chat"
                 text="Go To Chat"
                 textColor="black"
@@ -33,7 +40,7 @@ const Header = () => {
           ) : (
             <>
               <NavigationLink
-                bg="yellow"
+                bg="gold"
                 to="/login"
                 text="Login"
                 textColor="black"
