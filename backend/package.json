@@ -27,6 +27,7 @@
     "morgan": "^1.10.0",
     "node-fetch": "^2.6.7",
     "openai": "^4.52.7",
+    "spellchecker": "^3.7.1",
     "xmldom": "^0.6.0",
     "youtube-transcript": "^1.2.1"
   },

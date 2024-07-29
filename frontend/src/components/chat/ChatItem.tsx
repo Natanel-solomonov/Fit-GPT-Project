@@ -6,11 +6,11 @@ import useTypewriter from '../../hooks/useTypeWriter';
 const ChatItem = ({
   content,
   role,
-  videoId
+  videoIds
 }: {
   content: string;
   role: 'user' | 'assistant';
-  videoId?: string;
+  videoIds?: string[];
 }) => {
   const auth = useAuth();
   const typewriterText = useTypewriter(content, 2); // Adjust speed as needed
@@ -51,24 +51,25 @@ const ChatItem = ({
           </Avatar>
           <Box>
               <Typography fontSize={"20px"}>{renderContent(typewriterText)}</Typography>
-              {isTextComplete && videoId && (
+              {isTextComplete && videoIds && (
                 <Box 
                   sx={{ 
                     marginTop: '20px', 
-                    textAlign: 'center', 
-                    border: '1px solid gold',
-                    borderRadius: '10px', // Adjust the value as needed for desired border radius
-                    overflow: 'hidden' // Ensures the border radius is applied correctly
+                    display: 'flex',
+                    justifyContent: 'space-around'
                   }}
                 >
-                  <iframe 
-                    width="560" 
-                    height="315" 
-                    src={`https://www.youtube.com/embed/${videoId}`} 
-                    frameBorder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowFullScreen
-                  ></iframe>
+                  {videoIds.map((videoId, index) => (
+                    <iframe 
+                      key={index}
+                      width="300" 
+                      height="200" 
+                      src={`https://www.youtube.com/embed/${videoId}`} 
+                      frameBorder="0" 
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                      allowFullScreen
+                    ></iframe>
+                  ))}
                 </Box>
               )}
             </Box>

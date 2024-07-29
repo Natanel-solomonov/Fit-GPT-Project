@@ -14,8 +14,12 @@ const chatSchema = new mongoose.Schema({
         required: true,
     },
     videoId: {
-        type: String
-    }
+        type: String, // Comma-separated video IDs
+    },
+    currentVideoIndex: {
+        type: Number,
+        default: 0,
+    },
 });
 const userSchema = new mongoose.Schema({
     name: {
