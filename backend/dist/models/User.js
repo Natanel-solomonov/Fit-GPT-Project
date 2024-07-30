@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 // Define the schema for saved videos
 const videoSchema = new mongoose.Schema({
     title: {
@@ -25,8 +25,11 @@ const chatSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    videoIds: {
+        type: [String], // Array of video IDs
+    },
     videoId: {
-        type: String, // Comma-separated video IDs
+        type: String
     },
     currentVideoIndex: {
         type: Number,
@@ -51,5 +54,5 @@ const userSchema = new mongoose.Schema({
     chats: [chatSchema], // Embedded array of chat messages
     savedVideos: [videoSchema], // Embedded array of saved videos
 });
-export default mongoose.model("User", userSchema);
+export default mongoose.model('User', userSchema);
 //# sourceMappingURL=User.js.map

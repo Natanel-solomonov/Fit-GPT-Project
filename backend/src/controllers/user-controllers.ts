@@ -3,6 +3,7 @@ import User from "../models/User.js";
 import { hash,compare } from 'bcrypt'//hash is used to encrypt password
 import { createToken } from "../utils/token-manager.js";
 import { COOKIE_NAME } from "../utils/constants.js";
+import fetch from 'node-fetch';
 
 
 
@@ -167,7 +168,6 @@ export const userlogout = async (
 };
 
 
-// Controller to fetch saved videos
 export const getSavedVideos = async (req, res) => {
    try {
      const user = await User.findById(req.user.id).select('savedVideos');
@@ -182,7 +182,7 @@ export const getSavedVideos = async (req, res) => {
  
  export const getVideoDetails = async (videoId) => {
    try {
-     const apiKey = process.env.YOUTUBE_API_KEY; // Make sure you have your YouTube API key in environment variables
+     const apiKey = process.env.YOUTUBE_API_KEY; // Ensure this is correctly set in your environment variables
      const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet&key=${apiKey}`);
      const data = await response.json();
      
@@ -201,7 +201,6 @@ export const getSavedVideos = async (req, res) => {
    }
  };
  
- // Controller to add a saved video
  export const addSavedVideo = async (req, res) => {
    const { videoId } = req.body;
    try {
@@ -224,7 +223,7 @@ export const getSavedVideos = async (req, res) => {
      await user.save();
      res.status(201).json({ message: 'Video saved successfully' });
    } catch (error) {
+     console.error('Error saving video:', error); // Add this line to log the error
      res.status(500).json({ message: 'Error saving video' });
    }
  };
- 

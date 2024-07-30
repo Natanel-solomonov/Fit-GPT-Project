@@ -8,11 +8,11 @@ import axios from 'axios';
 const ChatItem = ({
   content,
   role,
-  videoIds
+  videoId
 }: {
   content: string;
   role: 'user' | 'assistant';
-  videoIds?: string[];
+  videoId?: string;
 }) => {
   const auth = useAuth();
   const typewriterText = useTypewriter(content, 2); // Adjust speed as needed
@@ -29,7 +29,16 @@ const ChatItem = ({
     return () => clearInterval(textCompleteCheck);
   }, [typewriterText, content]);
 
+  useEffect(() => {
+    console.log('isTextComplete:', isTextComplete);
+    console.log('videoId:', videoId);
+  }, [isTextComplete, videoId]);
+
   const saveVideo = async (videoId: string) => {
+    if (!videoId) {
+      console.error('No videoId provided to save');
+      return;
+    }
     try {
       await axios.post('/saved-videos', { videoId }, {
         headers: {
@@ -65,35 +74,40 @@ const ChatItem = ({
           <Avatar sx={{ m1: '0' }}>
             <img src="Dumbell_Icon.png" alt="Dumbell_Icon" width={"30px"} />
           </Avatar>
-          <Box>
+          <Box sx={{ flex: 1 }}>
             <Typography fontSize={"20px"}>{renderContent(typewriterText)}</Typography>
-            {isTextComplete && videoIds && (
+           
+            {isTextComplete && videoId && (
               <Box
                 sx={{
                   marginTop: '20px',
                   display: 'flex',
-                  justifyContent: 'space-around'
+                  alignItems: 'center',
+                  gap: 2
                 }}
               >
-                {videoIds.map((videoId, index) => (
-                  <Box key={index} sx={{ position: 'relative' }}>
-                    <iframe
-                      width="300"
-                      height="200"
-                      src={`https://www.youtube.com/embed/${videoId}`}
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
-                    <IconButton
-                      sx={{ position: 'absolute', top: 10, right: 10, bgcolor: 'white' }}
-                      onClick={() => saveVideo(videoId[index])}
-                    >
-                      <IoIosDownload />
-                    </IconButton>
-                  </Box>
-                  
-                ))}
+                <iframe
+                  width="300"
+                  height="200"
+                  src={`https://www.youtube.com/embed/${videoId}`}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+                <IconButton
+                  sx={{
+                    bgcolor: 'gold',
+                    color: 'black',
+                    p: 1,
+                    '&:hover': {
+                      bgcolor: 'gold',
+                      color: 'white'
+                    },
+                  }}
+                  onClick={() => saveVideo(videoId)}
+                >
+                  <IoIosDownload />
+                </IconButton>
               </Box>
             )}
           </Box>

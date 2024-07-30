@@ -29,7 +29,12 @@ const Chat = () => {
 
     try {
       const chatData = await sendChatRequest(content);
-      setChatMessages([...chatData.chats]);
+      const updatedChatMessages = chatData.chats.map((chat: any) => ({
+        role: chat.role,
+        content: chat.content,
+        videoId: chat.videoId
+      }));
+      setChatMessages(updatedChatMessages);
     } catch (error) {
       toast.error("Failed to send message");
     }
@@ -200,19 +205,7 @@ const Chat = () => {
         >
           {chatMessages.map((chat, index) => (
             <React.Fragment key={index}>
-              <ChatItem content={chat.content} role={chat.role} />
-              {chat.videoId && (
-                <Box sx={{ marginTop: '20px', textAlign: 'center' }}>
-                  <iframe 
-                    width="560" 
-                    height="315" 
-                    src={`https://www.youtube.com/embed/${chat.videoId}`} 
-                    frameBorder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowFullScreen
-                  ></iframe>
-                </Box>
-              )}
+              <ChatItem content={chat.content} role={chat.role} videoId={chat.videoId} />
             </React.Fragment>
           ))}
         </Box>

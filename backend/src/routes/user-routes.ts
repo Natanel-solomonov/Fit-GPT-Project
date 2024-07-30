@@ -11,7 +11,6 @@ userRoutes.post("/signup",validate(signupValidator),userSignup);
 userRoutes.post("/login",validate(loginValidator),userLogin);
 userRoutes.get("/auth-status",verifyToken, verifyUser);
 userRoutes.get("/logout",verifyToken, userlogout);
-userRoutes.get("/saved-videos", verifyToken, getSavedVideos);
-userRoutes.post("/saved-videos", verifyToken, addSavedVideo);
+
 
 export default userRoutes;
