@@ -8,11 +8,13 @@ import { saveVideo as saveVideoAPI } from '../../helpers/api-communicator';
 const ChatItem = ({
   content,
   role,
-  videoId
+  videoId,
+  refreshSavedVideos // Add this prop
 }: {
   content: string;
   role: 'user' | 'assistant';
   videoId?: string;
+  refreshSavedVideos?: () => void; // Add this prop type
 }) => {
   const auth = useAuth();
   const typewriterText = useTypewriter(content, 2); // Adjust speed as needed
@@ -42,6 +44,9 @@ const ChatItem = ({
     try {
       await saveVideoAPI(videoId);
       alert('Video saved successfully!');
+      if (refreshSavedVideos) {
+        refreshSavedVideos(); // Call the refresh function after saving a video
+      }
     } catch (error) {
       console.error('Error saving video:', error);
       alert('Failed to save video');

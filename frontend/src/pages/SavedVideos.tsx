@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Grid, Card, CardMedia, Typography } from '@mui/material';
 import axios from 'axios';
-import { IoIosDownload } from "react-icons/io";
 
 // Define the type for a video
 interface Video {
@@ -9,24 +8,32 @@ interface Video {
   url: string;
 }
 
+export const fetchSavedVideos = async () => {
+  try {
+    const response = await axios.get('/chat/saved-videos');
+    
+    if (response.data && Array.isArray(response.data.videos)) {
+      return response.data.videos;
+    } else {
+      console.error('Invalid response format:', response.data);
+      return [];
+    }
+  } catch (error) {
+    console.error('Error fetching saved videos:', error);
+    return [];
+  }
+};
+
 const SavedVideos: React.FC = () => {
   const [videos, setVideos] = useState<Video[]>([]); // Use the Video type for the state
 
   useEffect(() => {
-    const fetchSavedVideos = async () => {
-      try {
-        const response = await axios.get('/chat/saved-videos', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
-        setVideos(response.data.videos);
-      } catch (error) {
-        console.error('Error fetching saved videos:', error);
-      }
+    const loadVideos = async () => {
+      const videos = await fetchSavedVideos();
+      setVideos(videos);
     };
 
-    fetchSavedVideos();
+    loadVideos();
   }, []);
 
   return (
@@ -34,7 +41,7 @@ const SavedVideos: React.FC = () => {
       <Typography variant="h4" color="white" gutterBottom>
         Saved Videos
       </Typography>
-      <IoIosDownload/>
+     
       <Grid container spacing={3}>
         {videos.map((video, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>

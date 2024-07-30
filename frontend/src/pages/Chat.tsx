@@ -6,6 +6,7 @@ import { IoMdSend } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import { deleteUserChats, getUserChats, sendChatRequest } from '../helpers/api-communicator';
 import toast from 'react-hot-toast';
+import { fetchSavedVideos } from './SavedVideos'; // Import the fetchSavedVideos function
 
 type Message = {
   role: "user" | "assistant";
@@ -205,7 +206,7 @@ const Chat = () => {
         >
           {chatMessages.map((chat, index) => (
             <React.Fragment key={index}>
-              <ChatItem content={chat.content} role={chat.role} videoId={chat.videoId} />
+              <ChatItem content={chat.content} role={chat.role} videoId={chat.videoId} refreshSavedVideos={fetchSavedVideos} />
             </React.Fragment>
           ))}
         </Box>
