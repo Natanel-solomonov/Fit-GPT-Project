@@ -20,4 +20,5 @@ chatRoutes.post("/saved-videos", verifyToken, addSavedVideo);
 chatRoutes.get("/saved-videos", verifyToken, getSavedVideos);
 
 
+
 export default chatRoutes;

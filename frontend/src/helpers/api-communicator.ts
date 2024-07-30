@@ -79,24 +79,11 @@ export const logoutUser= async () => {
 
 export const saveVideo = async (videoId: string) => {
     try {
-      // Safely extract the token from cookies
-      const cookieString = document.cookie.split('; ').find(row => row.startsWith('auth_token'));
-      if (!cookieString) throw new Error('No token found');
-  
-      const token = cookieString.split('=')[1];
-      if (!token) throw new Error('Token is undefined');
-  
-      const res = await axios.post("/chat/saved-videos", { videoId }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-  
+      const res = await axios.post("/chat/saved-videos", { videoId });
       if (res.status !== 201 && res.status !== 200) {
         throw new Error("Unable to save video");
       }
-      const data = await res.data;
-      return data;
+      return res.data;
     } catch (error) {
       console.error("Error in saveVideo:", error);
       throw error;
