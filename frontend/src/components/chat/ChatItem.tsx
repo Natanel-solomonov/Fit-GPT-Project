@@ -3,7 +3,7 @@ import { Avatar, Box, Typography, IconButton } from '@mui/material';
 import { useAuth } from '../../context/AuthContext';
 import useTypewriter from '../../hooks/useTypeWriter';
 import { IoIosDownload } from "react-icons/io";
-import axios from 'axios';
+import { saveVideo as saveVideoAPI } from '../../helpers/api-communicator';
 
 const ChatItem = ({
   content,
@@ -40,11 +40,7 @@ const ChatItem = ({
       return;
     }
     try {
-      await axios.post('/saved-videos', { videoId }, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
+      await saveVideoAPI(videoId);
       alert('Video saved successfully!');
     } catch (error) {
       console.error('Error saving video:', error);
@@ -76,7 +72,6 @@ const ChatItem = ({
           </Avatar>
           <Box sx={{ flex: 1 }}>
             <Typography fontSize={"20px"}>{renderContent(typewriterText)}</Typography>
-           
             {isTextComplete && videoId && (
               <Box
                 sx={{

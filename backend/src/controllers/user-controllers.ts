@@ -203,8 +203,13 @@ export const getSavedVideos = async (req, res) => {
  
  export const addSavedVideo = async (req, res) => {
    const { videoId } = req.body;
+   const userId = res.locals.jwtData.id; // Retrieve user ID from decoded token
+   if (!userId) {
+     return res.status(401).json({ message: 'User not authenticated' });
+   }
+ 
    try {
-     const user = await User.findById(req.user.id);
+     const user = await User.findById(userId);
      if (!user) {
        return res.status(404).json({ message: 'User not found' });
      }
@@ -223,7 +228,7 @@ export const getSavedVideos = async (req, res) => {
      await user.save();
      res.status(201).json({ message: 'Video saved successfully' });
    } catch (error) {
-     console.error('Error saving video:', error); // Add this line to log the error
+     console.error('Error saving video:', error);
      res.status(500).json({ message: 'Error saving video' });
    }
  };

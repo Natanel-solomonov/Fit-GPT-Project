@@ -15,7 +15,7 @@ const SavedVideos: React.FC = () => {
   useEffect(() => {
     const fetchSavedVideos = async () => {
       try {
-        const response = await axios.get('/saved-videos', {
+        const response = await axios.get('/chat/saved-videos', {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
