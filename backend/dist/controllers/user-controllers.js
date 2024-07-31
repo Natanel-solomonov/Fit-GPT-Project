@@ -139,7 +139,7 @@ export const getSavedVideos = async (req, res) => {
 };
 export const getVideoDetails = async (videoId) => {
     try {
-        const apiKey = process.env.YOUTUBE_API_KEY; // Ensure this is correctly set in your environment variables
+        const apiKey = process.env.YOUTUBE_API_KEY;
         const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet&key=${apiKey}`);
         const data = await response.json();
         if (data.items.length === 0) {
@@ -182,6 +182,39 @@ export const addSavedVideo = async (req, res) => {
     catch (error) {
         console.error('Error saving video:', error);
         res.status(500).json({ message: 'Error saving video' });
+    }
+};
+export const clearAllSavedVideos = async (req, res) => {
+    try {
+        const user = await User.findById(res.locals.jwtData.id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        //@ts-ignore
+        user.savedVideos = [];
+        await user.save();
+        res.status(200).json({ message: 'All saved videos cleared' });
+    }
+    catch (error) {
+        console.error('Error clearing saved videos:', error);
+        res.status(500).json({ message: 'Error clearing saved videos' });
+    }
+};
+export const deleteSavedVideo = async (req, res) => {
+    const { videoId } = req.params;
+    try {
+        const user = await User.findById(res.locals.jwtData.id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        //@ts-ignore
+        user.savedVideos = user.savedVideos.filter(video => !video.url.includes(videoId));
+        await user.save();
+        res.status(200).json({ message: 'Video deleted successfully' });
+    }
+    catch (error) {
+        console.error('Error deleting saved video:', error);
+        res.status(500).json({ message: 'Error deleting saved video' });
     }
 };
 //# sourceMappingURL=user-controllers.js.map

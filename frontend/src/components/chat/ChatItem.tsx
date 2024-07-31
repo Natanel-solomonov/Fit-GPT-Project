@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import useTypewriter from '../../hooks/useTypeWriter';
 import { IoIosDownload } from "react-icons/io";
 import { saveVideo as saveVideoAPI } from '../../helpers/api-communicator';
+import {toast} from 'react-hot-toast';
 
 const ChatItem = ({
   content,
@@ -43,13 +44,13 @@ const ChatItem = ({
     }
     try {
       await saveVideoAPI(videoId);
-      alert('Video saved successfully!');
+      toast.success('Video saved successfully!');
       if (refreshSavedVideos) {
         refreshSavedVideos(); // Call the refresh function after saving a video
       }
     } catch (error) {
       console.error('Error saving video:', error);
-      alert('Failed to save video');
+      toast.error('Failed to save video');
     }
   };
 
