@@ -177,7 +177,7 @@ const fitnessKeywords = [
     "stamina", "staying power", "lasting ability", "durability",
     "elongating", "extending", "loosening up", "flexing",
     "healing", "mending", "restoring", "recuperating",
-    "schedule", "plan", "habit", "daily routine",
+    "schedule", "meal plan", "habit", "daily routine",
     "fitness center", "exercise facility", "workout space", "health club",
     "muscle building", "muscle growth", "physique sculpting", "muscle gaining",
     "functional fitness", "workout program", "exercise regime", "fitness plan",
@@ -510,16 +510,16 @@ export const generateChatCompletion = async (req, res, next) => {
                 let content;
                 switch (index) {
                     case 0:
-                        content = `I found a video that explains how to do a ${matchedKeyword}. Check it out below:`;
+                        content = `I found a video regarding your ${matchedKeyword} query.\nYou can click the download button to save the video.`;
                         break;
                     case 1:
-                        content = `Here's a second video in case the first one didn't meet your needs:`;
+                        content = `Here's a second video in case the first one didn't meet your needs.\nYou can click the download button to save the video.`;
                         break;
                     case 2:
-                        content = `And here's another option for you to consider:`;
+                        content = `And here's another option for you to consider.\nYou can click the download button to save the video.`;
                         break;
                     default:
-                        content = `I found another video for you:`;
+                        content = `I found another video for you.\nYou can click the download button to save the video.`;
                         break;
                 }
                 return {

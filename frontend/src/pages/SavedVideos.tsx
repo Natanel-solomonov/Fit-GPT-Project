@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Grid, Card, CardMedia, Typography, Button, IconButton } from '@mui/material';
-import { FaTrashAlt } from "react-icons/fa";
+import { FaTrashAlt, FaShare } from "react-icons/fa";
 import { CiSaveDown2 } from "react-icons/ci";
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
+import { 
+  FacebookShareButton, FacebookIcon, 
+  TwitterShareButton, TwitterIcon,
+  WhatsappShareButton, WhatsappIcon,
+  EmailShareButton, EmailIcon
+} from 'react-share';
+import { FaFacebookMessenger, FaSms } from 'react-icons/fa'; // Updated to use FaSms for iMessage icon
 
 interface Video {
   title: string;
@@ -32,6 +39,7 @@ export const fetchSavedVideos = async () => {
 
 const SavedVideos: React.FC = () => {
   const [videos, setVideos] = useState<Video[]>([]);
+  const [showShareButtons, setShowShareButtons] = useState<{ [key: number]: boolean }>({});
 
   useEffect(() => {
     const loadVideos = async () => {
@@ -47,7 +55,7 @@ const SavedVideos: React.FC = () => {
       const response = await axios.delete('/chat/clear-saved-videos');
       if (response.status === 200) {
         setVideos([]); // Clear the videos from state
-        toast.success("All Saved Vidoes Cleared")
+        toast.success("All Saved Videos Cleared")
       } else {
         toast.error("Error Clearing Videos");
       }
@@ -70,6 +78,21 @@ const SavedVideos: React.FC = () => {
       //@ts-ignore
       console.error('Error deleting video:', error.response || error.message || error);
     }
+  };
+
+  const toggleShareButtons = (index: number) => {
+    setShowShareButtons(prevState => ({
+      ...prevState,
+      [index]: !prevState[index]
+    }));
+  };
+
+  const shareToMessenger = (url: string) => {
+    window.open(`fb-messenger://share?link=${encodeURIComponent(url)}`, '_blank');
+  };
+
+  const shareToIMessage = (url: string, message: string) => {
+    window.open(`sms:&body=${encodeURIComponent(message + " " + url)}`, '_blank');
   };
 
   return (
@@ -97,23 +120,60 @@ const SavedVideos: React.FC = () => {
         <Grid container spacing={3} sx={{ mt: 3 }}>
           {videos.map((video, index) => (
             <Grid item xs={12} sm={6} md={6} key={index}>
-              <Card className="golden-border" sx={{ bgcolor: 'black' }}>
-                <CardMedia
-                  component="iframe"
-                  src={`https://www.youtube.com/embed/${new URL(video.url).searchParams.get('v')}`}
-                  title={video.title}
-                  sx={{ height: 200 }}
-                  allowFullScreen
-                />
-                <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Typography variant="h6" color="white">
-                    {video.title}
-                  </Typography>
-                  <IconButton onClick={() => deleteSavedVideo(new URL(video.url).searchParams.get('v') || '')}>
-                    <FaTrashAlt color="white" />
-                  </IconButton>
-                </Box>
-              </Card>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', bgcolor: 'black' }}>
+                <Card className="golden-border" sx={{ bgcolor: 'black', flex: 1 }}>
+                  <CardMedia
+                    component="iframe"
+                    src={`https://www.youtube.com/embed/${new URL(video.url).searchParams.get('v')}`}
+                    title={video.title}
+                    sx={{ height: 200 }}
+                    allowFullScreen
+                  />
+                  <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography variant="h6" color="white">
+                      {video.title}
+                    </Typography>
+                    <Box>
+                      <IconButton onClick={() => deleteSavedVideo(new URL(video.url).searchParams.get('v') || '')}>
+                        <FaTrashAlt color="white" />
+                      </IconButton>
+                      <IconButton onClick={() => toggleShareButtons(index)}>
+                        <FaShare color="white" />
+                      </IconButton>
+                    </Box>
+                  </Box>
+                </Card>
+                {showShareButtons[index] && (
+                  <Box
+                    sx={{
+                      bgcolor: 'white',
+                      p: 2,
+                      borderRadius: 1,
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(3, 1fr)',
+                      gap: 1,
+                      ml: 2, // Add margin-left to separate from the video card
+                    }}
+                  >
+                    <FacebookShareButton url={video.url} title="Hey! Check out this fitness Video that Fit GPT recommended me">
+                      <FacebookIcon size={32} round />
+                    </FacebookShareButton>
+                    <TwitterShareButton url={video.url} title="Hey! Check out this fitness Video that Fit GPT recommended me">
+                      <TwitterIcon size={32} round />
+                    </TwitterShareButton>
+                    <WhatsappShareButton url={video.url} title="Hey! Check out this fitness Video that Fit GPT recommended me">
+                      <WhatsappIcon size={32} round />
+                    </WhatsappShareButton>
+                    <EmailShareButton url={video.url} subject="Fitness Video Recommendation" body="Hey! Check out this fitness Video that Fit GPT recommended me">
+                      <EmailIcon size={32} round />
+                    </EmailShareButton>
+                   
+                    <IconButton onClick={() => shareToIMessage(video.url, "Hey! Check out this fitness Video that Fit GPT recommended me")}>
+                      <FaSms color="green" size={32} />
+                    </IconButton>
+                  </Box>
+                )}
+              </Box>
             </Grid>
           ))}
         </Grid>
