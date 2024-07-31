@@ -126,13 +126,14 @@ export const userlogout = async (req, res, next) => {
 };
 export const getSavedVideos = async (req, res) => {
     try {
-        const user = await User.findById(req.user.id).select('savedVideos');
+        const user = await User.findById(res.locals.jwtData.id).select('savedVideos');
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
         res.json({ videos: user.savedVideos });
     }
     catch (error) {
+        console.error('Error fetching saved videos:', error);
         res.status(500).json({ message: 'Error fetching saved videos' });
     }
 };

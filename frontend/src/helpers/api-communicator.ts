@@ -90,17 +90,13 @@ export const saveVideo = async (videoId: string) => {
     }
   };
 
-export const getSavedVideos = async () => {
+  export const getSavedVideos = async () => {
     try {
-        const res = await axios.get("/chat/saved-videos", {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`,
-            },
-        });
+        const res = await axios.get("/chat/saved-videos");
         if (res.status !== 201 && res.status !== 200) {
             throw new Error("Unable to fetch saved videos");
         }
-        const data = await res.data;
+        const data = res.data;
         return data;
     } catch (error) {
         console.error("Error in getSavedVideos:", error);
