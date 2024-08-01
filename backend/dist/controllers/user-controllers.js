@@ -3,6 +3,7 @@ import { hash, compare } from 'bcrypt'; //hash is used to encrypt password
 import { createToken } from "../utils/token-manager.js";
 import { COOKIE_NAME } from "../utils/constants.js";
 import fetch from 'node-fetch';
+import { sendThankYouEmail } from "../utils/email-service.js"; // Import the sendThankYouEmail function
 export const getAllUsers = async (req, res, next) => {
     try {
         //get all users
@@ -40,7 +41,9 @@ export const userSignup = async (req, res, next) => {
             httpOnly: true,
             signed: true,
         });
-        return res.status(201).json({ message: "OK", name: user.name, email: user.email });
+        // Send thank you email
+        await sendThankYouEmail(user.email, user.name);
+        return res.status(201).json({ message: "OK", name: user.name, email: user.email, token });
     }
     catch (error) {
         console.log(error);

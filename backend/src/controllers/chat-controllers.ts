@@ -36,7 +36,7 @@ const fitnessKeywords = [
   "foot pain", "orthotics", "braces", "compression gear", "kinesiology tape", "sports psychology", "motivation", "motivated", "goal setting", 
   "setting goals", "habit formation", "forming habits", "discipline", "disciplined", "consistency", "consistent", "perseverance", "persevere", 
   "mindset", "positive thinking", "visualization", "visualizing", "performance enhancement", "enhancing performance", "sports performance", 
-  "athletic performance", "personal best", "peak performance", "competitive sports", "team sports", "individual sports", "football", "soccer", 
+  "athletic performance", "personal best", "peak performance", "competitive sports", "team sports","front Squat","individual sports", "football", "soccer", 
   "basketball", "baseball", "softball", "hockey", "ice hockey", "field hockey", "volleyball", "tennis", "table tennis", "badminton", "squash", 
   "racquetball", "golf", "cricket", "rugby", "lacrosse", "water polo", "surfing", "skateboarding", "snowboarding", "skiing", "rock climbing", 
   "climbing rocks", "bouldering", "mountaineering", "hiking", "hike", "trail running", "trail run", "obstacle course racing", "obstacle race", 

@@ -4,33 +4,39 @@ import { useAuth } from '../../context/AuthContext';
 import useTypewriter from '../../hooks/useTypeWriter';
 import { IoIosDownload } from "react-icons/io";
 import { saveVideo as saveVideoAPI } from '../../helpers/api-communicator';
-import {toast} from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 
 const ChatItem = ({
   content,
   role,
   videoId,
-  refreshSavedVideos // Add this prop
+  refreshSavedVideos, // Add this prop
+  saved // Add this prop to indicate if the chat is saved
 }: {
   content: string;
   role: 'user' | 'assistant';
   videoId?: string;
   refreshSavedVideos?: () => void; // Add this prop type
+  saved?: boolean; // Add this prop type
 }) => {
   const auth = useAuth();
   const typewriterText = useTypewriter(content, 2); // Adjust speed as needed
   const [isTextComplete, setIsTextComplete] = useState(false);
 
   useEffect(() => {
-    const textCompleteCheck = setInterval(() => {
-      if (typewriterText === content) {
-        setIsTextComplete(true);
-        clearInterval(textCompleteCheck);
-      }
-    }, 100);
+    if (saved) {
+      setIsTextComplete(true);
+    } else {
+      const textCompleteCheck = setInterval(() => {
+        if (typewriterText === content) {
+          setIsTextComplete(true);
+          clearInterval(textCompleteCheck);
+        }
+      }, 100);
 
-    return () => clearInterval(textCompleteCheck);
-  }, [typewriterText, content]);
+      return () => clearInterval(textCompleteCheck);
+    }
+  }, [typewriterText, content, saved]);
 
   useEffect(() => {
     console.log('isTextComplete:', isTextComplete);
@@ -77,7 +83,7 @@ const ChatItem = ({
             <img src="Dumbell_Icon.png" alt="Dumbell_Icon" width={"30px"} />
           </Avatar>
           <Box sx={{ flex: 1 }}>
-            <Typography fontSize={"20px"}>{renderContent(typewriterText)}</Typography>
+            <Typography fontSize={"20px"}>{renderContent(saved ? content : typewriterText)}</Typography>
             {isTextComplete && videoId && (
               <Box
                 sx={{

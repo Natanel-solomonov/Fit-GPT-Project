@@ -87,9 +87,7 @@ const SavedVideos: React.FC = () => {
     }));
   };
 
-  const shareToMessenger = (url: string) => {
-    window.open(`fb-messenger://share?link=${encodeURIComponent(url)}`, '_blank');
-  };
+  
 
   const shareToIMessage = (url: string, message: string) => {
     window.open(`sms:&body=${encodeURIComponent(message + " " + url)}`, '_blank');
