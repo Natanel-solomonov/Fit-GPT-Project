@@ -6,8 +6,10 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Chat from "./pages/Chat";
 import SavedVideos from "./pages/SavedVideos";
+import LiftingPlanSurvey from "./pages/LiftingPlans"; // Import the LiftingPlanSurvey component
 import NotFound from "./pages/NotFound";
 import { useAuth } from "./context/AuthContext";
+import LiftingPlanResponse from './pages/LiftingPlan-Respnse';
 
 const App: React.FC = () => {
   const auth = useAuth();
@@ -23,6 +25,11 @@ const App: React.FC = () => {
           <>
             <Route path="/chat" element={<Chat />} />
             <Route path="/saved-videos" element={<SavedVideos />} />
+            <Route path="/lifting-plans" element={<LiftingPlanSurvey />} /> 
+            <Route path= "/lifting-plan-response" element= {<LiftingPlanResponse/>}/>
+            
+
+
           </>
         )}
         <Route path="*" element={<NotFound />} />

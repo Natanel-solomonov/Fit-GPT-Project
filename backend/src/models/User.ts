@@ -30,8 +30,8 @@ const chatSchema = new mongoose.Schema({
   videoIds: {
     type: [String], // Array of video IDs
   },
-  videoId:{
-    type: String
+  videoId: {
+    type: String,
   },
   currentVideoIndex: {
     type: Number,
@@ -39,6 +39,18 @@ const chatSchema = new mongoose.Schema({
   },
 });
 
+// Define the schema for lifting plans
+const LiftingPlanSchema = new mongoose.Schema({
+  height: { type: Number, required: true },
+  weight: { type: Number, required: true },
+  experienceLevel: { type: String, required: true },
+  gender: { type: String, required: true },
+  desiredExercise: { type: String, required: true },
+  targetWeight: { type: Number, required: true },
+  numberOfWeeks: { type: Number, required: true },
+  liftingPlan: { type: Array, required: true },
+  createdAt: { type: Date, default: Date.now }
+});
 // Define the user schema
 const userSchema = new mongoose.Schema({
   name: {
@@ -56,6 +68,7 @@ const userSchema = new mongoose.Schema({
   },
   chats: [chatSchema], // Embedded array of chat messages
   savedVideos: [videoSchema], // Embedded array of saved videos
+  liftingPlans: [LiftingPlanSchema], // Embedded array of lifting plans
 });
 
 export default mongoose.model('User', userSchema);

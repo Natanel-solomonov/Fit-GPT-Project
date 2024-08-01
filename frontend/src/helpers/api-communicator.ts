@@ -103,3 +103,54 @@ export const saveVideo = async (videoId: string) => {
         throw error;
     }
 };
+//@ts-ignore
+export const createLiftingPlan = async (liftingPlanData) => {
+    try {
+      const response = await axios.post('/user/lifting-plans', liftingPlanData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (response.status !== 201 && response.status !== 200) {
+        throw new Error('Failed to create lifting plan');
+      }
+  
+      return response.data;
+    } catch (error) {
+      console.error('Error creating lifting plan:', error);
+      throw error;
+    }
+  };
+  
+  export const getLiftingPlan = async () => {
+    try {
+      const res = await axios.get("/user/lifting-plan-response");
+      if (res.status !== 201 && res.status !== 200) {
+        throw new Error("Unable to retrieve lifting plan");
+      }
+      const data = res.data;
+      return data;
+    } catch (error) {
+      console.error("Error retrieving lifting plan:", error);
+      throw error;
+    }
+  };
+  export const generateLiftingPlanResponse = async (liftingPlanData: { weight: number; experienceLevel: string; targetWeight: number; numberOfWeeks: number }) => {
+    try {
+      const response = await axios.post('/user/generate-lifting-plan-response', liftingPlanData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (response.status !== 201 && response.status !== 200) {
+        throw new Error('Failed to generate lifting plan response');
+      }
+  
+      return response.data;
+    } catch (error) {
+      console.error('Error generating lifting plan response:', error);
+      throw error;
+    }
+  };
