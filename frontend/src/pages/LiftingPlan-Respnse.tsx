@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { Avatar, Box, Typography } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
-import { generateLiftingPlanResponse } from '../helpers/api-communicator';
+import { getLiftingPlan } from '../helpers/api-communicator';
 
 type Message = {
   role: "user" | "assistant";
@@ -17,27 +17,19 @@ const LiftingPlanResponse = () => {
 
   useLayoutEffect(() => {
     if (auth?.isLoggedIn && auth?.user) {
-      toast.loading("Generating Lifting Plan", { id: "generatePlan" });
+      toast.loading("Retrieving Lifting Plan", { id: "retrievePlan" });
 
-      generateLiftingPlanResponse({
-        //@ts-ignore
-        weight: auth.user.weight,
-        //@ts-ignore
-        experienceLevel: auth.user.experienceLevel,
-        //@ts-ignore
-        targetWeight: auth.user.targetWeight,
-        //@ts-ignore
-        numberOfWeeks: auth.user.numberOfWeeks,
-      })
-      //@ts-ignore
+      getLiftingPlan()
         .then(response => {
-          setChatMessages([{ role: "assistant", content: response.liftingPlan }]);
-          toast.success("Lifting plan generated successfully", { id: "generatePlan" });
+          const liftingPlanContent = response.liftingPlan.liftingPlan.map((weekPlan: any) => 
+            `Week ${weekPlan.week}: Lift ${weekPlan.weight.toFixed(2)} lbs for ${weekPlan.sets} sets of ${weekPlan.reps} reps.`
+          ).join('\n');
+          setChatMessages([{ role: "assistant", content: liftingPlanContent }]);
+          toast.success("Lifting plan retrieved successfully", { id: "retrievePlan" });
         })
-        //@ts-ignore
         .catch(err => {
           console.log(err);
-          toast.error("Failed to generate lifting plan", { id: "generatePlan" });
+          toast.error("Failed to retrieve lifting plan", { id: "retrievePlan" });
         })
         .finally(() => {
           setLoading(false);
