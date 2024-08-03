@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { Avatar, Box, Typography, IconButton } from '@mui/material';
 import { useAuth } from '../../context/AuthContext';
 import useTypewriter from '../../hooks/useTypeWriter';

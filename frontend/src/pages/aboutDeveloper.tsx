@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
-import { Box, Typography, Button, TextField } from '@mui/material';
+import { useEffect } from 'react';
+import { Box, Typography, } from '@mui/material';
 import { getAboutDeveloper } from '../helpers/api-communicator';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import GitHubIcon from '@mui/icons-material/GitHub';
+
 
 const AboutDeveloper = () => {
   useEffect(() => {

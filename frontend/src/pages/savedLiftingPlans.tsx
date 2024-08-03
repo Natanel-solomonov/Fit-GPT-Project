@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Grid, Card, CardContent, Typography, Button, IconButton, Collapse, Box } from '@mui/material';
-import { getSavedLiftingPlans, clearAllSavedLiftingPlans, deleteSavedLiftingPlan } from '../helpers/api-communicator'; // Adjust the import path as needed
+import { getSavedLiftingPlans, clearAllSavedLiftingPlans,  } from '../helpers/api-communicator'; // Adjust the import path as needed
 import toast from 'react-hot-toast';
 import { FaArrowRight, FaArrowUp,  FaShare, FaSms } from "react-icons/fa";
 import { 
@@ -52,15 +52,7 @@ const SavedPlans: React.FC = () => {
     }
   };
 
-  const handleDeletePlan = async (liftingPlanId: string) => {
-    try {
-      const response = await deleteSavedLiftingPlan(liftingPlanId);
-      setSavedPlans(response.liftingPlans || []);
-      toast.success("Lifting plan deleted successfully");
-    } catch (err) {
-      toast.error("Failed to delete lifting plan");
-    }
-  };
+  
 
   const toggleShareButtons = (index: number) => {
     setShowShareButtons(prevState => ({

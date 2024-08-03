@@ -1,11 +1,9 @@
-import React from 'react';
-import { Box, useTheme, useMediaQuery } from '@mui/material';
+import { Box} from '@mui/material';
 import TypingAnimation from '../components/typer/TypingAnimation';
 
 const Home = () => {
-  const theme = useTheme();
-  const isBelowMd = useMediaQuery(theme.breakpoints.down("md"));
-  
+ 
+
   return (
     <Box width={'100%'} height={'100%'}>
       <Box
@@ -56,7 +54,6 @@ const Home = () => {
           />
         </Box>
       </Box>
-      
     </Box>
   );
 };

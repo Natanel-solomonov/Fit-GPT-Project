@@ -10,7 +10,7 @@ import {
   WhatsappShareButton, WhatsappIcon,
   EmailShareButton, EmailIcon
 } from 'react-share';
-import { FaFacebookMessenger, FaSms } from 'react-icons/fa'; // Updated to use FaSms for iMessage icon
+import {  FaSms } from 'react-icons/fa'; // Updated to use FaSms for iMessage icon
 
 interface Video {
   title: string;

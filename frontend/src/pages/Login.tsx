@@ -4,7 +4,7 @@ import { IoIosLogIn } from 'react-icons/io';
 import CustomizedInput from '../components/shared/CustomizedInput';
 import {toast } from 'react-hot-toast'
 import { useAuth } from '../context/AuthContext';
-import { Navigate, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 
 
 const Login = () => {
