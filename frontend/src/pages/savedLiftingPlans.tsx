@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Grid, Card, CardContent, Typography, Button, IconButton, Collapse, Box } from '@mui/material';
 import { getSavedLiftingPlans, clearAllSavedLiftingPlans, deleteSavedLiftingPlan } from '../helpers/api-communicator'; // Adjust the import path as needed
 import toast from 'react-hot-toast';
-import { FaArrowRight, FaArrowUp, FaTrash, FaShare, FaSms } from "react-icons/fa";
+import { FaArrowRight, FaArrowUp,  FaShare, FaSms } from "react-icons/fa";
 import { 
   FacebookShareButton, FacebookIcon, 
   TwitterShareButton, TwitterIcon,
@@ -112,9 +112,7 @@ const SavedPlans: React.FC = () => {
                   </Typography>
                 </Collapse>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <IconButton onClick={() => handleDeletePlan(plan._id)} style={{ color: '#fff' }}>
-                    <FaTrash />
-                  </IconButton>
+                  
                   <IconButton onClick={() => toggleShareButtons(index)} style={{ color: '#fff' }}>
                     <FaShare />
                   </IconButton>

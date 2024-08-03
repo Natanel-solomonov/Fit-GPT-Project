@@ -30,6 +30,11 @@ export const sendThankYouEmail = async (email, name) => {
     html: `
       <p>Hi ${name},</p>
       <p>Congratulations on joining FitGPT! We're excited to have you on board, and can't wait to help you on your fitness journey.</p>
+      <p>On FitGPT you can get custom workout plans suited to you</p>
+      <p>You can share and save these plans with your friends</p>
+      <p>FitGPT will recomend you videos to watch based on your fitness questions</p>
+      <p>You can save and share these videos with your friends</p>
+      <p>Once again, congrats on joining and keep striving forwards with your fitness plans!</p>
       <p>Best regards,<br>Natanel Solomonov</p><br>-Lead Developer and founder of FitGPT
       <br>
       <div style="text-align: center;">
