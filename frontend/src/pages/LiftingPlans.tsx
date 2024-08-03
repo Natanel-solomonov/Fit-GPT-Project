@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
-import { TextField, Button, Box, Typography, Grid } from '@mui/material';
+import { TextField, Button, Box, Typography, Grid, CircularProgress } from '@mui/material';
 import { styled } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
@@ -33,6 +33,7 @@ const weightliftingTerms = [
   "single-leg deadlift", "single-leg Romanian deadlift", "pistol squat", "Bulgarian split squat",
   "cable fly", "low cable fly", "high cable fly", "cable crossover"
 ];
+
 
 interface FormData {
   height: string;
@@ -92,6 +93,7 @@ const LiftingPlanSurvey: React.FC = () => {
     numberOfWeeks: '',
   });
 
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -111,8 +113,10 @@ const LiftingPlanSurvey: React.FC = () => {
       return;
     }
 
+    setLoading(true);
+    const loadingToastId = toast.loading('Creating lifting plan...');
+
     try {
-      // Convert string fields to numbers before sending the data
       const liftingPlanData: LiftingPlanData = {
         height: Number(formData.height),
         weight: Number(formData.weight),
@@ -128,10 +132,15 @@ const LiftingPlanSurvey: React.FC = () => {
       const response = await createLiftingPlan(liftingPlanData);
 
       console.log('Lifting plan created successfully:', response);
+      toast.dismiss(loadingToastId);
+      toast.success('Lifting plan created successfully!');
       navigate('/lifting-plan-response');
     } catch (error: any) {
       console.error('Error creating lifting plan:', error);
+      toast.dismiss(loadingToastId);
       toast.error('Failed to create lifting plan');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -154,6 +163,7 @@ const LiftingPlanSurvey: React.FC = () => {
                 value={formData.height}
                 onChange={handleChange}
                 fullWidth
+                disabled={loading}
               />
             </Box>
             <Box mb={3}>
@@ -164,6 +174,7 @@ const LiftingPlanSurvey: React.FC = () => {
                 value={formData.weight}
                 onChange={handleChange}
                 fullWidth
+                disabled={loading}
               />
             </Box>
             <Box mb={3}>
@@ -181,6 +192,7 @@ const LiftingPlanSurvey: React.FC = () => {
                         backgroundColor: formData.experienceLevel === option ? 'gold' : 'white',
                       },
                     }}
+                    disabled={loading}
                   >
                     {option}
                   </Button>
@@ -202,6 +214,7 @@ const LiftingPlanSurvey: React.FC = () => {
                         backgroundColor: formData.gender === option ? 'gold' : 'white',
                       },
                     }}
+                    disabled={loading}
                   >
                     {option}
                   </Button>
@@ -216,6 +229,7 @@ const LiftingPlanSurvey: React.FC = () => {
                 value={formData.desiredExercise}
                 onChange={handleChange}
                 fullWidth
+                disabled={loading}
               />
             </Box>
             <Box mb={3}>
@@ -226,6 +240,7 @@ const LiftingPlanSurvey: React.FC = () => {
                 value={formData.targetWeight}
                 onChange={handleChange}
                 fullWidth
+                disabled={loading}
               />
             </Box>
             <Box mb={3}>
@@ -236,6 +251,7 @@ const LiftingPlanSurvey: React.FC = () => {
                 value={formData.numberOfWeeks}
                 onChange={handleChange}
                 fullWidth
+                disabled={loading}
               />
             </Box>
             <Button
@@ -252,6 +268,7 @@ const LiftingPlanSurvey: React.FC = () => {
                   backgroundColor: 'darkgoldenrod',
                 },
               }}
+              disabled={loading}
             >
               Submit
             </Button>
