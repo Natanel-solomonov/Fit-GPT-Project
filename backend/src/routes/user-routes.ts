@@ -1,6 +1,6 @@
 
 import {Router} from 'express';
-import { getAllUsers, getSavedVideos, userLogin, userSignup, userlogout, verifyUser,addSavedVideo, createLiftingPlan, getLiftingPlan, addSavedLiftingPlan, getAllSavedLiftingPlans,clearAllSavedLiftingPlans} from '../controllers/user-controllers.js';
+import { getAllUsers, getSavedVideos, userLogin, userSignup, userlogout, verifyUser,addSavedVideo, createLiftingPlan, getLiftingPlan, addSavedLiftingPlan, getAllSavedLiftingPlans,clearAllSavedLiftingPlans, getAboutDeveloper} from '../controllers/user-controllers.js';
 import{ loginValidator, signupValidator, validate } from "../utils/validators.js";
 import { verifyToken } from '../utils/token-manager.js';
 
@@ -28,6 +28,9 @@ userRoutes.post('/save-lifting-plan', verifyToken, noCache, addSavedLiftingPlan)
 userRoutes.get('/saved-lifting-plans', verifyToken,noCache, getAllSavedLiftingPlans); 
 userRoutes.delete('/clear-saved-lifting-plans', verifyToken, noCache, clearAllSavedLiftingPlans)
 
+
+//developer route 
+userRoutes.get('/about-developer', getAboutDeveloper)
 
 
 

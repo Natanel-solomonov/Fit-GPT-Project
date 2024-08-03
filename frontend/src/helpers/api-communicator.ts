@@ -215,3 +215,15 @@ export const deleteSavedLiftingPlan = async (liftingPlanId: string) => {
     return null;
   }
 };
+export const getAboutDeveloper = async () => {
+  try {
+    const res = await axios.get("/user/about-developer");
+    if (res.status !== 200) {
+      throw new Error("Unable to retrieve About the Developer page");
+    }
+    return res.data;
+  } catch (error) {
+    console.error("Error in getAboutDeveloper:", error);
+    throw error;
+  }
+};

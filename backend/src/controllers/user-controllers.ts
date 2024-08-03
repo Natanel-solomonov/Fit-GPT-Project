@@ -729,3 +729,15 @@ export const deleteSavedLiftingPlan = async (req: Request, res: Response, next: 
     res.status(500).json({ message: 'Error deleting saved lifting plan' });
   }
 };
+export const getAboutDeveloper = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    return res.status(200).json({ message: "About the Developer page opened successfully" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "ERROR", cause: error.message });
+  }
+};
