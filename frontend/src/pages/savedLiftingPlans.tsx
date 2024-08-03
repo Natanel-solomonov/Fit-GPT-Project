@@ -15,7 +15,7 @@ interface SavedPlan {
   title?: string;
   description?: string;
   liftingPlan: string;
-  desiredExercise?: string; // Add this field if it's not already present in the SavedPlan interface
+  desiredExercise?: string;
 }
 
 const SavedPlans: React.FC = () => {
@@ -69,8 +69,18 @@ const SavedPlans: React.FC = () => {
     }));
   };
 
-  const shareToIMessage = (url: string, message: string) => {
-    window.open(`sms:&body=${encodeURIComponent(message + " " + url)}`, '_blank');
+  const generateContent = (plan: SavedPlan) => {
+    return `Check out this plan Fit GPT recommended to increase my strength on ${plan.desiredExercise}\n\n${plan.title || `Plan for increased strength on ${plan.desiredExercise}`}\n\n${plan.description || plan.liftingPlan}`;
+  };
+
+  const shareToIMessage = (plan: SavedPlan) => {
+    const messageContent = generateContent(plan);
+    window.open(`sms:&body=${encodeURIComponent(messageContent)}`, '_blank');
+  };
+
+  const handleShare = (plan: SavedPlan) => {
+    const content = generateContent(plan);
+    return content;
   };
 
   return (
@@ -121,19 +131,33 @@ const SavedPlans: React.FC = () => {
                       mt: 2, // Add margin-top to separate from the content
                     }}
                   >
-                    <FacebookShareButton url={window.location.href} title={`Hey! Check out this plan Fit GPT recommended me to increase my strength on ${plan.desiredExercise}`}>
+                    <FacebookShareButton 
+                      url={window.location.href} 
+                      beforeOnClick={() => {
+                        // Custom actions can be added here
+                      }}
+                    >
                       <FacebookIcon size={32} round />
                     </FacebookShareButton>
-                    <TwitterShareButton url={window.location.href} title={`Hey! Check out this plan Fit GPT recommended me to increase my strength on ${plan.desiredExercise}`}>
+                    <TwitterShareButton 
+                      url={window.location.href} 
+                      title={handleShare(plan)}
+                    >
                       <TwitterIcon size={32} round />
                     </TwitterShareButton>
-                    <WhatsappShareButton url={window.location.href} title={`Hey! Check out this plan Fit GPT recommended me to increase my strength on ${plan.desiredExercise}`}>
+                    <WhatsappShareButton 
+                      url={`https://wa.me/?text=${encodeURIComponent(handleShare(plan))}`}
+                    >
                       <WhatsappIcon size={32} round />
                     </WhatsappShareButton>
-                    <EmailShareButton url={window.location.href} subject="Lifting Plan Recommendation" body={`Hey! Check out this plan Fit GPT recommended me to increase my strength on ${plan.desiredExercise}`}>
+                    <EmailShareButton 
+                      subject="Lifting Plan Recommendation" 
+                      body={handleShare(plan)}
+                      url={`https://wa.me/?text=${encodeURIComponent(handleShare(plan))}`}
+                    >
                       <EmailIcon size={32} round />
                     </EmailShareButton>
-                    <IconButton onClick={() => shareToIMessage(window.location.href, `Hey! Check out this plan Fit GPT recommended me to increase my strength on ${plan.desiredExercise}`)}>
+                    <IconButton onClick={() => shareToIMessage(plan)}>
                       <FaSms color="green" size={32} />
                     </IconButton>
                   </Box>
