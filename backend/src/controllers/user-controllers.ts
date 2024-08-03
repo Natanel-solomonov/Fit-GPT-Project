@@ -77,7 +77,7 @@ export const userSignup = async (
     // create token and store cookie
     res.clearCookie(COOKIE_NAME, {
       httpOnly: true,
-      domain: "localhost",
+      domain: "fitgptfrontend.onrender.com",
       signed: true,
       path: "/",
     });
@@ -87,7 +87,7 @@ export const userSignup = async (
     expires.setDate(expires.getDate() + 7);
     res.cookie(COOKIE_NAME, token, {
       path: "/",
-      domain: "localhost", // localhost could be replaced with actual domain when it is publicly hosted
+      domain: "fitgptfrontend.onrender.com", // localhost could be replaced with actual domain when it is publicly hosted
       expires,
       httpOnly: true,
       signed: true,
@@ -123,7 +123,7 @@ export const userLogin = async (
    //Create token and store cookie
    res.clearCookie(COOKIE_NAME,{
       httpOnly: true,
-     domain: "localhost",
+     domain: "fitgptfrontend.onrender.com",
      signed: true,
      path: "/",
       
@@ -133,7 +133,7 @@ export const userLogin = async (
    expires.setDate(expires.getDate()+7);
    res.cookie(COOKIE_NAME,token,
    {path:"/", 
-   domain: "localhost",//localhost could be replaced with actual domain when it is publically hosted
+   domain: "fitgptfrontend.onrender.com",//localhost could be replaced with actual domain when it is publically hosted
    expires,
    httpOnly:true,
    signed:true,
@@ -193,7 +193,7 @@ export const userlogout = async (
    }
    res.clearCookie(COOKIE_NAME,{
       httpOnly: true,
-     domain: "localhost",
+     domain: "fitgptfrontend.onrender.com",
      signed: true,
      path: "/",
       
