@@ -10,6 +10,7 @@ import LiftingPlanSurvey from "./pages/LiftingPlans"; // Import the LiftingPlanS
 import NotFound from "./pages/NotFound";
 import { useAuth } from "./context/AuthContext";
 import LiftingPlanResponse from './pages/LiftingPlan-Respnse';
+import SavedPlans from './pages/savedLiftingPlans';
 
 const App: React.FC = () => {
   const auth = useAuth();
@@ -27,6 +28,7 @@ const App: React.FC = () => {
             <Route path="/saved-videos" element={<SavedVideos />} />
             <Route path="/lifting-plans" element={<LiftingPlanSurvey />} /> 
             <Route path= "/lifting-plan-response" element= {<LiftingPlanResponse/>}/>
+            <Route path="/saved-plans" element={<SavedPlans />} />
             
 
 

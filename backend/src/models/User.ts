@@ -42,6 +42,10 @@ const chatSchema = new Schema({
 
 // Define the schema for lifting plans
 const liftingPlanSchema = new Schema({
+  liftingId: {
+    type: String,
+    default: randomUUID,
+  },
   height: { type: Number, required: true },
   weight: { type: Number, required: true },
   experienceLevel: { type: String, required: true },
@@ -79,6 +83,10 @@ const userSchema = new Schema({
   liftingPlans: {
     type: [liftingPlanSchema], // Embedded array of lifting plans
     default: [], // Ensure liftingPlans is initialized to an empty array
+  },
+  savedLiftingPlans: {
+    type: [liftingPlanSchema], // Embedded array of saved lifting plans
+    default: [], // Ensure savedLiftingPlans is initialized to an empty array
   },
 });
 

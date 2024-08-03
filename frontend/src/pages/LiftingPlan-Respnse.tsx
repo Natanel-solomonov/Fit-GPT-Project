@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Box, Typography } from '@mui/material';
+import { Avatar, Box, Typography, Button } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
-import { getLiftingPlan } from '../helpers/api-communicator';
+import { getLiftingPlan, saveLiftingPlan } from '../helpers/api-communicator';
+import { CiSaveDown2 } from "react-icons/ci";
 
 const LiftingPlanResponse = () => {
   const auth = useAuth();
   const [liftingPlan, setLiftingPlan] = useState<string>('');
+  const [liftingPlanId, setLiftingPlanId] = useState<string>(''); // New state for liftingPlanId
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -16,6 +18,7 @@ const LiftingPlanResponse = () => {
         const response = await getLiftingPlan();
         const formattedPlan = Array.isArray(response.liftingPlan) ? response.liftingPlan.join('') : response.liftingPlan;
         setLiftingPlan(formattedPlan);
+        setLiftingPlanId(response.liftingPlanId); // Store the liftingPlanId
         toast.success("Lifting plan retrieved successfully", { id: "retrievePlan" });
       } catch (err) {
         toast.error("Failed to retrieve lifting plan", { id: "retrievePlan" });
@@ -34,6 +37,16 @@ const LiftingPlanResponse = () => {
       setLiftingPlan('');
     };
   }, [auth]);
+
+  const handleSaveLiftingPlan = async () => {
+    try {
+      const response = await saveLiftingPlan(liftingPlanId); // Use the stored liftingPlanId
+      toast.success("Lifting plan saved successfully");
+      console.log("Saved Lifting Plan ID:", response.id); // Log the ID of the saved plan
+    } catch (error) {
+      toast.error("Failed to save lifting plan");
+    }
+  };
 
   if (loading) {
     return <Typography>Loading...</Typography>;
@@ -163,6 +176,23 @@ const LiftingPlanResponse = () => {
               </Typography>
             </Box>
           </Box>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<CiSaveDown2 />}
+            onClick={handleSaveLiftingPlan}
+            sx={{
+              mt: 3,
+              bgcolor: 'gold',
+              color: 'black',
+              fontWeight: 700,
+              '&:hover': {
+                bgcolor: 'darkgoldenrod',
+              },
+            }}
+          >
+            Save Lifting Plan
+          </Button>
         </Box>
       </Box>
     </Box>

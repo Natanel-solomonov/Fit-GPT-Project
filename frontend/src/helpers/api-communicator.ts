@@ -171,3 +171,27 @@ export const getLiftingPlan = async () => {
     throw error;
   }
 };
+export const saveLiftingPlan = async (liftingPlanId: string) => {
+  try {
+    const res = await axios.post("/user/save-lifting-plan", { liftingPlanId });
+    if (res.status !== 201 && res.status !== 200) {
+      throw new Error("Unable to save lifting plan");
+    }
+    return res.data;
+  } catch (error) {
+    console.error("Error in saveLiftingPlan:", error);
+    throw error;
+  }
+};
+export const getSavedLiftingPlans = async () => {
+  try {
+    const res = await axios.get("/user/saved-lifting-plans");
+    if (res.status !== 200) {
+      throw new Error("Unable to retrieve saved lifting plans");
+    }
+    return res.data;
+  } catch (error) {
+    console.error("Error in getSavedLiftingPlans:", error);
+    throw error;
+  }
+};

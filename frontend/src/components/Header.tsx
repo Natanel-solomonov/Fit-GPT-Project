@@ -18,6 +18,12 @@ const Header = () => {
             <>
               <NavigationLink
                 bg="gold"
+                to="/saved-plans"
+                text="Saved Lifting Plans"
+                textColor="black"
+              />
+              <NavigationLink
+                bg="gold"
                 to="/lifting-plans"
                 text="Lifting Plans"
                 textColor="black"

@@ -8,6 +8,7 @@ import { sendThankYouEmail } from "../utils/email-service.js"; // Import the sen
 import OpenAi from 'openai'
 import { configureOpenAI } from '../config/openai-config.js';
 import { ChatCompletionMessageParam } from 'openai/resources/chat/completions'; // Import the necessary type
+import { randomUUID } from "crypto";
 const weightliftingTerms = [
   "bench press", "incline bench press", "decline bench press", "dumbbell bench press",
   "squat", "front squat", "Bulgarian split squat", "overhead squat",
@@ -537,7 +538,8 @@ export const createLiftingPlan = async (req: Request, res: Response, next: NextF
           - **Sleep**: Aim for at least 7-8 hours of sleep per night.
           - **Form**: Focus on maintaining proper form throughout all exercises to prevent injury and ensure maximum muscle engagement.
           - **Progressive Overload**: Gradually increase the weight you lift each week to continuously challenge your muscles.
-
+          -Include a disclaimer that says it may take longer then  ${numberOfWeeks} weeks to acheive their goal, the above plan is just a 
+          outline 
           Generate the full multi-week plan using the above logic and structure.
         `,
       },
@@ -554,6 +556,7 @@ export const createLiftingPlan = async (req: Request, res: Response, next: NextF
 
       // Create the lifting plan object with all required fields
       const newLiftingPlan = {
+        Liftingid: randomUUID(),
         height,
         weight,
         experienceLevel,
@@ -564,6 +567,7 @@ export const createLiftingPlan = async (req: Request, res: Response, next: NextF
         liftingPlan: responseMessage, // Store as a plain string
         createdAt: new Date(),
       };
+      
 
       // Save the lifting plan to the user
       user.liftingPlans.push(newLiftingPlan);
@@ -598,9 +602,75 @@ export const getLiftingPlan = async (req: Request, res: Response, next: NextFunc
     res.setHeader('Expires', '0');
     res.setHeader('Surrogate-Control', 'no-store');
 
-    res.status(200).json({ message: 'Lifting plan retrieved successfully', liftingPlan: liftingPlan.liftingPlan });
+    res.status(200).json({ message: 'Lifting plan retrieved successfully', liftingPlan: liftingPlan.liftingPlan ,liftingPlanId: liftingPlan.liftingId});
   } catch (error) {
     console.error('Error retrieving lifting plan:', error);
     res.status(500).json({ message: 'Error retrieving lifting plan' });
+  }
+};
+export const addSavedLiftingPlan = async (req: Request, res: Response, next: NextFunction) => {
+  const { liftingPlanId } = req.body;
+  const userId = res.locals.jwtData.id; // Retrieve user ID from decoded token
+  if (!userId) {
+    return res.status(401).json({ message: 'User not authenticated' });
+  }
+
+  try {
+    console.log('User ID:', userId);
+    console.log('Lifting Plan ID:', liftingPlanId);
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    console.log('User found:', user);
+
+    const liftingPlan = user.liftingPlans.find(plan => plan.liftingId === liftingPlanId);
+    if (!liftingPlan) {
+      console.log('Lifting plan not found in user plans');
+      return res.status(404).json({ message: 'Lifting plan not found' });
+    }
+
+    console.log('Lifting plan found:', liftingPlan);
+
+    const liftingPlanExists = user.savedLiftingPlans.some(plan => plan.liftingId === liftingPlanId);
+    if (liftingPlanExists) {
+      return res.status(400).json({ message: 'Lifting plan already saved' });
+    }
+
+    user.savedLiftingPlans.push(liftingPlan);
+    await user.save();
+
+    console.log('Lifting plan saved successfully');
+
+    res.status(201).json({ message: 'Lifting plan saved successfully' });
+  } catch (error) {
+    console.error('Error saving lifting plan:', error);
+    res.status(500).json({ message: 'Error saving lifting plan' });
+  }
+};
+export const getAllSavedLiftingPlans = async (req: Request, res: Response, next: NextFunction) => {
+  const userId = res.locals.jwtData.id; // Retrieve user ID from decoded token
+  if (!userId) {
+    return res.status(401).json({ message: 'User not authenticated' });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Set headers to prevent caching
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    res.setHeader('Surrogate-Control', 'no-store');
+
+    res.status(200).json({ message: 'Saved lifting plans retrieved successfully', liftingPlans: user.savedLiftingPlans });
+  } catch (error) {
+    console.error('Error retrieving saved lifting plans:', error);
+    res.status(500).json({ message: 'Error retrieving saved lifting plans' });
   }
 };
