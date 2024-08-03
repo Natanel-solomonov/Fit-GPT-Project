@@ -1,7 +1,7 @@
 // helpers/api-communicator.ts
 
 import axios from 'axios';
-
+import toast from 'react-hot-toast'
 interface FormData {
   height: string;
   weight: string;
@@ -193,5 +193,25 @@ export const getSavedLiftingPlans = async () => {
   } catch (error) {
     console.error("Error in getSavedLiftingPlans:", error);
     throw error;
+  }
+};
+export const clearAllSavedLiftingPlans = async () => {
+  await axios.delete('/user/clear-saved-lifting-plans');
+};
+export const deleteSavedLiftingPlan = async (liftingPlanId: string) => {
+  try {
+    const response = await axios.delete(`/user/delete-saved-lifting-plan/${liftingPlanId}`);
+    if (response.status === 200) {
+      toast.success('Lifting plan deleted successfully');
+      return response.data;
+    } else {
+      toast.error('Failed to delete lifting plan');
+      return null;
+    }
+  } catch (error) {
+    //@ts-ignore
+    console.error('Error deleting lifting plan:', error.response || error.message || error);
+    toast.error('Failed to delete lifting plan');
+    return null;
   }
 };

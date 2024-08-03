@@ -51,7 +51,8 @@ const liftingPlanSchema = new Schema({
     targetWeight: { type: Number, required: true },
     numberOfWeeks: { type: Number, required: true },
     liftingPlan: { type: Array, required: true },
-    createdAt: { type: Date, default: Date.now }
+    createdAt: { type: Date, default: Date.now },
+    deleted: { type: Boolean, default: false } // Add deleted property
 });
 // Define the user schema
 const userSchema = new Schema({

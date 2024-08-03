@@ -42,7 +42,7 @@ const LiftingPlanResponse = () => {
     try {
       const response = await saveLiftingPlan(liftingPlanId); // Use the stored liftingPlanId
       toast.success("Lifting plan saved successfully");
-      console.log("Saved Lifting Plan ID:", response.id); // Log the ID of the saved plan
+      console.log("Saved Lifting Plan ID:", response.liftingPlanId); // Log the ID of the saved plan
     } catch (error) {
       toast.error("Failed to save lifting plan");
     }

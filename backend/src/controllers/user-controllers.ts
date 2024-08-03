@@ -650,6 +650,8 @@ export const addSavedLiftingPlan = async (req: Request, res: Response, next: Nex
     res.status(500).json({ message: 'Error saving lifting plan' });
   }
 };
+
+
 export const getAllSavedLiftingPlans = async (req: Request, res: Response, next: NextFunction) => {
   const userId = res.locals.jwtData.id; // Retrieve user ID from decoded token
   if (!userId) {
@@ -657,10 +659,18 @@ export const getAllSavedLiftingPlans = async (req: Request, res: Response, next:
   }
 
   try {
+    // Fetch the user document freshly from the database
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
+
+    // Filter out deleted lifting plans
+    //@ts-ignore
+    user.savedLiftingPlans = user.savedLiftingPlans.filter(plan => !plan.deleted);
+
+    // Save any changes (e.g., if you have automatic deletion flags)
+    await user.save();
 
     // Set headers to prevent caching
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
@@ -672,5 +682,50 @@ export const getAllSavedLiftingPlans = async (req: Request, res: Response, next:
   } catch (error) {
     console.error('Error retrieving saved lifting plans:', error);
     res.status(500).json({ message: 'Error retrieving saved lifting plans' });
+  }
+};
+export const clearAllSavedLiftingPlans = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = await User.findById(res.locals.jwtData.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    //@ts-ignore
+    user.savedLiftingPlans = [];
+    await user.save();
+
+    res.status(200).json({ message: 'All saved lifting plans cleared' });
+  } catch (error) {
+    console.error('Error clearing saved lifting plans:', error);
+    res.status(500).json({ message: 'Error clearing saved lifting plans' });
+  }
+};
+
+
+
+export const deleteSavedLiftingPlan = async (req: Request, res: Response, next: NextFunction) => {
+  const { desiredExercise } = req.params;
+
+  try {
+    const user = await User.findById(res.locals.jwtData.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Filter out the lifting plan to be deleted based on desiredExercise
+    //@ts-ignore
+    user.savedLiftingPlans = user.savedLiftingPlans.filter(plan => plan.desiredExercise !== desiredExercise);
+    await user.save();
+
+    // Fetch the updated user document to ensure the lifting plan was removed
+    const updatedUser = await User.findById(res.locals.jwtData.id);
+    if (updatedUser.savedLiftingPlans.some(plan => plan.desiredExercise === desiredExercise)) {
+      return res.status(500).json({ message: 'Error deleting saved lifting plan' });
+    }
+
+    res.status(200).json({ message: 'Lifting plan deleted successfully', savedLiftingPlans: updatedUser.savedLiftingPlans });
+  } catch (error) {
+    console.error('Error deleting saved lifting plan:', error);
+    res.status(500).json({ message: 'Error deleting saved lifting plan' });
   }
 };
