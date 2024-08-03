@@ -438,7 +438,7 @@ export const createLiftingPlan = async (req: Request, res: Response, next: NextF
         desiredExercise,
         targetWeight,
         numberOfWeeks,
-        liftingPlan: responseMessage, // Store as a string
+        liftingPlan: responseMessage, // Store as a plain string
         createdAt: new Date(),
       };
 
@@ -456,7 +456,7 @@ export const createLiftingPlan = async (req: Request, res: Response, next: NextF
   }
 };
 
-export const getLiftingPlan = async (req, res, next) => {
+export const getLiftingPlan = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = await User.findById(res.locals.jwtData.id);
     if (!user) {
@@ -475,7 +475,7 @@ export const getLiftingPlan = async (req, res, next) => {
     res.setHeader('Expires', '0');
     res.setHeader('Surrogate-Control', 'no-store');
 
-    res.status(200).json({ message: 'Lifting plan retrieved successfully', liftingPlan });
+    res.status(200).json({ message: 'Lifting plan retrieved successfully', liftingPlan: liftingPlan.liftingPlan });
   } catch (error) {
     console.error('Error retrieving lifting plan:', error);
     res.status(500).json({ message: 'Error retrieving lifting plan' });

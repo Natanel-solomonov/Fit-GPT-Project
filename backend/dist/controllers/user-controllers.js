@@ -370,7 +370,7 @@ export const createLiftingPlan = async (req, res, next) => {
                 desiredExercise,
                 targetWeight,
                 numberOfWeeks,
-                liftingPlan: responseMessage, // Store as a string
+                liftingPlan: responseMessage, // Store as a plain string
                 createdAt: new Date(),
             };
             // Save the lifting plan to the user
@@ -402,7 +402,7 @@ export const getLiftingPlan = async (req, res, next) => {
         res.setHeader('Pragma', 'no-cache');
         res.setHeader('Expires', '0');
         res.setHeader('Surrogate-Control', 'no-store');
-        res.status(200).json({ message: 'Lifting plan retrieved successfully', liftingPlan });
+        res.status(200).json({ message: 'Lifting plan retrieved successfully', liftingPlan: liftingPlan.liftingPlan });
     }
     catch (error) {
         console.error('Error retrieving lifting plan:', error);

@@ -14,8 +14,7 @@ const LiftingPlanResponse = () => {
       try {
         toast.loading("Retrieving Lifting Plan", { id: "retrievePlan" });
         const response = await getLiftingPlan();
-        // Ensure the lifting plan is a string
-        const formattedPlan = typeof response.liftingPlan === 'string' ? response.liftingPlan : JSON.stringify(response.liftingPlan, null, 2);
+        const formattedPlan = Array.isArray(response.liftingPlan) ? response.liftingPlan.join('') : response.liftingPlan;
         setLiftingPlan(formattedPlan);
         toast.success("Lifting plan retrieved successfully", { id: "retrievePlan" });
       } catch (err) {
@@ -157,8 +156,11 @@ const LiftingPlanResponse = () => {
             <Box sx={{ flex: 1 }}>
               <Typography
                 fontSize={"20px"}
-                dangerouslySetInnerHTML={{ __html: liftingPlan.replace(/\n/g, '<br />') }} // Render HTML content
-              />
+                component="pre"
+                style={{ whiteSpace: 'pre-wrap', color: 'white' }}
+              >
+                {liftingPlan}
+              </Typography>
             </Box>
           </Box>
         </Box>
