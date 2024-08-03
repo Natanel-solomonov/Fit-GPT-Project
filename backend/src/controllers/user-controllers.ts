@@ -314,7 +314,7 @@ const auxiliaryExercisesMapping = {
   // Define mappings for other exercises similarly
 };
 
-export const createLiftingPlan = async (req, res, next) => {
+export const createLiftingPlan = async (req: Request, res: Response, next: NextFunction) => {
   const { height, weight, experienceLevel, gender, desiredExercise, targetWeight, numberOfWeeks } = req.body;
 
   try {
@@ -348,14 +348,14 @@ export const createLiftingPlan = async (req, res, next) => {
       {
         role: "user",
         content: `
-          Generate a multi-week lifting plan specifically for ${desiredExercise} based on the following details:
-          Height: ${height}, 
-          Weight: ${weight}, 
-          Experience Level: ${experienceLevel}, 
-          Gender: ${gender}, 
-          Desired Exercise: ${desiredExercise}, 
-          Target Weight: ${targetWeight}, 
-          Number of Weeks: ${numberOfWeeks}.
+          Generate a detailed multi-week lifting plan specifically for ${desiredExercise} based on the following details:
+          - Height: ${height}
+          - Weight: ${weight}
+          - Experience Level: ${experienceLevel}
+          - Gender: ${gender}
+          - Desired Exercise: ${desiredExercise}
+          - Target Weight: ${targetWeight}
+          - Number of Weeks: ${numberOfWeeks}
 
           Here is the logic for generating the lifting plan:
           - The experience levels determine the base weight factor: beginner (0.5), intermediate (0.6), advanced (0.7).
@@ -384,59 +384,36 @@ export const createLiftingPlan = async (req, res, next) => {
             - Auxiliary Exercise 2: 3 sets of 12 reps
             - Auxiliary Exercise 3: 3 sets of 15 reps
 
-          For example:
-          - Week 1-2: Foundation Building
-            - Heavy Day
-              - ${desiredExercise}: 4 sets of 5 reps at calculated weight
-              - ${auxiliaryExercises[0]}: 3 sets of 8 reps
-              - ${auxiliaryExercises[1]}: 3 sets of 12 reps
-              - ${auxiliaryExercises[2]}: 3 sets of 10 reps
-            - Volume Day
-              - ${desiredExercise}: 5 sets of 8 reps at calculated weight
-              - ${auxiliaryExercises[3]}: 3 sets of 8 reps
-              - ${auxiliaryExercises[4]}: 3 sets of 15 reps
-              - ${auxiliaryExercises[5]}: 3 sets of 12 reps
-            - Accessory Day
-              - ${desiredExercise}: 4 sets of 10 reps at calculated weight
-              - ${auxiliaryExercises[6]}: 3 sets of 12 reps
-              - ${auxiliaryExercises[7]}: 3 sets of 12 reps
-              - ${auxiliaryExercises[8]}: 3 sets of 15 reps
-
           Auxiliary exercises for ${desiredExercise} include: ${auxiliaryExercisesText}.
 
-          Generate the detailed plan using this logic:
-          - Include the calculated weights for each week based on the initial weight and progressive overload increment.
-          - Organize the plan into the specified phases.
-          - Ensure each day includes the main exercise and three auxiliary exercises.
-          - Provide general tips for warm-up, rest, nutrition, sleep, form, and progressive overload.
+          Generate the detailed plan using this logic and provide it in the following format:
+
+          **Week 1-2: Foundation Building**
+          - **Day 1 (Heavy Day)**:
+            - ${desiredExercise}: 4 sets of 5 reps at [calculated weight]
+            - ${auxiliaryExercises[0]}: 3 sets of 8 reps
+            - ${auxiliaryExercises[1]}: 3 sets of 12 reps
+            - ${auxiliaryExercises[2]}: 3 sets of 10 reps
+
+          - **Day 2 (Volume Day)**:
+            - ${desiredExercise}: 5 sets of 8 reps at [calculated weight]
+            - ${auxiliaryExercises[3]}: 3 sets of 8 reps
+            - ${auxiliaryExercises[4]}: 3 sets of 15 reps
+            - ${auxiliaryExercises[5]}: 3 sets of 12 reps
+
+          - **Day 3 (Accessory Day)**:
+            - ${desiredExercise}: 4 sets of 10 reps at [calculated weight]
+            - ${auxiliaryExercises[6]}: 3 sets of 12 reps
+            - ${auxiliaryExercises[7]}: 3 sets of 12 reps
+            - ${auxiliaryExercises[8]}: 3 sets of 15 reps
 
           General Tips:
-          - Warm-Up: Always warm up properly before starting your workout. Do some light cardio and dynamic stretches.
-          - Rest: Take 2-3 minutes of rest between sets on heavy days and 1-2 minutes on volume and accessory days.
-          - Nutrition: Ensure you’re eating enough protein and calories to support muscle growth and recovery.
-          - Sleep: Aim for at least 7-8 hours of sleep per night.
-          - Form: Focus on maintaining proper form throughout all exercises to prevent injury and ensure maximum muscle engagement.
-          - Progressive Overload: Gradually increase the weight you lift each week to continuously challenge your muscles.
-
-          Example output for Weeks 1-2:
-          Week 1-2: Foundation Building
-          Day 1 (Heavy Day)
-          ${desiredExercise}: 4 sets of 5 reps at [calculated weight]
-          ${auxiliaryExercises[0]}: 3 sets of 8 reps
-          ${auxiliaryExercises[1]}: 3 sets of 12 reps
-          ${auxiliaryExercises[2]}: 3 sets of 10 reps
-
-          Day 2 (Volume Day)
-          ${desiredExercise}: 5 sets of 8 reps at [calculated weight]
-          ${auxiliaryExercises[3]}: 3 sets of 8 reps
-          ${auxiliaryExercises[4]}: 3 sets of 15 reps
-          ${auxiliaryExercises[5]}: 3 sets of 12 reps
-
-          Day 3 (Accessory Day)
-          ${desiredExercise}: 4 sets of 10 reps at [calculated weight]
-          ${auxiliaryExercises[6]}: 3 sets of 12 reps
-          ${auxiliaryExercises[7]}: 3 sets of 12 reps
-          ${auxiliaryExercises[8]}: 3 sets of 15 reps
+          - **Warm-Up**: Always warm up properly before starting your workout. Do some light cardio and dynamic stretches.
+          - **Rest**: Take 2-3 minutes of rest between sets on heavy days and 1-2 minutes on volume and accessory days.
+          - **Nutrition**: Ensure you’re eating enough protein and calories to support muscle growth and recovery.
+          - **Sleep**: Aim for at least 7-8 hours of sleep per night.
+          - **Form**: Focus on maintaining proper form throughout all exercises to prevent injury and ensure maximum muscle engagement.
+          - **Progressive Overload**: Gradually increase the weight you lift each week to continuously challenge your muscles.
 
           Generate the full multi-week plan using the above logic and structure.
         `,
@@ -450,6 +427,25 @@ export const createLiftingPlan = async (req, res, next) => {
 
     if (chatResponse.choices && chatResponse.choices.length > 0) {
       const responseMessage = chatResponse.choices[0].message?.content || '';
+      console.log("Generated lifting plan:", responseMessage);
+
+      // Create the lifting plan object with all required fields
+      const newLiftingPlan = {
+        height,
+        weight,
+        experienceLevel,
+        gender,
+        desiredExercise,
+        targetWeight,
+        numberOfWeeks,
+        liftingPlan: responseMessage, // Store as a string
+        createdAt: new Date(),
+      };
+
+      // Save the lifting plan to the user
+      user.liftingPlans.push(newLiftingPlan);
+      await user.save();
+
       res.status(201).json({ message: 'Lifting plan generated successfully', liftingPlan: responseMessage });
     } else {
       throw new Error('Unexpected API response format');
@@ -472,6 +468,12 @@ export const getLiftingPlan = async (req, res, next) => {
     }
 
     const liftingPlan = user.liftingPlans[user.liftingPlans.length - 1]; // Get the most recent lifting plan
+
+    // Set headers to prevent caching
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    res.setHeader('Surrogate-Control', 'no-store');
 
     res.status(200).json({ message: 'Lifting plan retrieved successfully', liftingPlan });
   } catch (error) {

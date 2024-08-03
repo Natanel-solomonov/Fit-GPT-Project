@@ -140,6 +140,7 @@ export const createLiftingPlan = async (formData: FormData) => {
     const response = await axios.post('/user/lifting-plans', liftingPlanData, {
       headers: {
         'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache',
       },
     });
 
@@ -156,12 +157,15 @@ export const createLiftingPlan = async (formData: FormData) => {
 
 export const getLiftingPlan = async () => {
   try {
-    const res = await axios.get("/user/lifting-plan-response");
+    const res = await axios.get("/user/lifting-plan-response", {
+      headers: {
+        'Cache-Control': 'no-cache',
+      },
+    });
     if (res.status !== 201 && res.status !== 200) {
       throw new Error("Unable to retrieve lifting plan");
     }
-    const data = res.data;
-    return data;
+    return res.data;
   } catch (error) {
     console.error("Error retrieving lifting plan:", error);
     throw error;

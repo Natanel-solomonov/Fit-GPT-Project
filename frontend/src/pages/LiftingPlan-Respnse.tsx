@@ -1,40 +1,39 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar, Box, Typography } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import { getLiftingPlan } from '../helpers/api-communicator';
 
-type Message = {
-  role: "user" | "assistant";
-  content: string;
-  videoId?: string;
-};
-
 const LiftingPlanResponse = () => {
   const auth = useAuth();
-  const [chatMessages, setChatMessages] = useState<Message[]>([]);
+  const [liftingPlan, setLiftingPlan] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
 
-  useLayoutEffect(() => {
-    if (auth?.isLoggedIn && auth?.user) {
-      toast.loading("Retrieving Lifting Plan", { id: "retrievePlan" });
+  useEffect(() => {
+    const fetchLiftingPlan = async () => {
+      try {
+        toast.loading("Retrieving Lifting Plan", { id: "retrievePlan" });
+        const response = await getLiftingPlan();
+        // Ensure the lifting plan is a string
+        const formattedPlan = typeof response.liftingPlan === 'string' ? response.liftingPlan : JSON.stringify(response.liftingPlan, null, 2);
+        setLiftingPlan(formattedPlan);
+        toast.success("Lifting plan retrieved successfully", { id: "retrievePlan" });
+      } catch (err) {
+        toast.error("Failed to retrieve lifting plan", { id: "retrievePlan" });
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      getLiftingPlan()
-        .then(response => {
-          const liftingPlanContent = response.liftingPlan.liftingPlan.map((weekPlan: any) => 
-            `Week ${weekPlan.week}: Lift ${weekPlan.weight.toFixed(2)} lbs for ${weekPlan.sets} sets of ${weekPlan.reps} reps.`
-          ).join('\n');
-          setChatMessages([{ role: "assistant", content: liftingPlanContent }]);
-          toast.success("Lifting plan retrieved successfully", { id: "retrievePlan" });
-        })
-        .catch(err => {
-          console.log(err);
-          toast.error("Failed to retrieve lifting plan", { id: "retrievePlan" });
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+    if (auth?.isLoggedIn && auth?.user) {
+      fetchLiftingPlan();
+    } else {
+      setLoading(false);
     }
+
+    return () => {
+      setLiftingPlan('');
+    };
   }, [auth]);
 
   if (loading) {
@@ -151,16 +150,17 @@ const LiftingPlanResponse = () => {
             border: '2px solid white',
           }}
         >
-          {chatMessages.map((chat, index) => (
-            <Box key={index} sx={{ display: 'flex', p: 2, bgcolor: '#004d5612', my: 2, gap: 2, ml: -1, borderRadius: 2 }}>
-              <Avatar sx={{ m1: '0' }}>
-                <img src="Dumbell_Icon.png" alt="Dumbell_Icon" width={"30px"} />
-              </Avatar>
-              <Box sx={{ flex: 1 }}>
-                <Typography fontSize={"20px"}>{chat.content}</Typography>
-              </Box>
+          <Box sx={{ display: 'flex', p: 2, bgcolor: '#004d5612', my: 2, gap: 2, ml: -1, borderRadius: 2 }}>
+            <Avatar sx={{ m1: '0' }}>
+              <img src="Dumbell_Icon.png" alt="Dumbell_Icon" width={"30px"} />
+            </Avatar>
+            <Box sx={{ flex: 1 }}>
+              <Typography
+                fontSize={"20px"}
+                dangerouslySetInnerHTML={{ __html: liftingPlan.replace(/\n/g, '<br />') }} // Render HTML content
+              />
             </Box>
-          ))}
+          </Box>
         </Box>
       </Box>
     </Box>

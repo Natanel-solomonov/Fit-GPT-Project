@@ -1,8 +1,8 @@
 import { randomUUID } from 'crypto';
-import mongoose from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
 
 // Define the schema for saved videos
-const videoSchema = new mongoose.Schema({
+const videoSchema = new Schema({
   title: {
     type: String,
     required: true,
@@ -14,7 +14,7 @@ const videoSchema = new mongoose.Schema({
 });
 
 // Define the schema for chat messages
-const chatSchema = new mongoose.Schema({
+const chatSchema = new Schema({
   id: {
     type: String,
     default: randomUUID,
@@ -29,6 +29,7 @@ const chatSchema = new mongoose.Schema({
   },
   videoIds: {
     type: [String], // Array of video IDs
+    default: [], // Ensure videoIds is initialized to an empty array
   },
   videoId: {
     type: String,
@@ -40,7 +41,7 @@ const chatSchema = new mongoose.Schema({
 });
 
 // Define the schema for lifting plans
-const LiftingPlanSchema = new mongoose.Schema({
+const liftingPlanSchema = new Schema({
   height: { type: Number, required: true },
   weight: { type: Number, required: true },
   experienceLevel: { type: String, required: true },
@@ -51,8 +52,9 @@ const LiftingPlanSchema = new mongoose.Schema({
   liftingPlan: { type: Array, required: true },
   createdAt: { type: Date, default: Date.now }
 });
+
 // Define the user schema
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -66,9 +68,18 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  chats: [chatSchema], // Embedded array of chat messages
-  savedVideos: [videoSchema], // Embedded array of saved videos
-  liftingPlans: [LiftingPlanSchema], // Embedded array of lifting plans
+  chats: {
+    type: [chatSchema], // Embedded array of chat messages
+    default: [], // Ensure chats is initialized to an empty array
+  },
+  savedVideos: {
+    type: [videoSchema], // Embedded array of saved videos
+    default: [], // Ensure savedVideos is initialized to an empty array
+  },
+  liftingPlans: {
+    type: [liftingPlanSchema], // Embedded array of lifting plans
+    default: [], // Ensure liftingPlans is initialized to an empty array
+  },
 });
 
 export default mongoose.model('User', userSchema);
