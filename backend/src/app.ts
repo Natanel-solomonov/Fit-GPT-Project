@@ -13,7 +13,7 @@ const corsOptions = {
   origin: ["https://fitgptfrontend.onrender.com", "http://localhost:5173"],
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS", "CONNECT", "TRACE"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Content-Type-Options", "Accept", "X-Requested-With", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"],
-  credentials: true,
+  credentials: false,
   maxAge: 7200
 };
 
