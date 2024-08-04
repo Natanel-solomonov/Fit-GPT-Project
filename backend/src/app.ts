@@ -3,18 +3,19 @@ import { config } from 'dotenv';
 import morgan from 'morgan';
 import appRouter from './routes/index.js';
 import cookieParser from 'cookie-parser';
-const cors = require("cors")
+const cors = require("cors");
 
 config();
 const app = express();
 
 // Configure CORS options
-
 app.use(
   cors({
-    orgin: "https://fitgptfrontend.onrender.com"
+    origin: "https://fitgptfrontend.onrender.com",
+    credentials: true
   })
-)
+);
+
 app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
