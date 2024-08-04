@@ -8,12 +8,22 @@ import cors from 'cors';
 config();
 const app = express();
 
-// Configure CORS options
+const allowedOrigins = [
+  "https://fitgptfrontend.onrender.com",
+  "http://localhost:5173"
+];
+
 const corsOptions = {
-  origin: ["https://fitgptfrontend.onrender.com", "http://localhost:5173"],
+  origin: (origin: string, callback: (err: Error | null, allow?: boolean) => void) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS", "CONNECT", "TRACE"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Content-Type-Options", "Accept", "X-Requested-With", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"],
-  credentials: false,
+  credentials: true,
   maxAge: 7200
 };
 
