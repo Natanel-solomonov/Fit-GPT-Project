@@ -12,7 +12,7 @@ const app = express();
 
 app.use(
   cors({
-    orgin: "https://fit-gpt-frontend.onrender.com"
+    origin: "https://fit-gpt-frontend.onrender.com"
   })
 )
 app.use(express.json());
