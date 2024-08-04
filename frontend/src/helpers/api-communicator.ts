@@ -54,15 +54,19 @@ export const signupUser = async (name: string, email: string, password: string) 
   return data;
 };
 
-export const checkAuthStatus = async () => {
-  const res = await axios.get("/user/auth-status");
-  if (res.status !== 201 && res.status !== 200) {
-    throw new Error("Unable to Authenticate");
-  }
-  const data = await res.data;
-  return data;
-};
 
+export const checkAuthStatus = async () => {
+  try {
+    const response = await axios.get('/user/auth-status');
+    return response.data;
+  } catch (error) {
+    //@ts-ignore
+    if (error.response && error.response.status === 401) {
+      return null; // User is not authenticated
+    }
+    throw error; // Handle other errors
+  }
+};
 export const sendChatRequest = async (message: string) => {
   try {
     const res = await axios.post("/chat/new", { message });

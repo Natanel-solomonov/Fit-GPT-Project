@@ -1,6 +1,3 @@
-
-
-
 import {
   ReactNode,
   createContext,
@@ -36,10 +33,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     async function checkStatus() {
-      const data = await checkAuthStatus();
-      if (data) {
-        setUser({ email: data.email, name: data.name });
-        setIsLoggedIn(true);
+      try {
+        const data = await checkAuthStatus();
+        if (data) {
+          setUser({ email: data.email, name: data.name });
+          setIsLoggedIn(true);
+        }
+      } catch (error) {
+        //@ts-ignore
+        if (error.response && error.response.status === 401) {
+          // User is not authenticated, handle accordingly
+          setIsLoggedIn(false);
+          setUser(null);
+        } else {
+          console.error('An unexpected error occurred:', error);
+        }
       }
     }
     checkStatus();
