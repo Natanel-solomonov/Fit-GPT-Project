@@ -9,7 +9,7 @@ export default defineConfig({
         target: 'https://mern-fit-gpt-backend.onrender.com',
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api\/v1/, '')
+       
       },
     },
   },
