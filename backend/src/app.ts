@@ -3,29 +3,14 @@ import { config } from 'dotenv';
 import morgan from 'morgan';
 import appRouter from './routes/index.js';
 import cookieParser from 'cookie-parser';
-import cors from 'cors';
+import corsMiddleware from './utils/corsMiddleware.js';
 
 config();
 const app = express();
 
-const allowedOrigins = [
-  'https://fitgptfrontend.onrender.com'
-];
+// Use the custom CORS middleware
+app.use(corsMiddleware);
 
-const corsOptions = {
-  origin: function (origin, callback) {
-    console.log(`CORS request from origin: ${origin}`);
-    if (allowedOrigins.includes(origin) || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true
-};
-
-// Middlewares
-app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
