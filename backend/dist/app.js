@@ -9,7 +9,7 @@ const app = express();
 const isDevelopment = process.env.NODE_ENV !== 'production';
 // Configure CORS options
 app.use(cors({
-    origin: isDevelopment ? "http://localhost:5173" : "https://fitsgpt.com",
+    origin: isDevelopment ? "http://localhost:5173" : "https://fit-gpt-frontend.onrender.com",
     credentials: true
 }));
 app.use(express.json());
