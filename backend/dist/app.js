@@ -3,7 +3,7 @@ import { config } from 'dotenv';
 import morgan from 'morgan';
 import appRouter from './routes/index.js';
 import cookieParser from 'cookie-parser';
-const cors = require("cors");
+import cors from 'cors'
 config();
 const app = express();
 // Configure CORS options
