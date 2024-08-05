@@ -75,7 +75,7 @@ export const userSignup = async (
     await user.save();
 
     // create token and store cookie
-    res.cookie(COOKIE_NAME, {
+    res.clearCookie(COOKIE_NAME, {
       httpOnly: true,
       secure:true,
       sameSite: 'none',
@@ -126,7 +126,7 @@ export const userLogin = async (
       return res.status(403).send("Incorrect Password");
    }
    //Create token and store cookie
-   res.cookie(COOKIE_NAME,{
+   res.clearCookie(COOKIE_NAME,{
       httpOnly: true,
       
       secure:true,
@@ -200,7 +200,7 @@ export const userlogout = async (
    if(user._id.toString()!==res.locals.jwtData.id){
       return res.status(401).send("Permissons Did not Match");
    }
-   res.cookie(COOKIE_NAME,{
+   res.clearCookie(COOKIE_NAME,{
       httpOnly: true,
      domain: "fitsgpt.com",
      signed: true,
