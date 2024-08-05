@@ -8,11 +8,13 @@ import cors from 'cors';
 
 config();
 const app = express();
+const isDevelopment = process.env.NODE_ENV !== 'production';
+
 
 // Configure CORS options
 app.use(
   cors({
-    origin: "https://fit-gpt-frontend.onrender.com", 
+    origin: isDevelopment ? "http://localhost:5173" : "https://fit-gpt-frontend.onrender.com",
     credentials: true
   })
 );

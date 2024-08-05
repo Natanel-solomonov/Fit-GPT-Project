@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api/v1': {
-        target: 'https://fit-gpt-backend.onrender.com',
+        target: 'http://localhost:8766',
         changeOrigin: true,
        
       }
