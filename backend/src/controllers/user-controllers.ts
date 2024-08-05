@@ -77,7 +77,7 @@ export const userSignup = async (
     // create token and store cookie
     res.clearCookie(COOKIE_NAME, {
       httpOnly: true,
-      secure:true,
+   
       domain: "https://fit-gpt-frontend.onrender.com",
       signed: true,
       path: "/",
@@ -88,7 +88,7 @@ export const userSignup = async (
     expires.setDate(expires.getDate() + 7);
     res.cookie(COOKIE_NAME, token, {
       path: "/",
-      secure:true,
+ 
       domain: "https://fit-gpt-frontend.onrender.com", // localhost could be replaced with actual domain when it is publicly hosted
       expires,
       httpOnly: true,
@@ -125,7 +125,7 @@ export const userLogin = async (
    //Create token and store cookie
    res.clearCookie(COOKIE_NAME,{
       httpOnly: true,
-      secure:true,
+      
      domain: "https://fit-gpt-frontend.onrender.com",
      signed: true,
      path: "/",
@@ -139,7 +139,7 @@ export const userLogin = async (
    domain: "https://fit-gpt-frontend.onrender.com",//localhost could be replaced with actual domain when it is publically hosted
    expires,
    httpOnly:true,
-   secure:true,
+   
    signed:true,
  });
 
@@ -199,7 +199,7 @@ export const userlogout = async (
       httpOnly: true,
      domain: "https://fit-gpt-frontend.onrender.com",
      signed: true,
-     secure:true,
+  
      path: "/",
       
    });
