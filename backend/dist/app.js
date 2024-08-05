@@ -7,25 +7,9 @@ import cors from 'cors';
 config();
 const app = express();
 const isDevelopment = process.env.NODE_ENV !== 'production';
-// Define allowed origins
-const allowedOrigins = [
-    "http://localhost:5173",
-    "https://fit-gpt-frontend.onrender.com",
-    "https://www.fitsgpt.com"
-];
-// Configure CORS options dynamically
+// Configure CORS options
 app.use(cors({
-    origin: function (origin, callback) {
-        // Allow requests with no origin (like mobile apps or curl requests)
-        if (!origin)
-            return callback(null, true);
-        if (allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true);
-        }
-        else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
+    origin: isDevelopment ? "http://localhost:5173" : "https://fitsgpt.com",
     credentials: true
 }));
 app.use(express.json());
