@@ -1,5 +1,6 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
+axios.defaults.withCredentials = true;
 
 interface FormData {
   height: string;
