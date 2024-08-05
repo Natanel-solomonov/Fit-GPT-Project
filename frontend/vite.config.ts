@@ -8,7 +8,7 @@ export default defineConfig({
       '/api/v1': {
         target: 'https://fit-gpt-backend.onrender.com',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/v1/, '')
+       
       }
     }
   },
