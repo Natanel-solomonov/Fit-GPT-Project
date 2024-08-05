@@ -12,7 +12,8 @@ const app = express();
 // Configure CORS options
 app.use(
   cors({
-    origin: "https://fit-gpt-frontend.onrender.com" // Fixed typo: "orgin" to "origin"
+    origin: "https://fit-gpt-frontend.onrender.com", 
+    credentials: true
   })
 );
 
