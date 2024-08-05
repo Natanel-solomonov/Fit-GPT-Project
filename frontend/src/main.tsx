@@ -9,7 +9,7 @@ import{Toaster} from 'react-hot-toast'
 import axios from "axios"
 
 const isDevelopment = import.meta.env.DEV;
-axios.defaults.baseURL = isDevelopment ? 'http://localhost:8766/api/v1' : '/api/v1';
+axios.defaults.baseURL = isDevelopment ? 'http://localhost:8766/api/v1' : 'https://fit-gpt-backend.onrender.com/api/v1';
 axios.defaults.withCredentials= true;
 
 const theme = createTheme({
