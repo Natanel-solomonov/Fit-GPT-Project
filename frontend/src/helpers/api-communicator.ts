@@ -1,7 +1,7 @@
-import axios from 'axios';
-import toast from 'react-hot-toast';
-axios.defaults.withCredentials = true;
+// helpers/api-communicator.ts
 
+import axios from 'axios';
+import toast from 'react-hot-toast'
 interface FormData {
   height: string;
   weight: string;
@@ -35,7 +35,7 @@ const convertFormDataToLiftingPlanData = (formData: FormData): LiftingPlanData =
 };
 
 export const loginUser = async (email: string, password: string) => {
-  const res = await axios.post("/user/login", { email, password }, { withCredentials: true });
+  const res = await axios.post("/user/login", { email, password });
   if (res.status !== 201 && res.status !== 200) {
     throw new Error("Unable to login");
   }
@@ -45,7 +45,7 @@ export const loginUser = async (email: string, password: string) => {
 };
 
 export const signupUser = async (name: string, email: string, password: string) => {
-  const res = await axios.post("/user/signup", { name, email, password }, { withCredentials: true });
+  const res = await axios.post("/user/signup", { name, email, password });
   if (res.status !== 201 && res.status !== 200) {
     throw new Error("Unable to Signup");
   }
@@ -55,21 +55,17 @@ export const signupUser = async (name: string, email: string, password: string) 
 };
 
 export const checkAuthStatus = async () => {
-  try {
-    const response = await axios.get('/user/auth-status', { withCredentials: true });
-    return response.data;
-  } catch (error) {
-     //@ts-ignore
-    if (error.response && error.response.status === 401) {
-      return null; // User is not authenticated
-    }
-    throw error; // Handle other errors
+  const res = await axios.get("/user/auth-status");
+  if (res.status !== 201 && res.status !== 200) {
+    throw new Error("Unable to Authenticate");
   }
+  const data = await res.data;
+  return data;
 };
 
 export const sendChatRequest = async (message: string) => {
   try {
-    const res = await axios.post("/chat/new", { message }, { withCredentials: true });
+    const res = await axios.post("/chat/new", { message });
     if (res.status !== 201 && res.status !== 200) {
       throw new Error("Unable to send chat");
     }
@@ -82,7 +78,7 @@ export const sendChatRequest = async (message: string) => {
 };
 
 export const getUserChats = async () => {
-  const res = await axios.get("/chat/all-chats", { withCredentials: true });
+  const res = await axios.get("/chat/all-chats");
   if (res.status !== 201 && res.status !== 200) {
     throw new Error("Unable to send chat");
   }
@@ -91,7 +87,7 @@ export const getUserChats = async () => {
 };
 
 export const deleteUserChats = async () => {
-  const res = await axios.delete("/chat/delete", { withCredentials: true });
+  const res = await axios.delete("/chat/delete");
   if (res.status !== 201 && res.status !== 200) {
     throw new Error("Unable to delete chat");
   }
@@ -100,7 +96,7 @@ export const deleteUserChats = async () => {
 };
 
 export const logoutUser = async () => {
-  const res = await axios.get("/user/logout", { withCredentials: true });
+  const res = await axios.get("/user/logout");
   if (res.status !== 201 && res.status !== 200) {
     throw new Error("Unable to logout");
   }
@@ -110,7 +106,7 @@ export const logoutUser = async () => {
 
 export const saveVideo = async (videoId: string) => {
   try {
-    const res = await axios.post("/chat/saved-videos", { videoId }, { withCredentials: true });
+    const res = await axios.post("/chat/saved-videos", { videoId });
     if (res.status !== 201 && res.status !== 200) {
       throw new Error("Unable to save video");
     }
@@ -123,7 +119,7 @@ export const saveVideo = async (videoId: string) => {
 
 export const getSavedVideos = async () => {
   try {
-    const res = await axios.get("/chat/saved-videos", { withCredentials: true });
+    const res = await axios.get("/chat/saved-videos");
     if (res.status !== 201 && res.status !== 200) {
       throw new Error("Unable to fetch saved videos");
     }
@@ -146,7 +142,6 @@ export const createLiftingPlan = async (formData: FormData) => {
         'Content-Type': 'application/json',
         'Cache-Control': 'no-cache',
       },
-      withCredentials: true,
     });
 
     if (response.status !== 201 && response.status !== 200) {
@@ -166,7 +161,6 @@ export const getLiftingPlan = async () => {
       headers: {
         'Cache-Control': 'no-cache',
       },
-      withCredentials: true,
     });
     if (res.status !== 201 && res.status !== 200) {
       throw new Error("Unable to retrieve lifting plan");
@@ -177,10 +171,9 @@ export const getLiftingPlan = async () => {
     throw error;
   }
 };
-
 export const saveLiftingPlan = async (liftingPlanId: string) => {
   try {
-    const res = await axios.post("/user/save-lifting-plan", { liftingPlanId }, { withCredentials: true });
+    const res = await axios.post("/user/save-lifting-plan", { liftingPlanId });
     if (res.status !== 201 && res.status !== 200) {
       throw new Error("Unable to save lifting plan");
     }
@@ -190,10 +183,9 @@ export const saveLiftingPlan = async (liftingPlanId: string) => {
     throw error;
   }
 };
-
 export const getSavedLiftingPlans = async () => {
   try {
-    const res = await axios.get("/user/saved-lifting-plans", { withCredentials: true });
+    const res = await axios.get("/user/saved-lifting-plans");
     if (res.status !== 200) {
       throw new Error("Unable to retrieve saved lifting plans");
     }
@@ -203,14 +195,12 @@ export const getSavedLiftingPlans = async () => {
     throw error;
   }
 };
-
 export const clearAllSavedLiftingPlans = async () => {
-  await axios.delete('/user/clear-saved-lifting-plans', { withCredentials: true });
+  await axios.delete('/user/clear-saved-lifting-plans');
 };
-
 export const deleteSavedLiftingPlan = async (liftingPlanId: string) => {
   try {
-    const response = await axios.delete(`/user/delete-saved-lifting-plan/${liftingPlanId}`, { withCredentials: true });
+    const response = await axios.delete(`/user/delete-saved-lifting-plan/${liftingPlanId}`);
     if (response.status === 200) {
       toast.success('Lifting plan deleted successfully');
       return response.data;
@@ -225,10 +215,9 @@ export const deleteSavedLiftingPlan = async (liftingPlanId: string) => {
     return null;
   }
 };
-
 export const getAboutDeveloper = async () => {
   try {
-    const res = await axios.get("/user/about-developer", { withCredentials: true });
+    const res = await axios.get("/user/about-developer");
     if (res.status !== 200) {
       throw new Error("Unable to retrieve About the Developer page");
     }

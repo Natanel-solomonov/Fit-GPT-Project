@@ -26,8 +26,5 @@ app.use(morgan('dev'));
 
 app.use('/api/v1', appRouter);
 
-app.get('/test-cors', (req, res) => {
-  res.json({ message: 'CORS configuration is working' });
-});
 
 export default app;
