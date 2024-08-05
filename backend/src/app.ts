@@ -14,7 +14,7 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 // Configure CORS options
 app.use(
   cors({
-    origin: isDevelopment ? "http://localhost:5173" : "https://fit-gpt-frontend.onrender.com",
+    origin: isDevelopment ? "http://localhost:5173" : "https://app_frontend.fitsgpt.com",
     credentials: true
   })
 );
