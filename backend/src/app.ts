@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import appRouter from './routes/index.js';
 import cookieParser from 'cookie-parser';
 const cors = require("cors")
+import bodyParser from 'body-parser';
 
 config();
 const app = express();
@@ -15,6 +16,8 @@ app.use(
     origin: "https://fit-gpt-frontend.onrender.com"
   })
 )
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
