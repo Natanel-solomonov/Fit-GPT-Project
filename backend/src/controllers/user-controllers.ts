@@ -78,7 +78,7 @@ export const userSignup = async (
     res.clearCookie(COOKIE_NAME, {
       httpOnly: true,
    
-      domain: "localhost",
+      domain: "fit-gpt-frontend.onrender",
       signed: true,
       path: "/",
     });
@@ -89,7 +89,7 @@ export const userSignup = async (
     res.cookie(COOKIE_NAME, token, {
       path: "/",
  
-      domain: "localhost", // localhost could be replaced with actual domain when it is publicly hosted
+      domain: "fit-gpt-frontend.onrender", // localhost could be replaced with actual domain when it is publicly hosted
       expires,
       httpOnly: true,
       signed: true,
@@ -126,7 +126,7 @@ export const userLogin = async (
    res.clearCookie(COOKIE_NAME,{
       httpOnly: true,
       
-     domain: "localhost",
+     domain: "fit-gpt-frontend.onrender",
      signed: true,
      path: "/",
       
@@ -136,7 +136,7 @@ export const userLogin = async (
    expires.setDate(expires.getDate()+7);
    res.cookie(COOKIE_NAME,token,
    {path:"/", 
-   domain: "localhost",//localhost could be replaced with actual domain when it is publically hosted
+   domain: "fit-gpt-frontend.onrender",//localhost could be replaced with actual domain when it is publically hosted
    expires,
    httpOnly:true,
    
@@ -197,7 +197,7 @@ export const userlogout = async (
    }
    res.clearCookie(COOKIE_NAME,{
       httpOnly: true,
-     domain: "localhost",
+     domain: "fit-gpt-frontend.onrender",
      signed: true,
   
      path: "/",
