@@ -7,16 +7,13 @@ export default defineConfig({
   server: {
     proxy: {
       '/api/v1': {
+        
         target: 'https://fit-gpt-backend.onrender.com',
         changeOrigin: true,
-        secure: true, // Use true if your backend is using HTTPS
-        headers: {
-          // Example headers that might help with forwarding credentials
-          'Access-Control-Allow-Origin': 'https://fit-gpt-frontend.onrender.com',
-          'Access-Control-Allow-Credentials': 'true',
-        },
-      },
-    },
+        
+       
+      }
+    }
   },
   plugins: [react()],
-});
+})
