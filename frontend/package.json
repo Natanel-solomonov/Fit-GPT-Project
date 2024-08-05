@@ -20,8 +20,11 @@
     "react-icons": "^5.2.1",
     "react-router-dom": "^6.25.1",
     "react-type-animation": "^3.2.0",
+<<<<<<< HEAD
     "react-share": "*" ,
     "react-type-animation": "^3.2.0",
+=======
+>>>>>>> ed915ec91b55762e9726fdb21bd7f5d6bdbbf3b4
     "react-share": "*" 
     
   },
