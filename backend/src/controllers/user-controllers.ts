@@ -79,7 +79,7 @@ export const userSignup = async (
       httpOnly: true,
       secure:true,
       sameSite: 'none',
-      domain: "https://fit-gpt-frontend.onrender.com",
+      domain: "fit-gpt-frontend.onrender.com",
       signed: true,
       path: "/",
     });
@@ -92,7 +92,7 @@ export const userSignup = async (
  
       secure:true,
       sameSite: 'none',
-      domain: "https://fit-gpt-frontend.onrender.com",
+      domain: "fit-gpt-frontend.onrender.com",
       expires,
       httpOnly: true,
       signed: true,
@@ -131,7 +131,7 @@ export const userLogin = async (
       
       secure:true,
       sameSite: 'none',
-      domain: "https://fit-gpt-frontend.onrender.com",
+      domain: "fit-gpt-frontend.onrender.com",
      signed: true,
      path: "/",
       
@@ -143,7 +143,7 @@ export const userLogin = async (
    {path:"/", 
    secure:true,
       sameSite: 'none',
-      domain: "https://fit-gpt-frontend.onrender.com",
+      domain: "fit-gpt-frontend.onrender.com",
    expires,
    httpOnly:true,
    
@@ -206,7 +206,7 @@ export const userlogout = async (
       httpOnly: true,
       secure:true,
       sameSite: 'none',
-      domain: "https://fit-gpt-frontend.onrender.com",
+      domain: "fit-gpt-frontend.onrender.com",
      signed: true,
   
      path: "/",

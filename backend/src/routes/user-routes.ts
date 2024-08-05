@@ -18,15 +18,15 @@ const noCache = (req, res, next) => {
 userRoutes.get("/",getAllUsers);
 userRoutes.post("/signup",validate(signupValidator),userSignup);
 userRoutes.post("/login",validate(loginValidator),userLogin);
-userRoutes.get("/auth-status", verifyUser);
-userRoutes.get("/logout", userlogout);
+userRoutes.get("/auth-status",verifyToken, verifyUser);
+userRoutes.get("/logout",verifyToken, userlogout);
 
 //lifting plan routes
-userRoutes.post('/lifting-plans', noCache, createLiftingPlan)
-userRoutes.get('/lifting-plan-response',noCache, getLiftingPlan); 
-userRoutes.post('/save-lifting-plan', noCache, addSavedLiftingPlan)
-userRoutes.get('/saved-lifting-plans',noCache, getAllSavedLiftingPlans); 
-userRoutes.delete('/clear-saved-lifting-plans', noCache, clearAllSavedLiftingPlans)
+userRoutes.post('/lifting-plans', verifyToken, noCache, createLiftingPlan)
+userRoutes.get('/lifting-plan-response', verifyToken,noCache, getLiftingPlan); 
+userRoutes.post('/save-lifting-plan', verifyToken, noCache, addSavedLiftingPlan)
+userRoutes.get('/saved-lifting-plans', verifyToken,noCache, getAllSavedLiftingPlans); 
+userRoutes.delete('/clear-saved-lifting-plans', verifyToken, noCache, clearAllSavedLiftingPlans)
 
 
 //developer route 
