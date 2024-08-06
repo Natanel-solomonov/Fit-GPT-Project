@@ -142,7 +142,7 @@ const Chat = () => {
             You can ask any questions related to Nutrition, Fitness, Health, Wellness, Sports etc
             <br />
             <div style={{ textAlign: 'center' }}>
-              Example: How do I do a proper push-up?
+              Example: How do I do a proper Push Up?
             </div>
           </Typography>
           <Button
