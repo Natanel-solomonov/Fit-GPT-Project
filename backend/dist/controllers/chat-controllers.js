@@ -500,7 +500,7 @@ export const generateChatCompletion = async (req, res, next) => {
         if (!containsFitnessKeyword) {
             const warningMessage = {
                 role: "assistant",
-                content: "Hmmm, I am not trained to answer your question as it does not seem to be related to fitness or health. If this is a mistake, I apologize. Try asking something else."
+                content: "Hmmm, I am not trained to answer your question as it does not seem to be related to fitness or health.  If this is a mistake, I apologize. Try asking something else. Often times an input may include a speling or grammer mistakae, check your input and try again "
             };
             user.chats.push(warningMessage);
             await user.save();
