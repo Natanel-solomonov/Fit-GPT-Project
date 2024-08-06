@@ -9,7 +9,7 @@ const TypingAnimation =() =>{
           1000, // wait 1s before replacing "Mice" with "Hamsters"
           '',
           1000,
-          'Unlock Your Potential',
+          'Get Personal Video Suggesitons and Personalized Fitness Plans',
           2000,
           'Your Fitness Journey Starts Here',
           1500,

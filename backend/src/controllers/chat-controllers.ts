@@ -160,7 +160,7 @@ const fitnessKeywords = [
   "Burpee", "Plank", "Mountain climber", "Dips", "Leg raise", 
   "Sit-up", "Crunch", "Jumping jack", "Pistol squat", "Handstand", 
   "Handstand push-up", "Bridge", "Superman", "High knees", "Tuck jump", 
-  "L-sit", "Muscle-up", "Inverted row", "Russian twist", "Side plank", 
+  "L sit", "Muscle up", "Inverted row", "Russian twist", "Side plank", 
   "Hollow body hold", "Flutter kick", "Spiderman push-up", "Diamond push-up", "Archer push-up", 
   "Clap push-up", "Box jump", "Bear crawl", "Single-leg deadlift", "V-up", 
   "Dragon flag", "Front lever", "Back lever", "Human flag", "Planche", 
@@ -474,6 +474,17 @@ const fitnessKeywords = [
   "plank variations", "plank types", "plank exercises", "plank workouts",
   "side plank"
 ];
+const preprocess = (text: string) => text.toLowerCase().replace(/[-\s]/g, '');
+
+const findKeywordMatch = (message: string, keywords: string[]) => {
+  const preprocessedMessage = preprocess(message);
+  for (const keyword of keywords) {
+    if (preprocessedMessage.includes(preprocess(keyword))) {
+      return keyword;
+    }
+  }
+  return null;
+};
 
 export const generateChatCompletion = async (req: Request, res: Response, next: NextFunction) => {
   const { message } = req.body;
@@ -491,11 +502,10 @@ export const generateChatCompletion = async (req: Request, res: Response, next: 
     chats.push({ content: message, role: "user" });
     user.chats.push({ content: message, role: "user" });
 
-    const preprocess = (text: string) => text.toLowerCase().replace(/[-\s]/g, '');
-    const preprocessedMessage = preprocess(message);
+    const preprocessedMessage = message.toLowerCase();
 
     const containsFitnessKeyword = fitnessKeywords.some(keyword =>
-      preprocessedMessage.includes(preprocess(keyword))
+      preprocessedMessage.includes(keyword.toLowerCase())
     );
 
     if (!containsFitnessKeyword) {
@@ -517,7 +527,7 @@ export const generateChatCompletion = async (req: Request, res: Response, next: 
 
     user.chats.push(chatResponse.choices[0].message);
 
-    const matchedKeyword = fitnessKeywords.find(keyword => preprocessedMessage.includes(preprocess(keyword)));
+    const matchedKeyword = findKeywordMatch(preprocessedMessage, fitnessKeywords);
 
     if (matchedKeyword) {
       const videos = await searchYouTube(matchedKeyword);

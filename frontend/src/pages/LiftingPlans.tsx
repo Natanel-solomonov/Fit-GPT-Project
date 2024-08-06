@@ -31,7 +31,25 @@ const weightliftingTerms = [
   "power snatch", "high pull", "snatch-grip high pull", "clean pull",
   "good morning", "seated good morning", "cable good morning", "banded good morning",
   "single-leg deadlift", "single-leg Romanian deadlift", "pistol squat", "Bulgarian split squat",
-  "cable fly", "low cable fly", "high cable fly", "cable crossover"
+  "cable fly", "low cable fly", "high cable fly", "cable crossover","barbell squat", "barbell front squat", "barbell overhead squat",
+  "barbell lunge", "barbell step-up", "barbell hip thrust", 
+  "barbell glute bridge", "barbell bent-over row", "barbell clean",
+  "barbell snatch", "barbell thruster", "barbell jerk",
+  "barbell high pull", "barbell low pull", "barbell rack pull",
+  "barbell shoulder press", "barbell push press", "barbell bench pull",
+  "barbell chest press", "barbell incline chest press", "barbell decline chest press",
+  "barbell pullover", "barbell curl", "barbell reverse curl",
+  "barbell skull crusher", "barbell tricep extension", "barbell overhead tricep extension",
+  "barbell shrug", "barbell upright row", "barbell front raise",
+  "barbell deadlift", "barbell sumo deadlift", "barbell Romanian deadlift",
+  "barbell stiff-leg deadlift", "barbell calf raise", "barbell wrist curl",
+  "barbell reverse wrist curl", "barbell hack squat", "barbell zercher squat",
+  "barbell split squat", "barbell good morning", "barbell single-arm row",
+  "barbell landmine press", "barbell landmine row", "barbell landmine squat",
+  "barbell landmine rotational twist", "barbell landmine single-leg deadlift",
+  "barbell landmine shoulder press", "barbell landmine clean and press",
+  "trap bar deadlift", "trap bar squat", "trap bar farmer's walk",
+  "trap bar jump shrug", "trap bar high pull"
 ];
 
 

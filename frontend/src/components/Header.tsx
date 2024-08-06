@@ -1,4 +1,3 @@
-
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Logo from "./shared/Logo";
@@ -18,20 +17,8 @@ const Header = () => {
             <>
               <NavigationLink
                 bg="gold"
-                to="/about-developer"
-                text="About the Developer"
-                textColor="black"
-              />
-              <NavigationLink
-                bg="gold"
-                to="/saved-plans"
-                text="Saved Lifting Plans"
-                textColor="black"
-              />
-              <NavigationLink
-                bg="gold"
-                to="/lifting-plans"
-                text="Lifting Plans"
+                to="/chat"
+                text="Chat"
                 textColor="black"
               />
               <NavigationLink
@@ -42,8 +29,20 @@ const Header = () => {
               />
               <NavigationLink
                 bg="gold"
-                to="/chat"
-                text="Go To Chat"
+                to="/lifting-plans"
+                text="Lifting Plans"
+                textColor="black"
+              />
+              <NavigationLink
+                bg="gold"
+                to="/saved-plans"
+                text="Saved Lifting Plans"
+                textColor="black"
+              />
+              <NavigationLink
+                bg="gold"
+                to="/about-developer"
+                text="About the Developer"
                 textColor="black"
               />
               <NavigationLink

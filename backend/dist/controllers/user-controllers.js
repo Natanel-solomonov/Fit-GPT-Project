@@ -32,7 +32,25 @@ const weightliftingTerms = [
     "power snatch", "high pull", "snatch-grip high pull", "clean pull",
     "good morning", "seated good morning", "cable good morning", "banded good morning",
     "single-leg deadlift", "single-leg Romanian deadlift", "pistol squat", "Bulgarian split squat",
-    "cable fly", "low cable fly", "high cable fly", "cable crossover"
+    "cable fly", "low cable fly", "high cable fly", "cable crossover", "barbell squat", "barbell front squat", "barbell overhead squat",
+    "barbell lunge", "barbell step-up", "barbell hip thrust",
+    "barbell glute bridge", "barbell bent-over row", "barbell clean",
+    "barbell snatch", "barbell thruster", "barbell jerk",
+    "barbell high pull", "barbell low pull", "barbell rack pull",
+    "barbell shoulder press", "barbell push press", "barbell bench pull",
+    "barbell chest press", "barbell incline chest press", "barbell decline chest press",
+    "barbell pullover", "barbell curl", "barbell reverse curl",
+    "barbell skull crusher", "barbell tricep extension", "barbell overhead tricep extension",
+    "barbell shrug", "barbell upright row", "barbell front raise",
+    "barbell deadlift", "barbell sumo deadlift", "barbell Romanian deadlift",
+    "barbell stiff-leg deadlift", "barbell calf raise", "barbell wrist curl",
+    "barbell reverse wrist curl", "barbell hack squat", "barbell zercher squat",
+    "barbell split squat", "barbell good morning", "barbell single-arm row",
+    "barbell landmine press", "barbell landmine row", "barbell landmine squat",
+    "barbell landmine rotational twist", "barbell landmine single-leg deadlift",
+    "barbell landmine shoulder press", "barbell landmine clean and press",
+    "trap bar deadlift", "trap bar squat", "trap bar farmer's walk",
+    "trap bar jump shrug", "trap bar high pull"
 ];
 export const getAllUsers = async (req, res, next) => {
     try {
@@ -360,7 +378,59 @@ const auxiliaryExercisesMapping = {
     'cable fly': ['Chest Fly', 'Bench Press', 'Incline Bench Press', 'Dumbbell Bench Press', 'Push-Ups', 'Tricep Dips', 'Incline Dumbbell Fly', 'Pec Deck Machine'],
     'low cable fly': ['Chest Fly', 'Bench Press', 'Incline Bench Press', 'Dumbbell Bench Press', 'Push-Ups', 'Tricep Dips', 'Incline Dumbbell Fly', 'Pec Deck Machine'],
     'high cable fly': ['Chest Fly', 'Bench Press', 'Incline Bench Press', 'Dumbbell Bench Press', 'Push-Ups', 'Tricep Dips', 'Incline Dumbbell Fly', 'Pec Deck Machine'],
-    'cable crossover': ['Chest Fly', 'Bench Press', 'Incline Bench Press', 'Dumbbell Bench Press', 'Push-Ups', 'Tricep Dips', 'Incline Dumbbell Fly', 'Pec Deck Machine']
+    'cable crossover': ['Chest Fly', 'Bench Press', 'Incline Bench Press', 'Dumbbell Bench Press', 'Push-Ups', 'Tricep Dips', 'Incline Dumbbell Fly', 'Pec Deck Machine'],
+    'barbell squat': ['Leg Press', 'Lunges', 'Step-Ups', 'Leg Extensions', 'Calf Raises', 'Romanian Deadlift', 'Hamstring Curls', 'Goblet Squats'],
+    'barbell front squat': ['Leg Press', 'Lunges', 'Step-Ups', 'Leg Extensions', 'Calf Raises', 'Romanian Deadlift', 'Hamstring Curls', 'Goblet Squats'],
+    'barbell overhead squat': ['Leg Press', 'Lunges', 'Step-Ups', 'Leg Extensions', 'Calf Raises', 'Romanian Deadlift', 'Hamstring Curls', 'Goblet Squats'],
+    'barbell lunge': ['Step-Ups', 'Bulgarian Split Squat', 'Leg Press', 'Leg Extensions', 'Calf Raises', 'Hamstring Curls', 'Romanian Deadlift', 'Goblet Squats'],
+    'barbell step-up': ['Lunges', 'Bulgarian Split Squat', 'Leg Press', 'Leg Extensions', 'Calf Raises', 'Hamstring Curls', 'Romanian Deadlift', 'Goblet Squats'],
+    'barbell hip thrust': ['Glute Bridges', 'Romanian Deadlift', 'Good Mornings', 'Single-Leg Deadlifts', 'Leg Press', 'Step-Ups', 'Hamstring Curls', 'Calf Raises'],
+    'barbell glute bridge': ['Hip Thrusts', 'Romanian Deadlift', 'Good Mornings', 'Single-Leg Deadlifts', 'Leg Press', 'Step-Ups', 'Hamstring Curls', 'Calf Raises'],
+    'barbell bent-over row': ['One-Arm Dumbbell Row', 'Seated Row', 'T-Bar Row', 'Lat Pulldown', 'Face Pull', 'Rear Delt Fly', 'Shrugs', 'Pull-Up'],
+    'barbell clean': ['Power Clean', 'Hang Clean', 'Front Squat', 'Romanian Deadlift', 'Overhead Squat', 'Push Press', 'High Pull', 'Snatch'],
+    'barbell snatch': ['Power Snatch', 'High Pull', 'Overhead Squat', 'Front Squat', 'Romanian Deadlift', 'Clean and Press', 'Hang Clean', 'Snatch-Grip High Pull'],
+    'barbell thruster': ['Push Press', 'Front Squat', 'Overhead Squat', 'Romanian Deadlift', 'High Pull', 'Clean and Press', 'Hang Clean', 'Snatch'],
+    'barbell jerk': ['Push Press', 'Front Squat', 'Overhead Squat', 'Romanian Deadlift', 'High Pull', 'Clean and Press', 'Hang Clean', 'Snatch'],
+    'barbell high pull': ['Power Clean', 'Hang Clean', 'Snatch', 'Front Squat', 'Romanian Deadlift', 'Clean and Press', 'Snatch-Grip High Pull', 'Overhead Squat'],
+    'barbell low pull': ['Power Clean', 'Hang Clean', 'Snatch', 'Front Squat', 'Romanian Deadlift', 'Clean and Press', 'Snatch-Grip High Pull', 'Overhead Squat'],
+    'barbell rack pull': ['Deadlift', 'Romanian Deadlift', 'Good Mornings', 'Glute Bridges', 'Hip Thrusts', 'Back Extensions', 'Shrugs', 'Kettlebell Swings'],
+    'barbell shoulder press': ['Dumbbell Shoulder Press', 'Arnold Press', 'Lateral Raise', 'Front Raise', 'Rear Delt Fly', 'Push Press', 'Military Press', 'Seated Shoulder Press'],
+    'barbell push press': ['Shoulder Press', 'Front Squat', 'Overhead Squat', 'Romanian Deadlift', 'High Pull', 'Clean and Press', 'Hang Clean', 'Snatch'],
+    'barbell bench pull': ['Bent-Over Row', 'One-Arm Dumbbell Row', 'Seated Row', 'Lat Pulldown', 'Face Pull', 'Rear Delt Fly', 'Shrugs', 'Pull-Up'],
+    'barbell chest press': ['Dumbbell Bench Press', 'Incline Bench Press', 'Decline Bench Press', 'Chest Fly', 'Push-Up', 'Cable Chest Press', 'Pec Deck', 'Dips'],
+    'barbell incline chest press': ['Incline Dumbbell Press', 'Incline Chest Fly', 'Push-Up', 'Cable Chest Press', 'Pec Deck', 'Dips', 'Chest Fly', 'Chest Press Machine'],
+    'barbell decline chest press': ['Decline Dumbbell Press', 'Decline Chest Fly', 'Push-Up', 'Cable Chest Press', 'Pec Deck', 'Dips', 'Chest Fly', 'Chest Press Machine'],
+    'barbell pullover': ['Dumbbell Pullover', 'Lat Pulldown', 'Straight-Arm Pulldown', 'Chest Fly', 'Chest Press', 'Tricep Extensions', 'Pull-Up', 'Seated Row'],
+    'barbell reverse curl': ['Reverse Grip Curl', 'Hammer Curl', 'Wrist Curl', 'Zottman Curl', 'Cable Curl', 'Concentration Curl', 'Spider Curl', 'EZ Bar Curl'],
+    'barbell skull crusher': ['Tricep Extension', 'Overhead Tricep Extension', 'Dips', 'Close-Grip Bench Press', 'Cable Tricep Extension', 'Tricep Kickbacks', 'Tricep Pushdowns', 'Bench Dips'],
+    'barbell tricep extension': ['Skull Crusher', 'Overhead Tricep Extension', 'Dips', 'Close-Grip Bench Press', 'Cable Tricep Extension', 'Tricep Kickbacks', 'Tricep Pushdowns', 'Bench Dips'],
+    'barbell overhead tricep extension': ['Skull Crusher', 'Tricep Extension', 'Dips', 'Close-Grip Bench Press', 'Cable Tricep Extension', 'Tricep Kickbacks', 'Tricep Pushdowns', 'Bench Dips'],
+    'barbell shrug': ['Dumbbell Shrug', 'Upright Row', 'Face Pull', 'Trap Raise', 'High Pull', 'Deadlift', 'Farmers Walk', 'Kettlebell Shrug'],
+    'barbell upright row': ['Dumbbell Upright Row', 'Face Pull', 'Lateral Raise', 'Shrug', 'High Pull', 'Bent-Over Row', 'Lat Pulldown', 'Pull-Up'],
+    'barbell front raise': ['Dumbbell Front Raise', 'Cable Front Raise', 'Lateral Raise', 'Shrug', 'Upright Row', 'Shoulder Press', 'Arnold Press', 'Military Press'],
+    'barbell deadlift': ['Romanian Deadlift', 'Good Mornings', 'Glute Bridges', 'Hip Thrusts', 'Back Extensions', 'Shrugs', 'Kettlebell Swings', 'Trap Bar Deadlift'],
+    'barbell sumo deadlift': ['Romanian Deadlift', 'Good Mornings', 'Glute Bridges', 'Hip Thrusts', 'Back Extensions', 'Shrugs', 'Kettlebell Swings', 'Trap Bar Deadlift'],
+    'barbell Romanian deadlift': ['Good Mornings', 'Back Extensions', 'Single-Leg Deadlifts', 'Hip Thrusts', 'Glute Bridges', 'Hamstring Curls', 'Kettlebell Swings', 'Cable Good Morning'],
+    'barbell stiff-leg deadlift': ['Good Mornings', 'Back Extensions', 'Single-Leg Deadlifts', 'Hip Thrusts', 'Glute Bridges', 'Hamstring Curls', 'Kettlebell Swings', 'Cable Good Morning'],
+    'barbell calf raise': ['Seated Calf Raise', 'Donkey Calf Raise', 'Leg Press Calf Raise', 'Standing Calf Raise', 'Single-Leg Calf Raise', 'Smith Machine Calf Raise', 'Farmers Walk', 'Jump Rope'],
+    'barbell wrist curl': ['Reverse Wrist Curl', 'Hammer Curl', 'Zottman Curl', 'Reverse Grip Curl', 'Concentration Curl', 'Spider Curl', 'Cable Curl', 'Preacher Curl'],
+    'barbell reverse wrist curl': ['Wrist Curl', 'Hammer Curl', 'Zottman Curl', 'Reverse Grip Curl', 'Concentration Curl', 'Spider Curl', 'Cable Curl', 'Preacher Curl'],
+    'barbell hack squat': ['Leg Press', 'Lunges', 'Step-Ups', 'Leg Extensions', 'Calf Raises', 'Romanian Deadlift', 'Hamstring Curls', 'Goblet Squats'],
+    'barbell zercher squat': ['Leg Press', 'Lunges', 'Step-Ups', 'Leg Extensions', 'Calf Raises', 'Romanian Deadlift', 'Hamstring Curls', 'Goblet Squats'],
+    'barbell split squat': ['Lunges', 'Step-Ups', 'Hamstring Curls', 'Calf Raises', 'Goblet Squats', 'Leg Press', 'Single-Leg Deadlifts', 'Leg Extensions'],
+    'barbell good morning': ['Romanian Deadlift', 'Back Extensions', 'Single-Leg Deadlifts', 'Hip Thrusts', 'Glute Bridges', 'Hamstring Curls', 'Kettlebell Swings', 'Cable Good Morning'],
+    'barbell single-arm row': ['One-Arm Dumbbell Row', 'Seated Row', 'T-Bar Row', 'Lat Pulldown', 'Face Pull', 'Rear Delt Fly', 'Shrugs', 'Pull-Up'],
+    'barbell landmine press': ['Shoulder Press', 'Dumbbell Shoulder Press', 'Arnold Press', 'Lateral Raise', 'Front Raise', 'Rear Delt Fly', 'Push Press', 'Military Press'],
+    'barbell landmine row': ['One-Arm Dumbbell Row', 'Seated Row', 'T-Bar Row', 'Lat Pulldown', 'Face Pull', 'Rear Delt Fly', 'Shrugs', 'Pull-Up'],
+    'barbell landmine squat': ['Leg Press', 'Lunges', 'Step-Ups', 'Leg Extensions', 'Calf Raises', 'Romanian Deadlift', 'Hamstring Curls', 'Goblet Squats'],
+    'barbell landmine rotational twist': ['Russian Twists', 'Hanging Leg Raises', 'Plank', 'Medicine Ball Slam', 'Cable Woodchopper', 'Oblique Crunch', 'Side Plank', 'Bicycle Crunch'],
+    'barbell landmine single-leg deadlift': ['Single-Leg Deadlift', 'Romanian Deadlift', 'Good Mornings', 'Hip Thrusts', 'Glute Bridges', 'Leg Press', 'Step-Ups', 'Hamstring Curls'],
+    'barbell landmine shoulder press': ['Shoulder Press', 'Dumbbell Shoulder Press', 'Arnold Press', 'Lateral Raise', 'Front Raise', 'Rear Delt Fly', 'Push Press', 'Military Press'],
+    'barbell landmine clean and press': ['Power Clean', 'Hang Clean', 'Push Press', 'Overhead Squat', 'Front Squat', 'Deadlift', 'Romanian Deadlift', 'Snatch'],
+    'trap bar squat': ['Leg Press', 'Lunges', 'Step-Ups', 'Leg Extensions', 'Calf Raises', 'Romanian Deadlift', 'Hamstring Curls', 'Goblet Squats'],
+    'trap bar farmer\'s walk': ['Farmer\'s Walk', 'Shrugs', 'Deadlift', 'Suitcase Carry', 'Trap Raise', 'Kettlebell Swing', 'Single-Leg Deadlift', 'Standing Calf Raise'],
+    'trap bar jump shrug': ['Power Clean', 'Hang Clean', 'High Pull', 'Romanian Deadlift', 'Deadlift', 'Kettlebell Swing', 'Shrugs', 'Jump Squat'],
+    'trap bar high pull': ['Power Clean', 'Hang Clean', 'Snatch', 'Front Squat', 'Romanian Deadlift', 'Clean and Press', 'Snatch-Grip High Pull', 'Overhead Squat']
 };
 export const createLiftingPlan = async (req, res, next) => {
     const { height, weight, experienceLevel, gender, desiredExercise, targetWeight, numberOfWeeks } = req.body;
@@ -456,7 +526,8 @@ export const createLiftingPlan = async (req, res, next) => {
           - **Progressive Overload**: Gradually increase the weight you lift each week to continuously challenge your muscles.
           -Include a disclaimer that says it may take longer then  ${numberOfWeeks} weeks to acheive their goal, the above plan is just a 
           outline 
-          Generate the full multi-week plan using the above logic and structure.
+          Generate the full multi-week plan using the above logic and structure. Include in the disclaimer, that the user should always listen to 
+          their body first and deviate from the plan if they feel it is to much 
         `,
             },
         ];
