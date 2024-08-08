@@ -42,10 +42,10 @@ const fitnessKeywords = [
     "wheelchair sports", "sledge hockey", "sitting volleyball", "goalball", "boccia", "archery", "shooting", "powerlifting", "wheelchair racing",
     "handcycling", "para triathlon", "para rowing", "para swimming", "para cycling", "para equestrian", "para canoe", "para snowboarding",
     "para skiing", "fitness equipment", "dumbbells", "barbells", "kettlebells", "medicine balls", "stability balls", "resistance bands", "trx",
-    "battle ropes", "pull up bar", "dip station", "power rack", "squat rack", "bench", "plyo box", "treadmill", "elliptical", "stationary bike",
+    "battle ropes", "pull up bar", "dip station", "power rack", "squat rack", "bench", "plyo box", "treadmill", "elliptical", "stationary biker", "bike riding",
     "rower", "ski erg", "climbing machine", "stair climber", "jump rope", "heart rate monitor", "fitness tracker", "smartwatch", "fitness apps",
     "workout apps", "diet apps", "calorie counter", "macro tracker", "meal planner", "fitness community", "online coaching", "personal trainer",
-    "group fitness", "fitness classes", "workout buddy", "accountability partner", "fitness challenges", "fitness goals", "body composition",
+    "group fitness", "fitness classes", "workout buddy", "accountability partner", "fitness challenges", "fitness goals", "body composition", "biker",
     "body fat percentage", "BMI", "lean body mass", "muscle mass", "hydration levels", "inbody scan", "dexa scan", "skin calipers",
     "body tape measure", "progress photos", "fitness journal", "workout log", "training plan", "fitness goals", "short term goals", "long term goals",
     "SMART goals", "fitness assessment", "fitness test", "VO2 max", "lactate threshold", "anaerobic threshold", "metabolic rate", "resting metabolic rate",
@@ -471,11 +471,16 @@ const fitnessKeywords = [
     "plank variations", "plank types", "plank exercises", "plank workouts",
     "side plank"
 ];
-const preprocess = (text) => text.toLowerCase().replace(/[-\s]/g, '');
+const preprocessMessage = (text) => text.toLowerCase();
+// Sort keywords by length in descending order to prioritize longer phrases
+const sortedKeywords = fitnessKeywords.slice().sort((a, b) => b.length - a.length);
 const findKeywordMatch = (message, keywords) => {
-    const preprocessedMessage = preprocess(message);
+    const preprocessedMessage = preprocessMessage(message);
+    // Check for matches using regular expressions to capture exact matches
     for (const keyword of keywords) {
-        if (preprocessedMessage.includes(preprocess(keyword))) {
+        const preprocessedKeyword = preprocessMessage(keyword);
+        const regex = new RegExp(`\\b${preprocessedKeyword.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}\\b`, 'i'); // Escaping special characters for regex
+        if (regex.test(preprocessedMessage)) {
             return keyword;
         }
     }
@@ -495,12 +500,11 @@ export const generateChatCompletion = async (req, res, next) => {
         }));
         chats.push({ content: message, role: "user" });
         user.chats.push({ content: message, role: "user" });
-        const preprocessedMessage = message.toLowerCase();
-        const containsFitnessKeyword = fitnessKeywords.some(keyword => preprocessedMessage.includes(keyword.toLowerCase()));
+        const containsFitnessKeyword = fitnessKeywords.some(keyword => preprocessMessage(message).includes(preprocessMessage(keyword)));
         if (!containsFitnessKeyword) {
             const warningMessage = {
                 role: "assistant",
-                content: "Hmmm, I am not trained to answer your question as it does not seem to be related to fitness or health.  If this is a mistake, I apologize. Try asking something else. Often times an input may include a speling or grammer mistakae, check your input and try again "
+                content: "Hmmm, I am not trained to answer your question as it does not seem to be related to fitness or health. If this is a mistake, I apologize. Try asking something else. Often times an input may include a spelling or grammar mistake, check your input and try again."
             };
             user.chats.push(warningMessage);
             await user.save();
@@ -512,7 +516,7 @@ export const generateChatCompletion = async (req, res, next) => {
             messages: chats,
         });
         user.chats.push(chatResponse.choices[0].message);
-        const matchedKeyword = findKeywordMatch(preprocessedMessage, fitnessKeywords);
+        const matchedKeyword = findKeywordMatch(preprocessMessage(message), sortedKeywords);
         if (matchedKeyword) {
             const videos = await searchYouTube(matchedKeyword);
             const videoMessages = videos.slice(0, 3).map((video, index) => {
