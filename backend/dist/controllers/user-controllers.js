@@ -77,7 +77,7 @@ export const userSignup = async (req, res, next) => {
             httpOnly: true,
             secure: true,
             sameSite: 'none',
-            domain: "fitsgpt.com",
+            domain: "localhost",
             signed: true,
             path: "/",
         });
@@ -88,7 +88,7 @@ export const userSignup = async (req, res, next) => {
             path: "/",
             secure: true,
             sameSite: 'none',
-            domain: "fitsgpt.com",
+            domain: "localhost",
             expires,
             httpOnly: true,
             signed: true,
@@ -119,7 +119,7 @@ export const userLogin = async (req, res, next) => {
             httpOnly: true,
             secure: true,
             sameSite: 'none',
-            domain: "fitsgpt.com",
+            domain: "localhost",
             signed: true,
             path: "/",
         });
@@ -127,7 +127,7 @@ export const userLogin = async (req, res, next) => {
         const expires = new Date();
         expires.setDate(expires.getDate() + 7);
         res.cookie(COOKIE_NAME, token, { path: "/",
-            domain: "fitsgpt.com", //localhost could be replaced with actual domain when it is publically hosted
+            domain: "localhost", //localhost could be replaced with actual domain when it is publically hosted
             expires,
             httpOnly: true,
             signed: true,
@@ -170,7 +170,7 @@ export const userlogout = async (req, res, next) => {
         }
         res.clearCookie(COOKIE_NAME, {
             httpOnly: true,
-            domain: ".fitsgpt.com",
+            domain: "localhost",
             signed: true,
             path: "/",
         });

@@ -468,7 +468,16 @@ const fitnessKeywords = [
     "core endurance", "core stamina", "midsection endurance", "core muscle endurance",
     "ab strength", "abdominal strength", "abdominal power", "ab muscle strength",
     "ab endurance", "abdominal endurance", "abdominal stamina", "ab muscle endurance",
-    "plank variations", "plank types", "plank exercises", "plank workouts",
+    "plank variations", "plank types", "plank exercises", "plank workouts", "Handstand", "Muscle-Up", "Pull-Up", "Toes-to-Bar",
+    "Ring Dip", "Cartwheel", "Front Lever", "Back Lever",
+    "L-Sit", "Pistol Squat", "Road Cycling", "Mountain Biking",
+    "Cyclocross", "BMX", "Time Trial", "Spinning",
+    "Touring", "Track Cycling", "Gravel Riding", "Bike Commuting",
+    "Deadlift", "Squat", "Bench Press", "Overhead Press",
+    "Clean and Jerk", "Snatch", "Barbell Row", "Front Squat",
+    "Push Press", "Power Clean", "Strength Training", "Endurance Training",
+    "Hypertrophy", "Functional Training", "Interval Training", "Plyometrics",
+    "Cross-Training", "Core Stability", "Agility Drills", "Mobility Work",
     "side plank"
 ];
 const preprocessMessage = (text) => text.toLowerCase();
@@ -504,7 +513,7 @@ export const generateChatCompletion = async (req, res, next) => {
         if (!containsFitnessKeyword) {
             const warningMessage = {
                 role: "assistant",
-                content: "Hmmm, I am not trained to answer your question as it does not seem to be related to fitness or health. If this is a mistake, I apologize. Try asking something else. Often times an input may include a spelling or grammar mistake, check your input and try again."
+                content: "Hmmm, I am not trained to answer your question as it does not seem to be related to fitness or health. If this is a mistake, I apologize. Try asking something else. Often times an input may include a spelling or grammar mistake, check your input and try again. If this is a mistake,  to help better train fitgpt, please email fit.gpts@gmail.com with your input as well as your response. Include in the subject line, FitGPT Mistake  "
             };
             user.chats.push(warningMessage);
             await user.save();
@@ -540,6 +549,10 @@ export const generateChatCompletion = async (req, res, next) => {
                     content,
                     videoId: video.id.videoId
                 };
+            });
+            videoMessages.push({
+                role: "assistant",
+                content: "If these videos where not what you were looking for, I applogize, I am still being trained as a model. If you are unsatisified with your video generation, and would like to help train me better, email fit.gpts@gmail.com with your video outputs and what types of videos you were expecting. "
             });
             user.chats.push(...videoMessages);
             console.log('videoMessages:', videoMessages);
