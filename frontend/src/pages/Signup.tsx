@@ -34,14 +34,30 @@ const Signup = () => {
     }, [auth, navigate]);
 
     return (
-        <Box width={'100%'} height={'100%'} display="flex" flexDirection={{ xs: "column", md: "row" }} justifyContent="center" alignItems="flex-end">
+        <Box
+            width={'100%'}
+            height={'100%'}
+            display="flex"
+            flexDirection={{ xs: "column", md: "row" }}
+            justifyContent="center"
+            alignItems="flex-end"
+            sx={{
+                '@media (max-width: 600px)': {
+                    alignItems: 'center',
+                    padding: 2,
+                }
+            }}
+        >
             <Box
                 padding={8}
                 display={{ md: "flex", sm: "none", xs: "none" }}
                 sx={{
                     position: "relative",
                     left: "-300px",
-                    bottom: "-150px"
+                    bottom: "-150px",
+                    '@media (max-width: 600px)': {
+                        display: "none",
+                    }
                 }}
             >
                 <img
@@ -61,7 +77,12 @@ const Signup = () => {
                 mb={4}
                 sx={{
                     position: "relative",
-                    left: "-410px"
+                    left: "-410px",
+                    '@media (max-width: 600px)': {
+                        position: "static",
+                        width: "100%",
+                        mb: 2,
+                    }
                 }}
             >
                 <form
@@ -72,6 +93,8 @@ const Signup = () => {
                         boxShadow: "0 0 20px rgba(255,255,255,1)",
                         borderRadius: '10px',
                         border: "none",
+                        maxWidth: "400px",
+                        width: "100%",
                     }}
                 >
                     <Box sx={{
@@ -85,6 +108,9 @@ const Signup = () => {
                             textAlign="center"
                             padding={2}
                             fontWeight={600}
+                            sx={{
+                                fontSize: { xs: '1.5rem', md: '2.125rem' },
+                            }}
                         >
                             Signup & Get Fit!
                         </Typography>
@@ -97,14 +123,15 @@ const Signup = () => {
                                 px: 2,
                                 py: 1,
                                 mt: 2,
-                                width: "400px",
+                                width: "100%",
                                 borderRadius: 2,
                                 bgcolor: "gold",
                                 color: "black",
                                 ":hover": {
                                     bgcolor: 'white',
                                     color: 'black',
-                                }
+                                },
+                                maxWidth: "400px"
                             }}
                             endIcon={<IoIosLogIn />}
                         >
@@ -119,7 +146,10 @@ const Signup = () => {
                 sx={{
                     position: "absolute",
                     right: "-115px",
-                    bottom: "-150px"
+                    bottom: "-150px",
+                    '@media (max-width: 600px)': {
+                        display: "none",
+                    }
                 }}
             >
                 <img
