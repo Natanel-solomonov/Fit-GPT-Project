@@ -9,57 +9,6 @@ import OpenAi from 'openai'
 import { configureOpenAI } from '../config/openai-config.js';
 import { ChatCompletionMessageParam } from 'openai/resources/chat/completions'; // Import the necessary type
 import { randomUUID } from "crypto";
-const weightliftingTerms = [
-  "bench press", "incline bench press", "decline bench press", "dumbbell bench press",
-  "squat", "front squat", "Bulgarian split squat", "overhead squat",
-  "deadlift", "romanian deadlift", "sumo deadlift", "single-leg deadlift",
-  "overhead press", "seated shoulder press", "dumbbell shoulder press", "Arnold press",
-  "barbell curl", "dumbbell curl", "hammer curl", "concentration curl",
-  "tricep extension", "skull crusher", "tricep dip", "overhead tricep extension",
-  "lat pulldown", "pull-up", "chin-up", "wide-grip pulldown",
-  "seated row", "bent-over row", "cable row", "one-arm dumbbell row",
-  "leg press", "single-leg press", "hack squat", "smith machine squat",
-  "leg extension", "leg curl", "lying leg curl", "seated leg curl",
-  "calf raise", "seated calf raise", "donkey calf raise", "leg press calf raise",
-  "shoulder press", "dumbbell shoulder press", "military press", "Arnold press",
-  "chest fly", "incline chest fly", "decline chest fly", "cable chest fly",
-  "hammer curl", "preacher curl", "reverse curl", "spider curl",
-  "skull crusher", "overhead tricep extension", "tricep dip", "close-grip bench press",
-  "pull-up", "chin-up", "neutral-grip pull-up", "wide-grip pull-up",
-  "face pull", "upright row", "shrug", "trap raise",
-  "front raise", "lateral raise", "rear delt fly", "dumbbell lateral raise",
-  "rear delt fly", "reverse pec deck", "bent-over rear delt fly", "cable rear delt fly",
-  "hyperextension", "reverse hyperextension", "glute bridge", "hip thrust",
-  "romanian deadlift", "sumo deadlift", "stiff-leg deadlift", "trap bar deadlift",
-  "clean and press", "snatch", "power clean", "hang clean",
-  "power snatch", "high pull", "snatch-grip high pull", "clean pull",
-  "good morning", "seated good morning", "cable good morning", "banded good morning",
-  "single-leg deadlift", "single-leg Romanian deadlift", "pistol squat", "Bulgarian split squat",
-  "cable fly", "low cable fly", "high cable fly", "cable crossover","barbell squat", "barbell front squat", "barbell overhead squat",
-  "barbell lunge", "barbell step-up", "barbell hip thrust", 
-  "barbell glute bridge", "barbell bent-over row", "barbell clean",
-  "barbell snatch", "barbell thruster", "barbell jerk",
-  "barbell high pull", "barbell low pull", "barbell rack pull",
-  "barbell shoulder press", "barbell push press", "barbell bench pull",
-  "barbell chest press", "barbell incline chest press", "barbell decline chest press",
-  "barbell pullover", "barbell curl", "barbell reverse curl",
-  "barbell skull crusher", "barbell tricep extension", "barbell overhead tricep extension",
-  "barbell shrug", "barbell upright row", "barbell front raise",
-  "barbell deadlift", "barbell sumo deadlift", "barbell Romanian deadlift",
-  "barbell stiff-leg deadlift", "barbell calf raise", "barbell wrist curl",
-  "barbell reverse wrist curl", "barbell hack squat", "barbell zercher squat",
-  "barbell split squat", "barbell good morning", "barbell single-arm row",
-  "barbell landmine press", "barbell landmine row", "barbell landmine squat",
-  "barbell landmine rotational twist", "barbell landmine single-leg deadlift",
-  "barbell landmine shoulder press", "barbell landmine clean and press",
-  "trap bar deadlift", "trap bar squat", "trap bar farmer's walk",
-  "trap bar jump shrug", "trap bar high pull"
-];
-
-
-
-
-
 
 
 
@@ -335,191 +284,15 @@ export const deleteSavedVideo = async (req, res) => {
 
 const validExperienceLevels = ['beginner', 'intermediate', 'advanced'];
 
-const auxiliaryExercisesMapping = {
-  'bench press': ['Incline Bench Press', 'Dumbbell Flyes', 'Tricep Dips', 'Close-Grip Bench Press', 'Push-Ups', 'Tricep Pushdowns', 'Incline Dumbbell Bench Press', 'Pec Deck Machine', 'Overhead Tricep Extension', 'Cable Crossovers'],
-  'incline bench press': ['Dumbbell Bench Press', 'Chest Fly', 'Tricep Dips', 'Push-Ups', 'Incline Dumbbell Fly', 'Incline Push-Ups', 'Chest Dips', 'Tricep Extensions'],
-  'decline bench press': ['Flat Bench Press', 'Dumbbell Bench Press', 'Chest Fly', 'Tricep Dips', 'Push-Ups', 'Cable Crossovers', 'Pec Deck Machine', 'Incline Bench Press'],
-  'dumbbell bench press': ['Flat Bench Press', 'Chest Fly', 'Push-Ups', 'Tricep Dips', 'Incline Bench Press', 'Cable Crossovers', 'Tricep Extensions', 'Pec Deck Machine'],
-  
-  'squat': ['Leg Press', 'Lunges', 'Leg Extensions', 'Hamstring Curls', 'Calf Raises', 'Bulgarian Split Squats', 'Step-Ups', 'Glute Bridges', 'Box Squats'],
-  'front squat': ['Leg Press', 'Lunges', 'Hamstring Curls', 'Calf Raises', 'Bulgarian Split Squats', 'Step-Ups', 'Goblet Squats', 'Wall Sits'],
-  'Bulgarian split squat': ['Lunges', 'Step-Ups', 'Hamstring Curls', 'Calf Raises', 'Goblet Squats', 'Leg Press', 'Single-Leg Deadlifts', 'Leg Extensions'],
-  'overhead squat': ['Snatch', 'Push Press', 'Lunges', 'Step-Ups', 'Leg Press', 'Calf Raises', 'Hamstring Curls', 'Goblet Squats'],
-  
-  'deadlift': ['Romanian Deadlift', 'Good Mornings', 'Back Extensions', 'Barbell Rows', 'Pull-Ups', 'Shrugs', 'Kettlebell Swings', 'Hip Thrusts', 'Single-Leg Deadlifts'],
-  'romanian deadlift': ['Leg Curls', 'Good Mornings', 'Back Extensions', 'Single-Leg Deadlifts', 'Hip Thrusts', 'Glute Bridges', 'Hamstring Curls', 'Kettlebell Swings'],
-  'sumo deadlift': ['Romanian Deadlift', 'Good Mornings', 'Back Extensions', 'Hip Thrusts', 'Single-Leg Deadlifts', 'Shrugs', 'Kettlebell Swings', 'Leg Press'],
-  'single-leg deadlift': ['Romanian Deadlift', 'Good Mornings', 'Hip Thrusts', 'Glute Bridges', 'Leg Press', 'Step-Ups', 'Hamstring Curls', 'Calf Raises'],
-  
-  'overhead press': ['Dumbbell Shoulder Press', 'Lateral Raises', 'Front Raises', 'Face Pulls', 'Tricep Pushdowns', 'Arnold Press', 'Upright Rows', 'Bent Over Lateral Raises'],
-  'seated shoulder press': ['Dumbbell Shoulder Press', 'Lateral Raises', 'Front Raises', 'Face Pulls', 'Arnold Press', 'Tricep Extensions', 'Upright Rows', 'Shrugs'],
-  'dumbbell shoulder press': ['Seated Shoulder Press', 'Lateral Raises', 'Front Raises', 'Face Pulls', 'Arnold Press', 'Tricep Extensions', 'Upright Rows', 'Shrugs'],
-  'Arnold press': ['Dumbbell Shoulder Press', 'Lateral Raises', 'Front Raises', 'Face Pulls', 'Seated Shoulder Press', 'Tricep Extensions', 'Upright Rows', 'Shrugs'],
-  
-  'barbell curl': ['Dumbbell Curl', 'Hammer Curl', 'Preacher Curl', 'Concentration Curl', 'Cable Curl', 'Reverse Curl', 'Spider Curl', 'Zottman Curl'],
-  'dumbbell curl': ['Barbell Curl', 'Hammer Curl', 'Preacher Curl', 'Concentration Curl', 'Cable Curl', 'Reverse Curl', 'Spider Curl', 'Zottman Curl'],
-  'hammer curl': ['Dumbbell Curl', 'Barbell Curl', 'Preacher Curl', 'Concentration Curl', 'Cable Curl', 'Reverse Curl', 'Spider Curl', 'Zottman Curl'],
-  'concentration curl': ['Dumbbell Curl', 'Hammer Curl', 'Preacher Curl', 'Cable Curl', 'Reverse Curl', 'Spider Curl', 'Zottman Curl', 'Barbell Curl'],
-  
-  'tricep extension': ['Skull Crusher', 'Tricep Dip', 'Overhead Tricep Extension', 'Close-Grip Bench Press', 'Tricep Pushdowns', 'Kickbacks', 'Bench Dips', 'Diamond Push-Ups'],
-  'skull crusher': ['Tricep Extension', 'Tricep Dip', 'Overhead Tricep Extension', 'Close-Grip Bench Press', 'Tricep Pushdowns', 'Kickbacks', 'Bench Dips', 'Diamond Push-Ups'],
-  'tricep dip': ['Tricep Extension', 'Skull Crusher', 'Overhead Tricep Extension', 'Close-Grip Bench Press', 'Tricep Pushdowns', 'Kickbacks', 'Bench Dips', 'Diamond Push-Ups'],
-  'overhead tricep extension': ['Tricep Extension', 'Skull Crusher', 'Tricep Dip', 'Close-Grip Bench Press', 'Tricep Pushdowns', 'Kickbacks', 'Bench Dips', 'Diamond Push-Ups'],
-  
-  'lat pulldown': ['Pull-Up', 'Chin-Up', 'Cable Row', 'Seated Row', 'Bent-Over Row', 'One-Arm Dumbbell Row', 'Face Pull', 'T-Bar Row'],
-  'pull-up': ['Chin-Up', 'Lat Pulldown', 'Cable Row', 'Seated Row', 'Bent-Over Row', 'One-Arm Dumbbell Row', 'Face Pull', 'T-Bar Row'],
-  'chin-up': ['Pull-Up', 'Lat Pulldown', 'Cable Row', 'Seated Row', 'Bent-Over Row', 'One-Arm Dumbbell Row', 'Face Pull', 'T-Bar Row'],
-  'wide-grip pulldown': ['Lat Pulldown', 'Pull-Up', 'Chin-Up', 'Cable Row', 'Seated Row', 'Bent-Over Row', 'One-Arm Dumbbell Row', 'Face Pull'],
-  
-  'seated row': ['Bent-Over Row', 'Cable Row', 'One-Arm Dumbbell Row', 'Lat Pulldown', 'Face Pull', 'Pull-Up', 'Chin-Up', 'T-Bar Row'],
-  'bent-over row': ['Seated Row', 'Cable Row', 'One-Arm Dumbbell Row', 'Lat Pulldown', 'Face Pull', 'Pull-Up', 'Chin-Up', 'T-Bar Row'],
-  'cable row': ['Seated Row', 'Bent-Over Row', 'One-Arm Dumbbell Row', 'Lat Pulldown', 'Face Pull', 'Pull-Up', 'Chin-Up', 'T-Bar Row'],
-  'one-arm dumbbell row': ['Seated Row', 'Bent-Over Row', 'Cable Row', 'Lat Pulldown', 'Face Pull', 'Pull-Up', 'Chin-Up', 'T-Bar Row'],
-  
-  'leg press': ['Squat', 'Lunges', 'Leg Extensions', 'Hamstring Curls', 'Calf Raises', 'Bulgarian Split Squats', 'Step-Ups', 'Glute Bridges'],
-  'single-leg press': ['Leg Press', 'Single-Leg Deadlifts', 'Lunges', 'Calf Raises', 'Hamstring Curls', 'Step-Ups', 'Goblet Squats', 'Wall Sits'],
-  'hack squat': ['Leg Press', 'Squat', 'Lunges', 'Leg Extensions', 'Hamstring Curls', 'Calf Raises', 'Step-Ups', 'Bulgarian Split Squats'],
-  'smith machine squat': ['Squat', 'Leg Press', 'Lunges', 'Leg Extensions', 'Hamstring Curls', 'Calf Raises', 'Step-Ups', 'Glute Bridges'],
-  
-  'leg extension': ['Leg Press', 'Squat', 'Lunges', 'Hamstring Curls', 'Calf Raises', 'Bulgarian Split Squats', 'Step-Ups', 'Glute Bridges'],
-  'leg curl': ['Leg Press', 'Squat', 'Lunges', 'Leg Extensions', 'Calf Raises', 'Bulgarian Split Squats', 'Step-Ups', 'Glute Bridges'],
-  'lying leg curl': ['Leg Press', 'Squat', 'Lunges', 'Leg Extensions', 'Calf Raises', 'Bulgarian Split Squats', 'Step-Ups', 'Glute Bridges'],
-  'seated leg curl': ['Leg Press', 'Squat', 'Lunges', 'Leg Extensions', 'Calf Raises', 'Bulgarian Split Squats', 'Step-Ups', 'Glute Bridges'],
-  
-  'calf raise': ['Leg Press', 'Squat', 'Lunges', 'Leg Extensions', 'Hamstring Curls', 'Bulgarian Split Squats', 'Step-Ups', 'Glute Bridges'],
-  'seated calf raise': ['Calf Raise', 'Leg Press', 'Squat', 'Lunges', 'Leg Extensions', 'Hamstring Curls', 'Bulgarian Split Squats', 'Step-Ups'],
-  'donkey calf raise': ['Calf Raise', 'Leg Press', 'Squat', 'Lunges', 'Leg Extensions', 'Hamstring Curls', 'Bulgarian Split Squats', 'Step-Ups'],
-  'leg press calf raise': ['Calf Raise', 'Leg Press', 'Squat', 'Lunges', 'Leg Extensions', 'Hamstring Curls', 'Bulgarian Split Squats', 'Step-Ups'],
-  
-  'shoulder press': ['Dumbbell Shoulder Press', 'Lateral Raises', 'Front Raises', 'Face Pulls', 'Tricep Pushdowns', 'Arnold Press', 'Upright Rows', 'Bent Over Lateral Raises'],
-  'Dumbbell shoulder press': ['Seated Shoulder Press', 'Lateral Raises', 'Front Raises', 'Face Pulls', 'Arnold Press', 'Tricep Extensions', 'Upright Rows', 'Shrugs'],
-  'military press': ['Seated Shoulder Press', 'Dumbbell Shoulder Press', 'Lateral Raises', 'Front Raises', 'Face Pulls', 'Arnold Press', 'Upright Rows', 'Shrugs'],
-  'arnold press': ['Dumbbell Shoulder Press', 'Lateral Raises', 'Front Raises', 'Face Pulls', 'Seated Shoulder Press', 'Tricep Extensions', 'Upright Rows', 'Shrugs'],
-  
-  'chest fly': ['Bench Press', 'Incline Bench Press', 'Dumbbell Bench Press', 'Cable Chest Fly', 'Push-Ups', 'Tricep Dips', 'Incline Dumbbell Fly', 'Pec Deck Machine'],
-  'incline chest fly': ['Incline Bench Press', 'Dumbbell Bench Press', 'Cable Chest Fly', 'Push-Ups', 'Tricep Dips', 'Incline Dumbbell Fly', 'Pec Deck Machine', 'Chest Dips'],
-  'decline chest fly': ['Decline Bench Press', 'Flat Bench Press', 'Dumbbell Bench Press', 'Cable Chest Fly', 'Push-Ups', 'Tricep Dips', 'Pec Deck Machine', 'Chest Dips'],
-  'cable chest fly': ['Chest Fly', 'Bench Press', 'Incline Bench Press', 'Dumbbell Bench Press', 'Push-Ups', 'Tricep Dips', 'Incline Dumbbell Fly', 'Pec Deck Machine'],
-  
-  'Hammer curl': ['Dumbbell Curl', 'Barbell Curl', 'Preacher Curl', 'Concentration Curl', 'Cable Curl', 'Reverse Curl', 'Spider Curl', 'Zottman Curl'],
-  'preacher curl': ['Dumbbell Curl', 'Hammer Curl', 'Barbell Curl', 'Concentration Curl', 'Cable Curl', 'Reverse Curl', 'Spider Curl', 'Zottman Curl'],
-  'reverse curl': ['Dumbbell Curl', 'Hammer Curl', 'Barbell Curl', 'Preacher Curl', 'Cable Curl', 'Spider Curl', 'Zottman Curl', 'Concentration Curl'],
-  'spider curl': ['Dumbbell Curl', 'Hammer Curl', 'Barbell Curl', 'Preacher Curl', 'Cable Curl', 'Reverse Curl', 'Zottman Curl', 'Concentration Curl'],
-  
-  'Skull crusher': ['Tricep Extension', 'Tricep Dip', 'Overhead Tricep Extension', 'Close-Grip Bench Press', 'Tricep Pushdowns', 'Kickbacks', 'Bench Dips', 'Diamond Push-Ups'],
-  'Overhead tricep extension': ['Tricep Extension', 'Skull Crusher', 'Tricep Dip', 'Close-Grip Bench Press', 'Tricep Pushdowns', 'Kickbacks', 'Bench Dips', 'Diamond Push-Ups'],
-  'Tricep dip': ['Tricep Extension', 'Skull Crusher', 'Overhead Tricep Extension', 'Close-Grip Bench Press', 'Tricep Pushdowns', 'Kickbacks', 'Bench Dips', 'Diamond Push-Ups'],
-  'close-grip bench press': ['Tricep Extension', 'Skull Crusher', 'Tricep Dip', 'Overhead Tricep Extension', 'Tricep Pushdowns', 'Kickbacks', 'Bench Dips', 'Diamond Push-Ups'],
-  
-  'Pull-up': ['Chin-Up', 'Lat Pulldown', 'Cable Row', 'Seated Row', 'Bent-Over Row', 'One-Arm Dumbbell Row', 'Face Pull', 'T-Bar Row'],
-  'Chin-up': ['Pull-Up', 'Lat Pulldown', 'Cable Row', 'Seated Row', 'Bent-Over Row', 'One-Arm Dumbbell Row', 'Face Pull', 'T-Bar Row'],
-  'neutral-grip pull-up': ['Pull-Up', 'Chin-Up', 'Lat Pulldown', 'Cable Row', 'Seated Row', 'Bent-Over Row', 'One-Arm Dumbbell Row', 'Face Pull'],
-  'wide-grip pull-up': ['Pull-Up', 'Chin-Up', 'Lat Pulldown', 'Cable Row', 'Seated Row', 'Bent-Over Row', 'One-Arm Dumbbell Row', 'Face Pull'],
-  
-  'face pull': ['Upright Row', 'Shrug', 'Trap Raise', 'Lateral Raise', 'Front Raise', 'Rear Delt Fly', 'Dumbbell Lateral Raise', 'Bent-Over Rear Delt Fly'],
-  'upright row': ['Face Pull', 'Shrug', 'Trap Raise', 'Lateral Raise', 'Front Raise', 'Rear Delt Fly', 'Dumbbell Lateral Raise', 'Bent-Over Rear Delt Fly'],
-  'shrug': ['Face Pull', 'Upright Row', 'Trap Raise', 'Lateral Raise', 'Front Raise', 'Rear Delt Fly', 'Dumbbell Lateral Raise', 'Bent-Over Rear Delt Fly'],
-  'trap raise': ['Face Pull', 'Upright Row', 'Shrug', 'Lateral Raise', 'Front Raise', 'Rear Delt Fly', 'Dumbbell Lateral Raise', 'Bent-Over Rear Delt Fly'],
-  
-  'front raise': ['Lateral Raise', 'Rear Delt Fly', 'Dumbbell Shoulder Press', 'Arnold Press', 'Face Pull', 'Upright Row', 'Shrug', 'Trap Raise'],
-  'lateral raise': ['Front Raise', 'Rear Delt Fly', 'Dumbbell Shoulder Press', 'Arnold Press', 'Face Pull', 'Upright Row', 'Shrug', 'Trap Raise'],
-  'rear delt fly': ['Front Raise', 'Lateral Raise', 'Dumbbell Shoulder Press', 'Arnold Press', 'Face Pull', 'Upright Row', 'Shrug', 'Trap Raise'],
-  'dumbbell lateral raise': ['Front Raise', 'Rear Delt Fly', 'Dumbbell Shoulder Press', 'Arnold Press', 'Face Pull', 'Upright Row', 'Shrug', 'Trap Raise'],
-  
-  'reverse pec deck': ['Rear Delt Fly', 'Face Pull', 'Upright Row', 'Shrug', 'Lateral Raise', 'Front Raise', 'Dumbbell Shoulder Press', 'Arnold Press'],
-  'bent-over rear delt fly': ['Rear Delt Fly', 'Face Pull', 'Upright Row', 'Shrug', 'Lateral Raise', 'Front Raise', 'Dumbbell Shoulder Press', 'Arnold Press'],
-  'cable rear delt fly': ['Rear Delt Fly', 'Face Pull', 'Upright Row', 'Shrug', 'Lateral Raise', 'Front Raise', 'Dumbbell Shoulder Press', 'Arnold Press'],
-  
-  'hyperextension': ['Reverse Hyperextension', 'Glute Bridge', 'Hip Thrust', 'Romanian Deadlift', 'Good Morning', 'Back Extension', 'Single-Leg Deadlift', 'Cable Good Morning'],
-  'reverse hyperextension': ['Hyperextension', 'Glute Bridge', 'Hip Thrust', 'Romanian Deadlift', 'Good Morning', 'Back Extension', 'Single-Leg Deadlift', 'Cable Good Morning'],
-  'glute bridge': ['Hip Thrust', 'Hyperextension', 'Reverse Hyperextension', 'Romanian Deadlift', 'Good Morning', 'Back Extension', 'Single-Leg Deadlift', 'Cable Good Morning'],
-  'hip thrust': ['Glute Bridge', 'Hyperextension', 'Reverse Hyperextension', 'Romanian Deadlift', 'Good Morning', 'Back Extension', 'Single-Leg Deadlift', 'Cable Good Morning'],
-  
-  'Romanian deadlift': ['Leg Curls', 'Good Mornings', 'Back Extensions', 'Single-Leg Deadlifts', 'Hip Thrusts', 'Glute Bridges', 'Hamstring Curls', 'Kettlebell Swings'],
-  'Sumo deadlift': ['Romanian Deadlift', 'Good Mornings', 'Back Extensions', 'Hip Thrusts', 'Single-Leg Deadlifts', 'Shrugs', 'Kettlebell Swings', 'Leg Press'],
-  'stiff-leg deadlift': ['Romanian Deadlift', 'Good Mornings', 'Back Extensions', 'Single-Leg Deadlifts', 'Hip Thrusts', 'Glute Bridges', 'Hamstring Curls', 'Kettlebell Swings'],
-  'trap bar deadlift': ['Romanian Deadlift', 'Good Mornings', 'Back Extensions', 'Single-Leg Deadlifts', 'Hip Thrusts', 'Glute Bridges', 'Hamstring Curls', 'Kettlebell Swings'],
-  
-  'clean and press': ['Power Clean', 'Hang Clean', 'Push Press', 'Overhead Squat', 'Front Squat', 'Deadlift', 'Romanian Deadlift', 'Snatch'],
-  'snatch': ['Power Snatch', 'High Pull', 'Overhead Squat', 'Front Squat', 'Romanian Deadlift', 'Clean and Press', 'Hang Clean', 'Snatch-Grip High Pull'],
-  'power clean': ['Clean and Press', 'Hang Clean', 'Front Squat', 'Romanian Deadlift', 'Overhead Squat', 'Push Press', 'High Pull', 'Snatch'],
-  'hang clean': ['Clean and Press', 'Power Clean', 'Front Squat', 'Romanian Deadlift', 'Overhead Squat', 'Push Press', 'High Pull', 'Snatch'],
-  
-  'power snatch': ['Snatch', 'High Pull', 'Overhead Squat', 'Front Squat', 'Romanian Deadlift', 'Clean and Press', 'Hang Clean', 'Snatch-Grip High Pull'],
-  'high pull': ['Power Clean', 'Hang Clean', 'Snatch', 'Front Squat', 'Romanian Deadlift', 'Clean and Press', 'Snatch-Grip High Pull', 'Overhead Squat'],
-  'snatch-grip high pull': ['High Pull', 'Snatch', 'Front Squat', 'Romanian Deadlift', 'Clean and Press', 'Hang Clean', 'Power Clean', 'Overhead Squat'],
-  'clean pull': ['High Pull', 'Power Clean', 'Hang Clean', 'Snatch', 'Front Squat', 'Romanian Deadlift', 'Clean and Press', 'Overhead Squat'],
-  
-  'good morning': ['Romanian Deadlift', 'Back Extensions', 'Single-Leg Deadlifts', 'Hip Thrusts', 'Glute Bridges', 'Hamstring Curls', 'Kettlebell Swings', 'Cable Good Morning'],
-  'seated good morning': ['Good Morning', 'Romanian Deadlift', 'Back Extensions', 'Single-Leg Deadlifts', 'Hip Thrusts', 'Glute Bridges', 'Hamstring Curls', 'Kettlebell Swings'],
-  'cable good morning': ['Good Morning', 'Romanian Deadlift', 'Back Extensions', 'Single-Leg Deadlifts', 'Hip Thrusts', 'Glute Bridges', 'Hamstring Curls', 'Kettlebell Swings'],
-  'banded good morning': ['Good Morning', 'Romanian Deadlift', 'Back Extensions', 'Single-Leg Deadlifts', 'Hip Thrusts', 'Glute Bridges', 'Hamstring Curls', 'Kettlebell Swings'],
-  
-  'Single-leg deadlift': ['Romanian Deadlift', 'Good Mornings', 'Hip Thrusts', 'Glute Bridges', 'Leg Press', 'Step-Ups', 'Hamstring Curls', 'Calf Raises'],
-  'single-leg Romanian deadlift': ['Single-Leg Deadlift', 'Good Mornings', 'Hip Thrusts', 'Glute Bridges', 'Leg Press', 'Step-Ups', 'Hamstring Curls', 'Calf Raises'],
-  'pistol squat': ['Single-Leg Deadlift', 'Bulgarian Split Squat', 'Step-Ups', 'Lunges', 'Hamstring Curls', 'Glute Bridges', 'Leg Press', 'Calf Raises'],
-  'bulgarian split squat': ['Lunges', 'Step-Ups', 'Hamstring Curls', 'Calf Raises', 'Goblet Squats', 'Leg Press', 'Single-Leg Deadlifts', 'Leg Extensions'],
-  
-  'cable fly': ['Chest Fly', 'Bench Press', 'Incline Bench Press', 'Dumbbell Bench Press', 'Push-Ups', 'Tricep Dips', 'Incline Dumbbell Fly', 'Pec Deck Machine'],
-  'low cable fly': ['Chest Fly', 'Bench Press', 'Incline Bench Press', 'Dumbbell Bench Press', 'Push-Ups', 'Tricep Dips', 'Incline Dumbbell Fly', 'Pec Deck Machine'],
-  'high cable fly': ['Chest Fly', 'Bench Press', 'Incline Bench Press', 'Dumbbell Bench Press', 'Push-Ups', 'Tricep Dips', 'Incline Dumbbell Fly', 'Pec Deck Machine'],
-  'cable crossover': ['Chest Fly', 'Bench Press', 'Incline Bench Press', 'Dumbbell Bench Press', 'Push-Ups', 'Tricep Dips', 'Incline Dumbbell Fly', 'Pec Deck Machine'],
-  'barbell squat': ['Leg Press', 'Lunges', 'Step-Ups', 'Leg Extensions', 'Calf Raises', 'Romanian Deadlift', 'Hamstring Curls', 'Goblet Squats'],
-  'barbell front squat': ['Leg Press', 'Lunges', 'Step-Ups', 'Leg Extensions', 'Calf Raises', 'Romanian Deadlift', 'Hamstring Curls', 'Goblet Squats'],
-  'barbell overhead squat': ['Leg Press', 'Lunges', 'Step-Ups', 'Leg Extensions', 'Calf Raises', 'Romanian Deadlift', 'Hamstring Curls', 'Goblet Squats'],
-  'barbell lunge': ['Step-Ups', 'Bulgarian Split Squat', 'Leg Press', 'Leg Extensions', 'Calf Raises', 'Hamstring Curls', 'Romanian Deadlift', 'Goblet Squats'],
-  'barbell step-up': ['Lunges', 'Bulgarian Split Squat', 'Leg Press', 'Leg Extensions', 'Calf Raises', 'Hamstring Curls', 'Romanian Deadlift', 'Goblet Squats'],
-  'barbell hip thrust': ['Glute Bridges', 'Romanian Deadlift', 'Good Mornings', 'Single-Leg Deadlifts', 'Leg Press', 'Step-Ups', 'Hamstring Curls', 'Calf Raises'],
-  'barbell glute bridge': ['Hip Thrusts', 'Romanian Deadlift', 'Good Mornings', 'Single-Leg Deadlifts', 'Leg Press', 'Step-Ups', 'Hamstring Curls', 'Calf Raises'],
-  'barbell bent-over row': ['One-Arm Dumbbell Row', 'Seated Row', 'T-Bar Row', 'Lat Pulldown', 'Face Pull', 'Rear Delt Fly', 'Shrugs', 'Pull-Up'],
-  'barbell clean': ['Power Clean', 'Hang Clean', 'Front Squat', 'Romanian Deadlift', 'Overhead Squat', 'Push Press', 'High Pull', 'Snatch'],
-  'barbell snatch': ['Power Snatch', 'High Pull', 'Overhead Squat', 'Front Squat', 'Romanian Deadlift', 'Clean and Press', 'Hang Clean', 'Snatch-Grip High Pull'],
-  'barbell thruster': ['Push Press', 'Front Squat', 'Overhead Squat', 'Romanian Deadlift', 'High Pull', 'Clean and Press', 'Hang Clean', 'Snatch'],
-  'barbell jerk': ['Push Press', 'Front Squat', 'Overhead Squat', 'Romanian Deadlift', 'High Pull', 'Clean and Press', 'Hang Clean', 'Snatch'],
-  'barbell high pull': ['Power Clean', 'Hang Clean', 'Snatch', 'Front Squat', 'Romanian Deadlift', 'Clean and Press', 'Snatch-Grip High Pull', 'Overhead Squat'],
-  'barbell low pull': ['Power Clean', 'Hang Clean', 'Snatch', 'Front Squat', 'Romanian Deadlift', 'Clean and Press', 'Snatch-Grip High Pull', 'Overhead Squat'],
-  'barbell rack pull': ['Deadlift', 'Romanian Deadlift', 'Good Mornings', 'Glute Bridges', 'Hip Thrusts', 'Back Extensions', 'Shrugs', 'Kettlebell Swings'],
-  'barbell shoulder press': ['Dumbbell Shoulder Press', 'Arnold Press', 'Lateral Raise', 'Front Raise', 'Rear Delt Fly', 'Push Press', 'Military Press', 'Seated Shoulder Press'],
-  'barbell push press': ['Shoulder Press', 'Front Squat', 'Overhead Squat', 'Romanian Deadlift', 'High Pull', 'Clean and Press', 'Hang Clean', 'Snatch'],
-  'barbell bench pull': ['Bent-Over Row', 'One-Arm Dumbbell Row', 'Seated Row', 'Lat Pulldown', 'Face Pull', 'Rear Delt Fly', 'Shrugs', 'Pull-Up'],
-  'barbell chest press': ['Dumbbell Bench Press', 'Incline Bench Press', 'Decline Bench Press', 'Chest Fly', 'Push-Up', 'Cable Chest Press', 'Pec Deck', 'Dips'],
-  'barbell incline chest press': ['Incline Dumbbell Press', 'Incline Chest Fly', 'Push-Up', 'Cable Chest Press', 'Pec Deck', 'Dips', 'Chest Fly', 'Chest Press Machine'],
-  'barbell decline chest press': ['Decline Dumbbell Press', 'Decline Chest Fly', 'Push-Up', 'Cable Chest Press', 'Pec Deck', 'Dips', 'Chest Fly', 'Chest Press Machine'],
-  'barbell pullover': ['Dumbbell Pullover', 'Lat Pulldown', 'Straight-Arm Pulldown', 'Chest Fly', 'Chest Press', 'Tricep Extensions', 'Pull-Up', 'Seated Row'],
- 
-  'barbell reverse curl': ['Reverse Grip Curl', 'Hammer Curl', 'Wrist Curl', 'Zottman Curl', 'Cable Curl', 'Concentration Curl', 'Spider Curl', 'EZ Bar Curl'],
-  'barbell skull crusher': ['Tricep Extension', 'Overhead Tricep Extension', 'Dips', 'Close-Grip Bench Press', 'Cable Tricep Extension', 'Tricep Kickbacks', 'Tricep Pushdowns', 'Bench Dips'],
-  'barbell tricep extension': ['Skull Crusher', 'Overhead Tricep Extension', 'Dips', 'Close-Grip Bench Press', 'Cable Tricep Extension', 'Tricep Kickbacks', 'Tricep Pushdowns', 'Bench Dips'],
-  'barbell overhead tricep extension': ['Skull Crusher', 'Tricep Extension', 'Dips', 'Close-Grip Bench Press', 'Cable Tricep Extension', 'Tricep Kickbacks', 'Tricep Pushdowns', 'Bench Dips'],
-  'barbell shrug': ['Dumbbell Shrug', 'Upright Row', 'Face Pull', 'Trap Raise', 'High Pull', 'Deadlift', 'Farmers Walk', 'Kettlebell Shrug'],
-  'barbell upright row': ['Dumbbell Upright Row', 'Face Pull', 'Lateral Raise', 'Shrug', 'High Pull', 'Bent-Over Row', 'Lat Pulldown', 'Pull-Up'],
-  'barbell front raise': ['Dumbbell Front Raise', 'Cable Front Raise', 'Lateral Raise', 'Shrug', 'Upright Row', 'Shoulder Press', 'Arnold Press', 'Military Press'],
-  'barbell deadlift': ['Romanian Deadlift', 'Good Mornings', 'Glute Bridges', 'Hip Thrusts', 'Back Extensions', 'Shrugs', 'Kettlebell Swings', 'Trap Bar Deadlift'],
-  'barbell sumo deadlift': ['Romanian Deadlift', 'Good Mornings', 'Glute Bridges', 'Hip Thrusts', 'Back Extensions', 'Shrugs', 'Kettlebell Swings', 'Trap Bar Deadlift'],
-  'barbell Romanian deadlift': ['Good Mornings', 'Back Extensions', 'Single-Leg Deadlifts', 'Hip Thrusts', 'Glute Bridges', 'Hamstring Curls', 'Kettlebell Swings', 'Cable Good Morning'],
-  'barbell stiff-leg deadlift': ['Good Mornings', 'Back Extensions', 'Single-Leg Deadlifts', 'Hip Thrusts', 'Glute Bridges', 'Hamstring Curls', 'Kettlebell Swings', 'Cable Good Morning'],
-  'barbell calf raise': ['Seated Calf Raise', 'Donkey Calf Raise', 'Leg Press Calf Raise', 'Standing Calf Raise', 'Single-Leg Calf Raise', 'Smith Machine Calf Raise', 'Farmers Walk', 'Jump Rope'],
-  'barbell wrist curl': ['Reverse Wrist Curl', 'Hammer Curl', 'Zottman Curl', 'Reverse Grip Curl', 'Concentration Curl', 'Spider Curl', 'Cable Curl', 'Preacher Curl'],
-  'barbell reverse wrist curl': ['Wrist Curl', 'Hammer Curl', 'Zottman Curl', 'Reverse Grip Curl', 'Concentration Curl', 'Spider Curl', 'Cable Curl', 'Preacher Curl'],
-  'barbell hack squat': ['Leg Press', 'Lunges', 'Step-Ups', 'Leg Extensions', 'Calf Raises', 'Romanian Deadlift', 'Hamstring Curls', 'Goblet Squats'],
-  'barbell zercher squat': ['Leg Press', 'Lunges', 'Step-Ups', 'Leg Extensions', 'Calf Raises', 'Romanian Deadlift', 'Hamstring Curls', 'Goblet Squats'],
-  'barbell split squat': ['Lunges', 'Step-Ups', 'Hamstring Curls', 'Calf Raises', 'Goblet Squats', 'Leg Press', 'Single-Leg Deadlifts', 'Leg Extensions'],
-  'barbell good morning': ['Romanian Deadlift', 'Back Extensions', 'Single-Leg Deadlifts', 'Hip Thrusts', 'Glute Bridges', 'Hamstring Curls', 'Kettlebell Swings', 'Cable Good Morning'],
-  'barbell single-arm row': ['One-Arm Dumbbell Row', 'Seated Row', 'T-Bar Row', 'Lat Pulldown', 'Face Pull', 'Rear Delt Fly', 'Shrugs', 'Pull-Up'],
-  'barbell landmine press': ['Shoulder Press', 'Dumbbell Shoulder Press', 'Arnold Press', 'Lateral Raise', 'Front Raise', 'Rear Delt Fly', 'Push Press', 'Military Press'],
-  'barbell landmine row': ['One-Arm Dumbbell Row', 'Seated Row', 'T-Bar Row', 'Lat Pulldown', 'Face Pull', 'Rear Delt Fly', 'Shrugs', 'Pull-Up'],
-  'barbell landmine squat': ['Leg Press', 'Lunges', 'Step-Ups', 'Leg Extensions', 'Calf Raises', 'Romanian Deadlift', 'Hamstring Curls', 'Goblet Squats'],
-  'barbell landmine rotational twist': ['Russian Twists', 'Hanging Leg Raises', 'Plank', 'Medicine Ball Slam', 'Cable Woodchopper', 'Oblique Crunch', 'Side Plank', 'Bicycle Crunch'],
-  'barbell landmine single-leg deadlift': ['Single-Leg Deadlift', 'Romanian Deadlift', 'Good Mornings', 'Hip Thrusts', 'Glute Bridges', 'Leg Press', 'Step-Ups', 'Hamstring Curls'],
-  'barbell landmine shoulder press': ['Shoulder Press', 'Dumbbell Shoulder Press', 'Arnold Press', 'Lateral Raise', 'Front Raise', 'Rear Delt Fly', 'Push Press', 'Military Press'],
-  'barbell landmine clean and press': ['Power Clean', 'Hang Clean', 'Push Press', 'Overhead Squat', 'Front Squat', 'Deadlift', 'Romanian Deadlift', 'Snatch'],
-
-  'trap bar squat': ['Leg Press', 'Lunges', 'Step-Ups', 'Leg Extensions', 'Calf Raises', 'Romanian Deadlift', 'Hamstring Curls', 'Goblet Squats'],
-  'trap bar farmer\'s walk': ['Farmer\'s Walk', 'Shrugs', 'Deadlift', 'Suitcase Carry', 'Trap Raise', 'Kettlebell Swing', 'Single-Leg Deadlift', 'Standing Calf Raise'],
-  'trap bar jump shrug': ['Power Clean', 'Hang Clean', 'High Pull', 'Romanian Deadlift', 'Deadlift', 'Kettlebell Swing', 'Shrugs', 'Jump Squat'],
-  'trap bar high pull': ['Power Clean', 'Hang Clean', 'Snatch', 'Front Squat', 'Romanian Deadlift', 'Clean and Press', 'Snatch-Grip High Pull', 'Overhead Squat']
-
+export const getPlanOptions = async (req, res, next) => {
+  try {
+    const options = ['Lifting', 'Calisthenics', 'Endurance', 'Balance', 'Flexibility'];
+    return res.status(200).json({ options });
+  } catch (error) {
+    return res.status(500).json({ message: 'Failed to retrieve options', error: error.message });
+  }
 };
+
 
 export const createLiftingPlan = async (req: Request, res: Response, next: NextFunction) => {
   const { height, weight, experienceLevel, gender, desiredExercise, targetWeight, numberOfWeeks } = req.body;
@@ -530,134 +303,130 @@ export const createLiftingPlan = async (req: Request, res: Response, next: NextF
       return res.status(401).json({ message: "User not registered OR Token malfunctioned" });
     }
 
-    const isValidExercise = Object.keys(auxiliaryExercisesMapping).some(
-      (keyword) => keyword.toLowerCase() === desiredExercise.toLowerCase()
-    );
-    if (!isValidExercise) {
-      return res.status(400).json({ message: 'Invalid exercise entered. Please enter a valid exercise.' });
-    }
-
-    const lowerCaseExperienceLevel = experienceLevel.toLowerCase();
-    if (!validExperienceLevels.includes(lowerCaseExperienceLevel)) {
-      return res.status(400).json({ message: 'Invalid experience level entered. Please enter a valid experience level.' });
-    }
-
     const openai = configureOpenAI();
 
-    const auxiliaryExercises = auxiliaryExercisesMapping[desiredExercise.toLowerCase()] || [];
-    const auxiliaryExercisesText = auxiliaryExercises.join(', ');
-
-    const messages: ChatCompletionMessageParam[] = [
+    const validationMessages: ChatCompletionMessageParam[] = [
       {
         role: "system",
-        content: "You are a fitness assistant that generates specific lifting plans.",
+        content: "You are a fitness assistant that validates exercises and generates specific lifting plans.",
       },
       {
         role: "user",
         content: `
-          Generate a detailed multi-week lifting plan specifically for ${desiredExercise} based on the following details:
-          - Height: ${height}
-          - Weight: ${weight}
-          - Experience Level: ${experienceLevel}
-          - Gender: ${gender}
-          - Desired Exercise: ${desiredExercise}
-          - Target Weight: ${targetWeight}
-          - Number of Weeks: ${numberOfWeeks}
-
-          Here is the logic for generating the lifting plan:
-          - The experience levels determine the base weight factor: beginner (0.5), intermediate (0.6), advanced (0.7).
-          - Initial weight is calculated as weight * base weight factor.
-          - Progressive overload increment is 2.5% of the initial weight per week.
-          - Phases are organized as follows:
-            - Foundation Building (Weeks 1-2)
-            - Strength Focus (Weeks 3-4)
-            - Peak Intensity (Weeks 5-6)
-            - Max Effort (Weeks 7-8)
-
-          Each phase includes specific days with detailed exercises:
-          - Heavy Day:
-            - Main Exercise: 4 sets of 5 reps
-            - Auxiliary Exercise 1: 3 sets of 8 reps
-            - Auxiliary Exercise 2: 3 sets of 12 reps
-            - Auxiliary Exercise 3: 3 sets of 10 reps
-          - Volume Day:
-            - Main Exercise: 5 sets of 8 reps
-            - Auxiliary Exercise 1: 3 sets of 8 reps
-            - Auxiliary Exercise 2: 3 sets of 15 reps
-            - Auxiliary Exercise 3: 3 sets of 12 reps
-          - Accessory Day:
-            - Main Exercise: 4 sets of 10 reps
-            - Auxiliary Exercise 1: 3 sets of 12 reps
-            - Auxiliary Exercise 2: 3 sets of 12 reps
-            - Auxiliary Exercise 3: 3 sets of 15 reps
-
-          Auxiliary exercises for ${desiredExercise} include: ${auxiliaryExercisesText}.
-
-          Generate the detailed plan using this logic and provide it in the following format:
-
-          **Week 1-2: Foundation Building**
-          - **Day 1 (Heavy Day)**:
-            - ${desiredExercise}: 4 sets of 5 reps at [calculated weight]
-            - ${auxiliaryExercises[0]}: 3 sets of 8 reps
-            - ${auxiliaryExercises[1]}: 3 sets of 12 reps
-            - ${auxiliaryExercises[2]}: 3 sets of 10 reps
-
-          - **Day 2 (Volume Day)**:
-            - ${desiredExercise}: 5 sets of 8 reps at [calculated weight]
-            - ${auxiliaryExercises[3]}: 3 sets of 8 reps
-            - ${auxiliaryExercises[4]}: 3 sets of 15 reps
-            - ${auxiliaryExercises[5]}: 3 sets of 12 reps
-
-          - **Day 3 (Accessory Day)**:
-            - ${desiredExercise}: 4 sets of 10 reps at [calculated weight]
-            - ${auxiliaryExercises[6]}: 3 sets of 12 reps
-            - ${auxiliaryExercises[7]}: 3 sets of 12 reps
-            - ${auxiliaryExercises[8]}: 3 sets of 15 reps
-
-          General Tips:
-          - **Warm-Up**: Always warm up properly before starting your workout. Do some light cardio and dynamic stretches.
-          - **Rest**: Take 2-3 minutes of rest between sets on heavy days and 1-2 minutes on volume and accessory days.
-          - **Nutrition**: Ensure you’re eating enough protein and calories to support muscle growth and recovery.
-          - **Sleep**: Aim for at least 7-8 hours of sleep per night.
-          - **Form**: Focus on maintaining proper form throughout all exercises to prevent injury and ensure maximum muscle engagement.
-          - **Progressive Overload**: Gradually increase the weight you lift each week to continuously challenge your muscles.
-          -Include a disclaimer that says it may take longer then  ${numberOfWeeks} weeks to acheive their goal, the above plan is just a 
-          outline 
-          Generate the full multi-week plan using the above logic and structure. Include in the disclaimer, that the user should always listen to 
-          their body first and deviate from the plan if they feel it is to much 
+          Is "${desiredExercise}" a valid strength training exercise? If it is, generate a list of related auxiliary exercises that complement this exercise. If not, respond with "Invalid exercise."
         `,
       },
     ];
 
-    const chatResponse = await openai.chat.completions.create({
+    const validationResponse = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
-      messages,
+      messages: validationMessages,
     });
 
-    if (chatResponse.choices && chatResponse.choices.length > 0) {
-      const responseMessage = chatResponse.choices[0].message?.content || '';
-      console.log("Generated lifting plan:", responseMessage);
+    if (validationResponse.choices && validationResponse.choices.length > 0) {
+      const responseMessage = validationResponse.choices[0].message?.content || '';
 
-      // Create the lifting plan object with all required fields
-      const newLiftingPlan = {
-        Liftingid: randomUUID(),
-        height,
-        weight,
-        experienceLevel,
-        gender,
-        desiredExercise,
-        targetWeight,
-        numberOfWeeks,
-        liftingPlan: responseMessage, // Store as a plain string
-        createdAt: new Date(),
-      };
+      if (responseMessage.toLowerCase().includes("invalid exercise")) {
+        return res.status(400).json({ message: 'Invalid exercise entered. Please enter a valid exercise.' });
+      }
+
+      const AuxiliaryMovements = responseMessage.split(',').map(movement => movement.trim());
+
+      console.log("Exercise:", desiredExercise);
+      console.log("Auxiliary Movements:", AuxiliaryMovements);
+
+      const baseWeightFactor = experienceLevel === "beginner" ? 0.5 :
+                               experienceLevel === "intermediate" ? 0.6 : 0.7;
+
+      const startingWeight = Math.round(targetWeight * baseWeightFactor / 5) * 5;
+
+      const auxiliaryWeights = AuxiliaryMovements.map((movement, index) => {
+        const adjustmentFactor = 0.7 - (index * 0.05);
+        return {
+          movement,
+          weight: Math.round(startingWeight * adjustmentFactor / 5) * 5
+        };
+      });
+
+      // Calculate the number of weeks for each phase based on total numberOfWeeks
+      const foundationWeeks = Math.floor(numberOfWeeks * 0.25);  // Foundation Building Phase
+      const strengthFocusWeeks = Math.floor(numberOfWeeks * 0.25);  // Strength Focus Phase
+      const peakIntensityWeeks = Math.floor(numberOfWeeks * 0.25);  // Peak Intensity Phase
+      const maxEffortWeeks = numberOfWeeks - (foundationWeeks + strengthFocusWeeks + peakIntensityWeeks);  // Max Effort Phase
+
+      const planMessages: ChatCompletionMessageParam[] = [
+        {
+          role: "system",
+          content: "You are a fitness assistant that generates specific lifting plans.",
+        },
+        {
+          role: "user",
+          content: `
+            Generate a detailed ${numberOfWeeks}-week lifting plan specifically for ${desiredExercise} based on the following details:
+            - Height: ${height} inches
+            - Weight: ${weight} pounds
+            - Experience Level: ${experienceLevel}
+            - Gender: ${gender}
+            - Desired Exercise: ${desiredExercise}
+            - Target Weight: ${targetWeight} pounds
+            - Starting Weight (Calculated): ${startingWeight} pounds (This should be the weight used on Week 1, Day 1 and progress from here over the course of the program)
+            - Number of Weeks: ${numberOfWeeks}
+            
+            The plan should include appropriately weighted auxiliary movements: ${auxiliaryWeights.map(aw => `${aw.movement} at ${aw.weight} pounds`).join(', ')}.
       
+            **Important Considerations:**
+            - Ensure all suggested weights are in common gym increments (e.g., 5-pound increments) to make the plan practical and realistic (e.g., 100 pounds instead of 99 pounds).
+            - Use the calculated starting weight of ${startingWeight} pounds for Week 1, Day 1, and then progressively increase the weight over the duration of the program.
+            - For each week, specify only two training days focused on the main exercise (${desiredExercise}) and its auxiliary movements. The remaining days of the week should be left for the athlete to focus on other movements or exercises as per their goals.
+            - **Do not include any # symbols in the output.**
+            - **Ensure to output each phase/week in detail. Do not cut anything out, especially for weeks that come later . These weeks should have the same level of detail as Weeks that came earlier in the program.**
+      
+            **Output Format:**
+            Start with: This is a ${numberOfWeeks}-Week Plan for an ${experienceLevel} ${gender} athlete looking to improve their ${desiredExercise} to ${targetWeight} pounds
+            - then add **Baseline Information**, listing height, weight, experience level, gender, desired exercise, starting weight (calculated), and target weight.
+            - Break down the plan into the following phases, with each phase including detailed week-by-week breakdowns:
+              - Foundation Building (Weeks 1-${foundationWeeks})
+              - Strength Focus (Weeks ${foundationWeeks+1}-${foundationWeeks+strengthFocusWeeks})
+              - Peak Intensity (Weeks ${foundationWeeks+strengthFocusWeeks+1}-${foundationWeeks+strengthFocusWeeks+peakIntensityWeeks})
+              - Max Effort (Weeks ${foundationWeeks+strengthFocusWeeks+peakIntensityWeeks+1}-${numberOfWeeks}): **Provide a detailed breakdown for each week and day, just as in the previous phases. Specify sets, reps, and weights for each day, ensuring that the athlete has a clear plan to follow for every training session.**
+            - For each week, specify:
+              - Day 1: The number of sets, reps, and weight for the main exercise (${desiredExercise}) and the auxiliary movements.
+              - Day 2: The number of sets, reps, and weight for the main exercise (${desiredExercise}) and the auxiliary movements.
+              - Mention that for the rest of the days in the week, the athlete should feel free to focus on other movements or exercises based on their overall fitness goals.
+            - Provide a summary at the end of each phase, outlining the overall progress and focus.
+            - Include the same tips and disclaimer as before.
+          `,
+        },
+      ];
+      const planResponse = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: planMessages,
+      });
 
-      // Save the lifting plan to the user
-      user.liftingPlans.push(newLiftingPlan);
-      await user.save();
+      if (planResponse.choices && planResponse.choices.length > 0) {
+        const liftingPlan = planResponse.choices[0].message?.content || '';
+        console.log("Generated lifting plan:", liftingPlan);
 
-      res.status(201).json({ message: 'Lifting plan generated successfully', liftingPlan: responseMessage });
+        const newLiftingPlan = {
+          Liftingid: randomUUID(),
+          height,
+          weight,
+          experienceLevel,
+          gender,
+          desiredExercise,
+          targetWeight,
+          numberOfWeeks,
+          liftingPlan,
+          createdAt: new Date(),
+        };
+
+        user.liftingPlans.push(newLiftingPlan);
+        await user.save();
+
+        res.status(201).json({ message: 'Lifting plan generated successfully', liftingPlan });
+      } else {
+        throw new Error('Unexpected API response format');
+      }
     } else {
       throw new Error('Unexpected API response format');
     }
@@ -785,34 +554,896 @@ export const clearAllSavedLiftingPlans = async (req: Request, res: Response, nex
   }
 };
 
+export const createCalisthenicsPlan = async (req: Request, res: Response, next: NextFunction) => {
+  const { height, weight, experienceLevel, gender, desiredMovement, repsGoal, numberOfWeeks } = req.body;
 
+  try {
+    const user = await User.findById(res.locals.jwtData.id);
+    if (!user) {
+      return res.status(401).json({ message: "User not registered OR Token malfunctioned" });
+    }
 
-export const deleteSavedLiftingPlan = async (req: Request, res: Response, next: NextFunction) => {
-  const { desiredExercise } = req.params;
+    const openai = configureOpenAI();
 
+    const validationMessages: ChatCompletionMessageParam[] = [
+      {
+        role: "system",
+        content: "You are a fitness assistant that validates exercises and generates specific calisthenics plans.",
+      },
+      {
+        role: "user",
+        content: `
+          Is "${desiredMovement}" a valid calisthenics exercise? If it is, generate a list of related auxiliary exercises that complement this movement. If not, respond with "Invalid exercise."
+        `,
+      },
+    ];
+
+    const validationResponse = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: validationMessages,
+    });
+
+    if (validationResponse.choices && validationResponse.choices.length > 0) {
+      const responseMessage = validationResponse.choices[0].message?.content || '';
+
+      if (responseMessage.toLowerCase().includes("invalid exercise")) {
+        return res.status(400).json({ message: 'Invalid exercise entered. Please enter a valid exercise.' });
+      }
+
+      const auxiliaryMovements = responseMessage.split(',').map(movement => movement.trim());
+
+      console.log("Movement:", desiredMovement);
+      console.log("Auxiliary Movements:", auxiliaryMovements);
+
+      // Base algorithm to calculate reps and progression
+      const baseRepsFactor = experienceLevel === "beginner" ? 0.5 :
+                             experienceLevel === "intermediate" ? 0.7 : 0.9;
+
+      const startingReps = Math.round(repsGoal * baseRepsFactor);
+
+      const weeklyProgression = Math.ceil((repsGoal - startingReps) / numberOfWeeks);
+
+      // Calculate the number of weeks for each phase based on total numberOfWeeks
+      const foundationWeeks = Math.floor(numberOfWeeks * 0.25);  // Foundation Building Phase
+      const strengthFocusWeeks = Math.floor(numberOfWeeks * 0.25);  // Strength Focus Phase
+      const peakIntensityWeeks = Math.floor(numberOfWeeks * 0.25);  // Peak Intensity Phase
+      const maxEffortWeeks = numberOfWeeks - (foundationWeeks + strengthFocusWeeks + peakIntensityWeeks);  // Max Effort Phase
+
+      const planMessages: ChatCompletionMessageParam[] = [
+        {
+          role: "system",
+          content: "You are a fitness assistant that generates specific calisthenics plans.",
+        },
+        {
+          role: "user",
+          content: `
+            Generate a detailed ${numberOfWeeks}-week calisthenics plan specifically for ${desiredMovement} based on the following details:
+            - Height: ${height} inches
+            - Weight: ${weight} pounds
+            - Experience Level: ${experienceLevel}
+            - Gender: ${gender}
+            - Desired Movement: ${desiredMovement}
+            - Target Reps: ${repsGoal} repetitions
+            - Starting Reps (Calculated): ${startingReps} repetitions (This should be the number of reps used on Week 1, Day 1 and progress from here over the course of the program)
+            - Number of Weeks: ${numberOfWeeks}
+            
+            The plan should include appropriately integrated auxiliary movements: ${auxiliaryMovements.join(', ')}.
+      
+            **Important Considerations:**
+            - Ensure the progression in repetitions is realistic and achievable, with appropriate increases each week.
+            - Use the calculated starting reps of ${startingReps} repetitions for Week 1, Day 1, and then progressively increase the reps over the duration of the program.
+            - For each week, specify only two training days focused on the main movement (${desiredMovement}) and its auxiliary movements. The remaining days of the week should be left for the athlete to focus on other movements or exercises as per their goals.
+            - **Do not include any # symbols in the output.**
+            - **Ensure to output each phase/week in detail. Do not cut anything out, especially for weeks that come later. These weeks should have the same level of detail as Weeks that came earlier in the program.**
+            - **If${desiredMovement} is typically a movement you would hold for a certain amount of time rather then do a number of reps, reflect the plan to show seconds rather then reps. **
+            **Output Format:**
+            Start with: This is a ${numberOfWeeks}-Week Plan for an ${experienceLevel} ${gender} athlete looking to improve their ${desiredMovement} to ${repsGoal} repetitions
+            - then add **Baseline Information**, listing height, weight, experience level, gender, desired movement, and target reps.
+            - Break down the plan into the following phases, with each phase including detailed week-by-week breakdowns:
+              - Foundation Building (Weeks 1-${foundationWeeks})
+              - Strength Focus (Weeks ${foundationWeeks+1}-${foundationWeeks+strengthFocusWeeks})
+              - Peak Intensity (Weeks ${foundationWeeks+strengthFocusWeeks+1}-${foundationWeeks+strengthFocusWeeks+peakIntensityWeeks})
+              - Max Effort (Weeks ${foundationWeeks+strengthFocusWeeks+peakIntensityWeeks+1}-${numberOfWeeks}): **Provide a detailed breakdown for each week and day, just as in the previous phases. Specify sets, reps, and auxiliary movements for each day, ensuring that the athlete has a clear plan to follow for every training session.**
+            - For each week, specify:
+              - Day 1: The number of sets, reps, and auxiliary movements.
+              - Day 2: The number of sets, reps, and auxiliary movements.
+              - Mention that for the rest of the days in the week, the athlete should feel free to focus on other movements or exercises based on their overall fitness goals.
+            - Provide a summary at the end of each phase, outlining the overall progress and focus.
+            - Include the same tips and disclaimer as before.
+          `,
+        },
+      ];
+
+      const planResponse = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: planMessages,
+      });
+
+      if (planResponse.choices && planResponse.choices.length > 0) {
+        const calisthenicsPlan = planResponse.choices[0].message?.content || '';
+        console.log("Generated calisthenics plan:", calisthenicsPlan);
+
+        const newCalisthenicsPlan = {
+          calisthenicsId: randomUUID(),
+          height,
+          weight,
+          experienceLevel,
+          gender,
+          desiredMovement,
+          repsGoal,
+          numberOfWeeks,
+          calisthenicsPlan,
+          createdAt: new Date(),
+        };
+
+        user.calisthenicsPlans.push(newCalisthenicsPlan);
+        await user.save();
+
+        res.status(201).json({ message: 'Calisthenics plan generated successfully', calisthenicsPlan });
+      } else {
+        throw new Error('Unexpected API response format');
+      }
+    } else {
+      throw new Error('Unexpected API response format');
+    }
+  } catch (error) {
+    console.error('Error creating calisthenics plan:', error.response ? error.response.data : error.message);
+    return res.status(500).json({ message: 'Error creating calisthenics plan' });
+  }
+};
+
+export const getCalisthenicsPlan = async (req, res) => {
+  try {
+    const userId = res.locals.jwtData.id;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Fetch the most recent calisthenics plan
+    const calisthenicsPlan = user.calisthenicsPlans[user.calisthenicsPlans.length - 1]; // Assuming you want the latest plan
+    if (!calisthenicsPlan) {
+      return res.status(404).json({ message: "Calisthenics plan not found" });
+    }
+
+    console.log("Sending Calisthenics Plan:", calisthenicsPlan); // Log the data being sent
+
+    return res.status(200).json({ calisthenicsPlan });
+  } catch (error) {
+    console.error("Error fetching calisthenics plan:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const addSavedCalisthenicsPlan = async (req: Request, res: Response, next: NextFunction) => {
+  const { calisthenicsPlanId } = req.body;  // Adjusted variable name to match frontend
+  const userId = res.locals.jwtData.id; // Retrieve user ID from decoded token
+  if (!userId) {
+    return res.status(401).json({ message: 'User not authenticated' });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Find the calisthenics plan by its id
+    const calisthenicsPlan = user.calisthenicsPlans.find(plan => plan.calisthenicsId === calisthenicsPlanId);
+    if (!calisthenicsPlan) {
+      return res.status(404).json({ message: 'Calisthenics plan not found' });
+    }
+
+    // Check if the calisthenics plan is already saved
+    const calisthenicsPlanExists = user.savedCalisthenicsPlans.some(plan => plan.calisthenicsId === calisthenicsPlanId);
+    if (calisthenicsPlanExists) {
+      return res.status(400).json({ message: 'Calisthenics plan already saved' });
+    }
+
+    // Save the plan
+    user.savedCalisthenicsPlans.push(calisthenicsPlan);
+    await user.save();
+
+    res.status(201).json({ message: 'Calisthenics plan saved successfully' });
+  } catch (error) {
+    console.error('Error saving calisthenics plan:', error);
+    res.status(500).json({ message: 'Error saving calisthenics plan' });
+  }
+};
+export const getSavedCalisthenicsPlans = async (req: Request, res: Response, next: NextFunction) => {
+  const userId = res.locals.jwtData.id; // Retrieve user ID from decoded token
+  if (!userId) {
+    return res.status(401).json({ message: 'User not authenticated' });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Filter out deleted calisthenics plans
+    //@ts-ignore
+    user.savedCalisthenicsPlans = user.savedCalisthenicsPlans.filter(plan => !plan.deleted);
+
+    await user.save();
+
+    res.status(200).json({ message: 'Saved calisthenics plans retrieved successfully', calisthenicsPlans: user.savedCalisthenicsPlans });
+  } catch (error) {
+    console.error('Error retrieving saved calisthenics plans:', error);
+    res.status(500).json({ message: 'Error retrieving saved calisthenics plans' });
+  }
+};
+export const clearAllSavedCalisthenicsPlans = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = await User.findById(res.locals.jwtData.id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-
-    // Filter out the lifting plan to be deleted based on desiredExercise
     //@ts-ignore
-    user.savedLiftingPlans = user.savedLiftingPlans.filter(plan => plan.desiredExercise !== desiredExercise);
+    user.savedCalisthenicsPlans = [];
     await user.save();
 
-    // Fetch the updated user document to ensure the lifting plan was removed
-    const updatedUser = await User.findById(res.locals.jwtData.id);
-    if (updatedUser.savedLiftingPlans.some(plan => plan.desiredExercise === desiredExercise)) {
-      return res.status(500).json({ message: 'Error deleting saved lifting plan' });
-    }
-
-    res.status(200).json({ message: 'Lifting plan deleted successfully', savedLiftingPlans: updatedUser.savedLiftingPlans });
+    res.status(200).json({ message: 'All saved calisthenics plans cleared' });
   } catch (error) {
-    console.error('Error deleting saved lifting plan:', error);
-    res.status(500).json({ message: 'Error deleting saved lifting plan' });
+    console.error('Error clearing saved calisthenics plans:', error);
+    res.status(500).json({ message: 'Error clearing saved calisthenics plans' });
   }
 };
+
+
+export const createEndurancePlan = async (req: Request, res: Response, next: NextFunction) => {
+  const { age, weight, fitnessLevel, gender, preferredActivity, distanceGoal, timeGoal, numberOfWeeks } = req.body;
+
+  try {
+    const user = await User.findById(res.locals.jwtData.id);
+    if (!user) {
+      return res.status(401).json({ message: "User not registered OR Token malfunctioned" });
+    }
+
+    const openai = configureOpenAI();
+
+    const validationMessages: ChatCompletionMessageParam[]  = [
+      {
+        role: "system",
+        content: "You are a fitness assistant that validates endurance activities and generates specific endurance plans.",
+      },
+      {
+        role: "user",
+        content: `
+          Is "${preferredActivity}" a valid endurance activity? If it is, generate a list of related training sessions that complement this activity. If not, respond with "Invalid activity."
+        `,
+      },
+    ];
+
+    const validationResponse = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: validationMessages,
+    });
+
+    if (validationResponse.choices && validationResponse.choices.length > 0) {
+      const responseMessage = validationResponse.choices[0].message?.content || '';
+
+      if (responseMessage.toLowerCase().includes("invalid activity")) {
+        return res.status(400).json({ message: 'Invalid activity entered. Please enter a valid endurance activity.' });
+      }
+
+      const trainingSessions = responseMessage.split(',').map(session => session.trim());
+
+      console.log("Activity:", preferredActivity);
+      console.log("Training Sessions:", trainingSessions);
+
+      // Base algorithm to calculate distance and time progression
+      const baseDistanceFactor = fitnessLevel === "Beginner" ? 0.6 :
+                                 fitnessLevel === "Intermediate" ? 0.75 : 0.9;
+
+      const startingDistance = Math.round(distanceGoal * baseDistanceFactor);
+      const weeklyProgression = Math.ceil((distanceGoal - startingDistance) / numberOfWeeks);
+
+      const baseTimeFactor = fitnessLevel === "Beginner" ? 0.6 :
+                             fitnessLevel === "Intermediate" ? 0.75 : 0.9;
+
+      const startingTime = Math.round(parseFloat(timeGoal) * baseTimeFactor);
+      const weeklyTimeProgression = Math.ceil((parseFloat(timeGoal) - startingTime) / numberOfWeeks);
+
+      const planMessages: ChatCompletionMessageParam[]  = [
+        {
+          role: "system",
+          content: "You are a fitness assistant that generates specific endurance plans.",
+        },
+        {
+          role: "user",
+          content: `
+            Generate a detailed ${numberOfWeeks}-week endurance plan specifically for ${preferredActivity} based on the following details:
+            - Age: ${age}
+            - Weight: ${weight} pounds
+            - Fitness Level: ${fitnessLevel}
+            - Gender: ${gender}
+            - Preferred Activity: ${preferredActivity}
+            - Target Distance: ${distanceGoal} miles/kilometers
+            - Target Time: ${timeGoal} minutes
+            - Starting Distance (Calculated): ${startingDistance} miles/kilometers (This should be the distance used on Week 1, Day 1 and progress from here over the course of the program)
+            - Starting Time (Calculated): ${startingTime} minutes (This should be the time used on Week 1, Day 1 and progress from here over the course of the program)
+            - Number of Weeks: ${numberOfWeeks}
+            
+            The plan should include appropriately integrated training sessions: ${trainingSessions.join(', ')}.
+
+            **Important Considerations:**
+            - Ensure the progression in distance and time is realistic and achievable, with appropriate increases each week.
+            - Use the calculated starting distance of ${startingDistance} miles/kilometers and starting time of ${startingTime} minutes for Week 1, Day 1, and then progressively increase these metrics over the duration of the program.
+            - For each week, specify training days focused on the main activity (${preferredActivity}) and its complementary sessions.
+            - **Do not include any # symbols in the output.**
+            - **Ensure to output each phase/week in detail.**
+            - **Provide a detailed breakdown for each week and day, ensuring the athlete has a clear plan to follow for every training session.**
+            - Include general tips for warm-up, rest, nutrition, sleep, and form.
+            **Output Format:**
+            Start with: This is a ${numberOfWeeks}-Week Plan for an ${fitnessLevel} ${gender} athlete looking to improve their ${preferredActivity} to ${distanceGoal} miles/kilometers and ${timeGoal} minutes.
+            - then add **Baseline Information**, listing age, weight, fitness level, gender, preferred activity, target distance, and target time.
+            - Break down the plan into detailed week-by-week breakdowns.
+            - For each week, specify:
+              - Day 1: The distance, time, and training sessions.
+              - Day 2: The distance, time, and training sessions.
+              - Mention that for the rest of the days in the week, the athlete should focus on recovery or other complementary activities.
+            - Provide a summary at the end, outlining the overall progress and focus.
+            - Include the same tips and disclaimer as before.
+          `,
+        },
+      ];
+
+      const planResponse = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: planMessages,
+      });
+
+      if (planResponse.choices && planResponse.choices.length > 0) {
+        const endurancePlan = planResponse.choices[0].message?.content || '';
+        console.log("Generated endurance plan:", endurancePlan);
+
+        const newEndurancePlan = {
+          enduranceId: randomUUID(),
+          age,
+          weight,
+          fitnessLevel,
+          gender,
+          preferredActivity,
+          distanceGoal,
+          timeGoal,
+          numberOfWeeks,
+          endurancePlan,
+          createdAt: new Date(),
+        };
+
+        user.endurancePlans.push(newEndurancePlan);
+        await user.save();
+
+        res.status(201).json({ message: 'Endurance plan generated successfully', endurancePlan });
+      } else {
+        throw new Error('Unexpected API response format');
+      }
+    } else {
+      throw new Error('Unexpected API response format');
+    }
+  } catch (error) {
+    console.error('Error creating endurance plan:', error.response ? error.response.data : error.message);
+    return res.status(500).json({ message: 'Error creating endurance plan' });
+  }
+};
+export const getEndurancePlan = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = res.locals.jwtData.id;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Fetch the most recent endurance plan
+    const endurancePlan = user.endurancePlans[user.endurancePlans.length - 1]; // Assuming you want the latest plan
+    if (!endurancePlan) {
+      return res.status(404).json({ message: "Endurance plan not found" });
+    }
+
+    console.log("Sending Endurance Plan:", endurancePlan); // Log the data being sent
+
+    return res.status(200).json({ endurancePlan });
+  } catch (error) {
+    console.error("Error fetching endurance plan:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Controller to save an endurance plan
+export const addSavedEndurancePlan = async (req: Request, res: Response, next: NextFunction) => {
+  const { endurancePlanId } = req.body;  // Adjusted variable name to match frontend
+  const userId = res.locals.jwtData.id; // Retrieve user ID from decoded token
+  if (!userId) {
+    return res.status(401).json({ message: 'User not authenticated' });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Find the endurance plan by its id
+    const endurancePlan = user.endurancePlans.find(plan => plan.enduranceId === endurancePlanId);
+    if (!endurancePlan) {
+      return res.status(404).json({ message: 'Endurance plan not found' });
+    }
+
+    // Check if the endurance plan is already saved
+    const endurancePlanExists = user.savedEndurancePlans.some(plan => plan.enduranceId === endurancePlanId);
+    if (endurancePlanExists) {
+      return res.status(400).json({ message: 'Endurance plan already saved' });
+    }
+
+    // Save the plan
+    user.savedEndurancePlans.push(endurancePlan);
+    await user.save();
+
+    res.status(201).json({ message: 'Endurance plan saved successfully' });
+  } catch (error) {
+    console.error('Error saving endurance plan:', error);
+    res.status(500).json({ message: 'Error saving endurance plan' });
+  }
+};
+export const getSavedEndurancePlans = async (req: Request, res: Response, next: NextFunction) => {
+  const userId = res.locals.jwtData.id; // Retrieve user ID from decoded token
+  if (!userId) {
+    return res.status(401).json({ message: 'User not authenticated' });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Filter out deleted endurance plans
+    //@ts-ignore
+    user.savedEndurancePlans = user.savedEndurancePlans.filter(plan => !plan.deleted);
+
+    await user.save();
+
+    res.status(200).json({ message: 'Saved endurance plans retrieved successfully', endurancePlans: user.savedEndurancePlans });
+  } catch (error) {
+    console.error('Error retrieving saved endurance plans:', error);
+    res.status(500).json({ message: 'Error retrieving saved endurance plans' });
+  }
+};
+// Controller to clear all saved endurance plans
+export const clearAllSavedEndurancePlans = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = await User.findById(res.locals.jwtData.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    //@ts-ignore
+
+    user.savedEndurancePlans = [];
+    await user.save();
+
+    res.status(200).json({ message: 'All saved endurance plans cleared' });
+  } catch (error) {
+    console.error('Error clearing saved endurance plans:', error);
+    res.status(500).json({ message: 'Error clearing saved endurance plans' });
+  }
+};
+
+export const createBalancePlan = async (req: Request, res: Response, next: NextFunction) => {
+  const { age, fitnessLevel, gender, targetMovement, stabilityGoal, numberOfWeeks } = req.body;
+
+  try {
+    const user = await User.findById(res.locals.jwtData.id);
+    if (!user) {
+      return res.status(401).json({ message: "User not registered OR Token malfunctioned" });
+    }
+
+    const openai = configureOpenAI();
+
+    const validationMessages: ChatCompletionMessageParam[] = [
+      {
+        role: "system",
+        content: "You are a fitness assistant that validates exercises and generates specific balance plans.",
+      },
+      {
+        role: "user",
+        content: `Is "${targetMovement}" a valid balance exercise? If it is, generate a list of related auxiliary exercises that complement this movement. If not, respond with "Invalid exercise."`,
+      },
+    ];
+
+    const validationResponse = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: validationMessages,
+    });
+
+    if (validationResponse.choices && validationResponse.choices.length > 0) {
+      const responseMessage = validationResponse.choices[0].message?.content || '';
+
+      if (responseMessage.toLowerCase().includes("invalid exercise")) {
+        return res.status(400).json({ message: 'Invalid exercise entered. Please enter a valid exercise.' });
+      }
+
+      const auxiliaryMovements = responseMessage.split(',').map(movement => movement.trim());
+
+      console.log("Movement:", targetMovement);
+      console.log("Auxiliary Movements:", auxiliaryMovements);
+
+      // Base algorithm to calculate stability progression
+      const baseStabilityFactor = fitnessLevel === "Beginner" ? 0.5 :
+                                  fitnessLevel === "Intermediate" ? 0.7 : 0.9;
+
+      const startingStability = Math.round(parseFloat(stabilityGoal) * baseStabilityFactor);
+
+      const weeklyProgression = Math.ceil((parseFloat(stabilityGoal) - startingStability) / numberOfWeeks);
+
+      // Calculate the number of weeks for each phase based on total numberOfWeeks
+      const foundationWeeks = Math.floor(numberOfWeeks * 0.25);  // Foundation Building Phase
+      const strengthFocusWeeks = Math.floor(numberOfWeeks * 0.25);  // Strength Focus Phase
+      const peakIntensityWeeks = Math.floor(numberOfWeeks * 0.25);  // Peak Intensity Phase
+      const maxEffortWeeks = numberOfWeeks - (foundationWeeks + strengthFocusWeeks + peakIntensityWeeks);  // Max Effort Phase
+
+      const planMessages: ChatCompletionMessageParam[] = [
+        {
+          role: "system",
+          content: "You are a fitness assistant that generates specific balance plans.",
+        },
+        {
+          role: "user",
+          content: `
+            Generate a detailed ${numberOfWeeks}-week balance plan specifically for ${targetMovement} based on the following details:
+            - Age: ${age} years
+            - Fitness Level: ${fitnessLevel}
+            - Gender: ${gender}
+            - Target Movement: ${targetMovement}
+            - Stability Goal: ${stabilityGoal} seconds
+            - Starting Stability (Calculated): ${startingStability} seconds (This should be the starting stability goal for Week 1, Day 1 and should progress from here over the course of the program)
+            - Number of Weeks: ${numberOfWeeks}
+            
+            The plan should include appropriately integrated auxiliary movements: ${auxiliaryMovements.join(', ')}.
+      
+            **Important Considerations:**
+            - Ensure the progression in stability is realistic and achievable, with appropriate increases each week.
+            - Use the calculated starting stability of ${startingStability} seconds for Week 1, Day 1, and then progressively increase the stability over the duration of the program.
+            - For each week, specify only two training days focused on the main movement (${targetMovement}) and its auxiliary movements. The remaining days of the week should be left for the athlete to focus on other movements or exercises as per their goals.
+            - **Do not include any # symbols in the output.**
+            - **Ensure to output each phase/week in detail. Do not cut anything out, especially for weeks that come later. These weeks should have the same level of detail as Weeks that came earlier in the program.**
+          `,
+        },
+      ];
+
+      const planResponse = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: planMessages,
+      });
+
+      if (planResponse.choices && planResponse.choices.length > 0) {
+        const balancePlan = planResponse.choices[0].message?.content || '';
+        console.log("Generated balance plan:", balancePlan);
+
+        const newBalancePlan = {
+          balanceId: randomUUID(),
+          age,
+          fitnessLevel,
+          gender,
+          targetMovement,
+          stabilityGoal,
+          numberOfWeeks,
+          balancePlan,
+          createdAt: new Date(),
+        };
+
+        user.balancePlans.push(newBalancePlan);
+        await user.save();
+
+        res.status(201).json({ message: 'Balance plan generated successfully', balancePlan });
+      } else {
+        throw new Error('Unexpected API response format');
+      }
+    } else {
+      throw new Error('Unexpected API response format');
+    }
+  } catch (error) {
+    console.error('Error creating balance plan:', error.response ? error.response.data : error.message);
+    return res.status(500).json({ message: 'Error creating balance plan' });
+  }
+};
+export const getBalancePlan = async (req: Request, res: Response, next: NextFunction) => {
+  const userId = res.locals.jwtData.id; // Retrieve user ID from decoded token
+  if (!userId) {
+    return res.status(401).json({ message: 'User not authenticated' });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Fetch the most recent balance plan
+    const balancePlan = user.balancePlans[user.balancePlans.length - 1]; // Assuming you want the latest plan
+    if (!balancePlan) {
+      return res.status(404).json({ message: 'Balance plan not found' });
+    }
+
+    console.log("Sending Balance Plan:", balancePlan); // Log the data being sent
+
+    return res.status(200).json({ balancePlan });
+  } catch (error) {
+    console.error("Error fetching balance plan:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+export const addSavedBalancePlan = async (req: Request, res: Response, next: NextFunction) => {
+  const { balancePlanId } = req.body;
+  const userId = res.locals.jwtData.id;
+  if (!userId) {
+    return res.status(401).json({ message: 'User not authenticated' });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const balancePlan = user.balancePlans.find(plan => plan.balanceId === balancePlanId);
+    if (!balancePlan) {
+      return res.status(404).json({ message: 'Balance plan not found' });
+    }
+
+    const balancePlanExists = user.savedBalancePlans.some(plan => plan.balanceId === balancePlanId);
+    if (balancePlanExists) {
+      return res.status(400).json({ message: 'Balance plan already saved' });
+    }
+
+    user.savedBalancePlans.push(balancePlan);
+    await user.save();
+
+    res.status(201).json({ message: 'Balance plan saved successfully' });
+  } catch (error) {
+    console.error('Error saving balance plan:', error);
+    res.status(500).json({ message: 'Error saving balance plan' });
+  }
+};
+export const getSavedBalancePlans = async (req: Request, res: Response, next: NextFunction) => {
+  const userId = res.locals.jwtData.id;
+  if (!userId) {
+    return res.status(401).json({ message: 'User not authenticated' });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    //@ts-ignore
+    user.savedBalancePlans = user.savedBalancePlans.filter(plan => !plan.deleted);
+
+    await user.save();
+
+    res.status(200).json({ message: 'Saved balance plans retrieved successfully', balancePlans: user.savedBalancePlans });
+  } catch (error) {
+    console.error('Error retrieving saved balance plans:', error);
+    res.status(500).json({ message: 'Error retrieving saved balance plans' });
+  }
+};
+export const clearAllSavedBalancePlans = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = await User.findById(res.locals.jwtData.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    //@ts-ignore
+    user.savedBalancePlans = [];
+    await user.save();
+
+    res.status(200).json({ message: 'All saved balance plans cleared' });
+  } catch (error) {
+    console.error('Error clearing saved balance plans:', error);
+    res.status(500).json({ message: 'Error clearing saved balance plans' });
+  }
+};
+
+export const createFlexibilityPlan = async (req: Request, res: Response, next: NextFunction) => {
+  const { age, fitnessLevel, gender, targetArea, flexibilityGoal, numberOfWeeks } = req.body;
+
+  try {
+    const user = await User.findById(res.locals.jwtData.id);
+    if (!user) {
+      return res.status(401).json({ message: "User not registered OR Token malfunctioned" });
+    }
+
+    const openai = configureOpenAI();
+
+    const validationMessages:ChatCompletionMessageParam[] = [
+      {
+        role: "system",
+        content: "You are a fitness assistant that validates exercises and generates specific flexibility plans.",
+      },
+      {
+        role: "user",
+        content: `Is "${targetArea}" a valid area for flexibility training? If it is, generate a list of related stretches that complement this area. If not, respond with "Invalid area."`,
+      },
+    ];
+
+    const validationResponse = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: validationMessages,
+    });
+
+    if (validationResponse.choices && validationResponse.choices.length > 0) {
+      const responseMessage = validationResponse.choices[0].message?.content || '';
+
+      if (responseMessage.toLowerCase().includes("invalid area")) {
+        return res.status(400).json({ message: 'Invalid area entered. Please enter a valid area.' });
+      }
+
+      const relatedStretches = responseMessage.split(',').map(stretch => stretch.trim());
+
+      // Base algorithm to calculate stretch duration and progression
+      const baseDurationFactor = fitnessLevel === "beginner" ? 0.5 :
+                                 fitnessLevel === "intermediate" ? 0.7 : 0.9;
+
+      const startingDuration = Math.round(30 * baseDurationFactor); // 30 seconds as base
+
+      const weeklyProgression = Math.ceil((60 - startingDuration) / numberOfWeeks); // Progression towards 60 seconds
+
+      const planMessages: ChatCompletionMessageParam[]= [
+        {
+          role: "system",
+          content: "You are a fitness assistant that generates specific flexibility plans.",
+        },
+        {
+          role: "user",
+          content: `
+            Generate a detailed ${numberOfWeeks}-week flexibility plan specifically for the ${targetArea} based on the following details:
+            - Age: ${age} years
+            - Fitness Level: ${fitnessLevel}
+            - Gender: ${gender}
+            - Target Area: ${targetArea}
+            - Flexibility Goal: ${flexibilityGoal}
+            - Starting Duration: ${startingDuration} seconds (Week 1)
+            - Weekly Progression: ${weeklyProgression} seconds/week
+            - Include related stretches: ${relatedStretches.join(', ')}.
+
+            **Output Format:**
+            - Provide a week-by-week plan detailing the stretches and progression in duration.
+            - Include safety tips and advice for optimal flexibility training.
+          `,
+        },
+      ];
+
+      const planResponse = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: planMessages,
+      });
+
+      if (planResponse.choices && planResponse.choices.length > 0) {
+        const flexibilityPlan = planResponse.choices[0].message?.content || '';
+        console.log("Generated flexibility plan:", flexibilityPlan);
+
+        const newFlexibilityPlan = {
+          flexibilityId: randomUUID(),
+          age,
+          fitnessLevel,
+          gender,
+          targetArea,
+          flexibilityGoal,
+          numberOfWeeks,
+          flexibilityPlan,
+          createdAt: new Date(),
+        };
+
+        user.flexibilityPlans.push(newFlexibilityPlan);
+        await user.save();
+
+        res.status(201).json({ message: 'Flexibility plan generated successfully', flexibilityPlan });
+      } else {
+        throw new Error('Unexpected API response format');
+      }
+    } else {
+      throw new Error('Unexpected API response format');
+    }
+  } catch (error) {
+    console.error('Error creating flexibility plan:', error.response ? error.response.data : error.message);
+    return res.status(500).json({ message: 'Error creating flexibility plan' });
+  }
+};
+export const getFlexibilityPlan = async (req: Request, res: Response, next: NextFunction) => {
+  const userId = res.locals.jwtData.id;
+  if (!userId) {
+    return res.status(401).json({ message: 'User not authenticated' });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const flexibilityPlan = user.flexibilityPlans[user.flexibilityPlans.length - 1];
+    if (!flexibilityPlan) {
+      return res.status(404).json({ message: 'Flexibility plan not found' });
+    }
+
+    return res.status(200).json({ flexibilityPlan });
+  } catch (error) {
+    console.error("Error fetching flexibility plan:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+export const getSavedFlexibilityPlans = async (req: Request, res: Response, next: NextFunction) => {
+  const userId = res.locals.jwtData.id;
+  if (!userId) {
+    return res.status(401).json({ message: 'User not authenticated' });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    //@ts-ignore
+    user.savedFlexibilityPlans = user.savedFlexibilityPlans.filter(plan => !plan.deleted);
+    await user.save();
+
+    res.status(200).json({ message: 'Saved flexibility plans retrieved successfully', flexibilityPlans: user.savedFlexibilityPlans });
+  } catch (error) {
+    console.error('Error retrieving saved flexibility plans:', error);
+    res.status(500).json({ message: 'Error retrieving saved flexibility plans' });
+  }
+};
+export const addSavedFlexibilityPlan = async (req: Request, res: Response, next: NextFunction) => {
+  const { flexibilityPlanId } = req.body;
+  const userId = res.locals.jwtData.id;
+  if (!userId) {
+    return res.status(401).json({ message: 'User not authenticated' });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const flexibilityPlan = user.flexibilityPlans.find(plan => plan.flexibilityId === flexibilityPlanId);
+    if (!flexibilityPlan) {
+      return res.status(404).json({ message: 'Flexibility plan not found' });
+    }
+
+    const planExists = user.savedFlexibilityPlans.some(plan => plan.flexibilityId === flexibilityPlanId);
+    if (planExists) {
+      return res.status(400).json({ message: 'Flexibility plan already saved' });
+    }
+
+    user.savedFlexibilityPlans.push(flexibilityPlan);
+    await user.save();
+
+    res.status(201).json({ message: 'Flexibility plan saved successfully' });
+  } catch (error) {
+    console.error('Error saving flexibility plan:', error);
+    res.status(500).json({ message: 'Error saving flexibility plan' });
+  }
+};
+export const clearAllSavedFlexibilityPlans = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = await User.findById(res.locals.jwtData.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    //@ts-ignore
+    user.savedFlexibilityPlans = [];
+    await user.save();
+
+    res.status(200).json({ message: 'All saved flexibility plans cleared' });
+  } catch (error) {
+    console.error('Error clearing saved flexibility plans:', error);
+    res.status(500).json({ message: 'Error clearing saved flexibility plans' });
+  }
+};
+
+
 export const getAboutDeveloper = async (
   req: Request,
   res: Response,

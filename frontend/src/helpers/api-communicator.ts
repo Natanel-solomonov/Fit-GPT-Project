@@ -21,6 +21,33 @@ interface LiftingPlanData {
   targetWeight: number;
   numberOfWeeks: number;
 }
+interface CalisthenicsPlanData {
+  height: number;
+  weight: number;
+  experienceLevel: string;
+  gender: string;
+  desiredMovement: string;
+  repsGoal: number;
+  numberOfWeeks: number;
+}
+ interface EndurancePlanData {
+  age: number;
+  weight: number;
+  fitnessLevel: string; // e.g., "Beginner", "Intermediate", "Advanced"
+  gender: string; // e.g., "Male", "Female"
+  preferredActivity: string; // e.g., "Running", "Cycling"
+  distanceGoal: number; // e.g., in miles or kilometers
+  timeGoal: string; // e.g., "60 minutes"
+  numberOfWeeks: number; // The number of weeks for the plan
+}
+export interface FlexibilityPlanData {
+  age: number;
+  fitnessLevel: string;
+  gender: string;
+  targetArea: string;
+  flexibilityGoal: string;
+  numberOfWeeks: number;
+}
 
 const convertFormDataToLiftingPlanData = (formData: FormData): LiftingPlanData => {
   return {
@@ -213,6 +240,272 @@ export const deleteSavedLiftingPlan = async (liftingPlanId: string) => {
     console.error('Error deleting lifting plan:', error.response || error.message || error);
     toast.error('Failed to delete lifting plan');
     return null;
+  }
+};
+
+export const createCalisthenicsPlan = async (formData: CalisthenicsPlanData) => {
+  try {
+    const response = await axios.post('/user/calisthenics-plan', formData, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error creating calisthenics plan:', error);
+    throw error;
+  }
+};
+
+export const getCalisthenicsPlan = async () => {
+  try {
+    const response = await axios.get('/user/calisthenics-plan-response', {
+      headers: {
+        'Cache-Control': 'no-cache',
+      },
+    });
+    return response.data
+  } catch (error) {
+    console.error('Error retrieving calisthenics plan:', error);
+    throw error;
+  }
+};
+export const saveCalisthenicsPlan = async (calisthenicsPlanId: string) => {
+  try {
+    const res = await axios.post("/user/save-calisthenics-plan", { calisthenicsPlanId });
+    if (res.status !== 201 && res.status !== 200) {
+      throw new Error("Unable to save calisthenics plan");
+    }
+    return res.data;
+  } catch (error) {
+    console.error("Error in saveCalisthenicsPlan:", error);
+    throw error;
+  }
+};
+
+export const getSavedCalisthenicsPlans = async () => {
+  try {
+    const res = await axios.get("/user/saved-calisthenics-plans");
+    if (res.status !== 200) {
+      throw new Error("Unable to retrieve saved calisthenics plans");
+    }
+    return res.data
+  } catch (error) {
+    console.error("Error in getSavedCalisthenicsPlans:", error);
+    throw error;
+  }
+};
+
+export const clearAllSavedCalisthenicsPlans = async () => {
+  try {
+    await axios.delete('/user/clear-saved-calisthenics-plans');
+  } catch (error) {
+    console.error("Error clearing saved calisthenics plans:", error);
+    throw error;
+  }
+};
+
+
+
+
+export const createEndurancePlan = async (formData: EndurancePlanData) => {
+  try {
+    const response = await axios.post('/user/endurance-plan', formData, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error creating endurance plan:', error);
+    throw error;
+  }
+};
+
+export const getEndurancePlan = async () => {
+  try {
+    const response = await axios.get('/user/endurance-plan-response', {
+      headers: {
+        'Cache-Control': 'no-cache',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error retrieving endurance plan:', error);
+    throw error;
+  }
+};
+
+export const saveEndurancePlan = async (endurancePlanId: string) => {
+  try {
+    const res = await axios.post("/user/save-endurance-plan", { endurancePlanId });
+    if (res.status !== 201 && res.status !== 200) {
+      throw new Error("Unable to save endurance plan");
+    }
+    return res.data;
+  } catch (error) {
+    console.error("Error in saveEndurancePlan:", error);
+    throw error;
+  }
+};
+
+export const getSavedEndurancePlans = async () => {
+  try {
+    const res = await axios.get("/user/saved-endurance-plans");
+    if (res.status !== 200) {
+      throw new Error("Unable to retrieve saved endurance plans");
+    }
+    return res.data;
+  } catch (error) {
+    console.error("Error in getSavedEndurancePlans:", error);
+    throw error;
+  }
+};
+
+export const clearAllSavedEndurancePlans = async () => {
+  try {
+    await axios.delete('/user/clear-saved-endurance-plans');
+  } catch (error) {
+    console.error("Error clearing saved endurance plans:", error);
+    throw error;
+  }
+};
+
+
+export const createBalancePlan = async (formData: any) => {
+  try {
+    const response = await axios.post('/user/balance-plan', formData, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error creating balance plan:', error);
+    throw error;
+  }
+};
+export const getBalancePlan = async () => {
+  try {
+    const response = await axios.get('/user/balance-plan-response', {
+      headers: {
+        'Cache-Control': 'no-cache',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error retrieving balance plan:', error);
+    throw error;
+  }
+};
+
+export const getSavedBalancePlans = async () => {
+  try {
+    const response = await axios.get('/user/saved-balance-plans', {
+      headers: {
+        'Cache-Control': 'no-cache',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error retrieving saved balance plans:', error);
+    throw error;
+  }
+};
+
+export const saveBalancePlan = async (balancePlanId: string) => {
+  try {
+    const response = await axios.post('/user/save-balance-plan', { balancePlanId });
+    return response.data;
+  } catch (error) {
+    console.error('Error saving balance plan:', error);
+    throw error;
+  }
+};
+
+export const clearAllSavedBalancePlans = async () => {
+  try {
+    await axios.delete('/user/clear-saved-balance-plans');
+  } catch (error) {
+    console.error('Error clearing saved balance plans:', error);
+    throw error;
+  }
+};
+
+export const createFlexibilityPlan = async (formData: FlexibilityPlanData) => {
+  try {
+    const response = await axios.post('/user/flexibility-plan', formData, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error creating flexibility plan:', error);
+    throw error;
+  }
+};
+export const getFlexibilityPlan = async () => {
+  try {
+    const response = await axios.get('/user/flexibility-plan-response', {
+      headers: {
+        'Cache-Control': 'no-cache',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error retrieving flexibility plan:', error);
+    throw error;
+  }
+};
+export const getSavedFlexibilityPlans = async () => {
+  try {
+    const res = await axios.get("/user/saved-flexibility-plans");
+    if (res.status !== 200) {
+      throw new Error("Unable to retrieve saved flexibility plans");
+    }
+    return res.data
+  } catch (error) {
+    console.error("Error in getSavedFlexibilityPlans:", error);
+    throw error;
+  }
+};
+export const saveFlexibilityPlan = async (flexibilityPlanId: string) => {
+  try {
+    const res = await axios.post("/user/save-flexibility-plan", { flexibilityPlanId });
+    if (res.status !== 201 && res.status !== 200) {
+      throw new Error("Unable to save flexibility plan");
+    }
+    return res.data;
+  } catch (error) {
+    console.error("Error in saveFlexibilityPlan:", error);
+    throw error;
+  }
+};
+export const clearAllSavedFlexibilityPlans = async () => {
+  try {
+    await axios.delete('/user/clear-saved-flexibility-plans');
+  } catch (error) {
+    console.error("Error clearing saved flexibility plans:", error);
+    throw error;
+  }
+};
+
+
+export const getPlanOptions = async () => {
+  try {
+    const response = await axios.get('/user/plan-options');
+    if (response.status !== 200) {
+      throw new Error('Failed to retrieve plan options');
+    }
+    return response.data.options;
+  } catch (error) {
+    console.error('Error fetching plan options:', error);
+    throw error;
   }
 };
 export const getAboutDeveloper = async () => {

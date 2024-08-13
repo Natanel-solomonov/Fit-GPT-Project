@@ -29,14 +29,14 @@ const Header = () => {
               />
               <NavigationLink
                 bg="gold"
-                to="/lifting-plans"
-                text="Lifting Plans"
+                to="/plan-options"
+                text="Fitness Plans"
                 textColor="black"
               />
               <NavigationLink
                 bg="gold"
                 to="/saved-plans"
-                text="Saved Lifting Plans"
+                text="Saved Fitness Plans"
                 textColor="black"
               />
               <NavigationLink

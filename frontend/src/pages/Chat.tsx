@@ -53,6 +53,12 @@ const Chat = () => {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSubmit();
+    }
+  };
+
   useLayoutEffect(() => {
     if (auth?.isLoggedIn && auth?.user) {
       toast.loading("Loading Chats", { id: "loadchats" });
@@ -225,6 +231,7 @@ const Chat = () => {
           <input
             ref={inputRef}
             type="text"
+            onKeyDown={handleKeyDown} // Add onKeyDown event listener
             style={{
               width: "100%",
               backgroundColor: "transparent",

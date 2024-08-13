@@ -1,77 +1,9 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
-import { TextField, Button, Box, Typography, Grid, } from '@mui/material';
+import { TextField, Button, Box, Typography, Grid } from '@mui/material';
 import { styled } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
-import { createLiftingPlan } from '../helpers/api-communicator';
-
-const weightliftingTerms = [
-  "bench press", "incline bench press", "decline bench press", "dumbbell bench press",
-  "squat", "front squat", "Bulgarian split squat", "overhead squat",
-  "deadlift", "romanian deadlift", "sumo deadlift", "single-leg deadlift",
-  "overhead press", "seated shoulder press", "dumbbell shoulder press", "Arnold press",
-  "barbell curl", "dumbbell curl", "hammer curl", "concentration curl",
-  "tricep extension", "skull crusher", "tricep dip", "overhead tricep extension",
-  "lat pulldown", "pull-up", "chin-up", "wide-grip pulldown",
-  "seated row", "bent-over row", "cable row", "one-arm dumbbell row",
-  "leg press", "single-leg press", "hack squat", "smith machine squat",
-  "leg extension", "leg curl", "lying leg curl", "seated leg curl",
-  "calf raise", "seated calf raise", "donkey calf raise", "leg press calf raise",
-  "shoulder press", "dumbbell shoulder press", "military press", "Arnold press",
-  "chest fly", "incline chest fly", "decline chest fly", "cable chest fly",
-  "hammer curl", "preacher curl", "reverse curl", "spider curl",
-  "skull crusher", "overhead tricep extension", "tricep dip", "close-grip bench press",
-  "pull-up", "chin-up", "neutral-grip pull-up", "wide-grip pull-up",
-  "face pull", "upright row", "shrug", "trap raise",
-  "front raise", "lateral raise", "rear delt fly", "dumbbell lateral raise",
-  "rear delt fly", "reverse pec deck", "bent-over rear delt fly", "cable rear delt fly",
-  "hyperextension", "reverse hyperextension", "glute bridge", "hip thrust",
-  "romanian deadlift", "sumo deadlift", "stiff-leg deadlift", "trap bar deadlift",
-  "clean and press", "snatch", "power clean", "hang clean",
-  "power snatch", "high pull", "snatch-grip high pull", "clean pull",
-  "good morning", "seated good morning", "cable good morning", "banded good morning",
-  "single-leg deadlift", "single-leg Romanian deadlift", "pistol squat", "Bulgarian split squat",
-  "cable fly", "low cable fly", "high cable fly", "cable crossover","barbell squat", "barbell front squat", "barbell overhead squat",
-  "barbell lunge", "barbell step-up", "barbell hip thrust", 
-  "barbell glute bridge", "barbell bent-over row", "barbell clean",
-  "barbell snatch", "barbell thruster", "barbell jerk",
-  "barbell high pull", "barbell low pull", "barbell rack pull",
-  "barbell shoulder press", "barbell push press", "barbell bench pull",
-  "barbell chest press", "barbell incline chest press", "barbell decline chest press",
-  "barbell pullover", "barbell curl", "barbell reverse curl",
-  "barbell skull crusher", "barbell tricep extension", "barbell overhead tricep extension",
-  "barbell shrug", "barbell upright row", "barbell front raise",
-  "barbell deadlift", "barbell sumo deadlift", "barbell Romanian deadlift",
-  "barbell stiff-leg deadlift", "barbell calf raise", "barbell wrist curl",
-  "barbell reverse wrist curl", "barbell hack squat", "barbell zercher squat",
-  "barbell split squat", "barbell good morning", "barbell single-arm row",
-  "barbell landmine press", "barbell landmine row", "barbell landmine squat",
-  "barbell landmine rotational twist", "barbell landmine single-leg deadlift",
-  "barbell landmine shoulder press", "barbell landmine clean and press",
-  "trap bar deadlift", "trap bar squat", "trap bar farmer's walk",
-  "trap bar jump shrug", "trap bar high pull"
-];
-
-
-interface FormData {
-  height: string;
-  weight: string;
-  experienceLevel: string;
-  gender: string;
-  desiredExercise: string;
-  targetWeight: string;
-  numberOfWeeks: string;
-}
-
-interface LiftingPlanData {
-  height: number;
-  weight: number;
-  experienceLevel: string;
-  gender: string;
-  desiredExercise: string;
-  targetWeight: number;
-  numberOfWeeks: number;
-}
+import { createCalisthenicsPlan } from '../helpers/api-communicator';
 
 const CustomTextField = styled(TextField)({
   '& .MuiInputBase-root': {
@@ -100,14 +32,14 @@ const CustomTextField = styled(TextField)({
   },
 });
 
-const LiftingPlanSurvey: React.FC = () => {
-  const [formData, setFormData] = useState<FormData>({
+const CalisthenicsPlanSurvey: React.FC = () => {
+  const [formData, setFormData] = useState({
     height: '',
     weight: '',
     experienceLevel: '',
     gender: '',
-    desiredExercise: '',
-    targetWeight: '',
+    desiredMovement: '',
+    repsGoal: '',
     numberOfWeeks: '',
   });
 
@@ -121,42 +53,25 @@ const LiftingPlanSurvey: React.FC = () => {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-
-    const isValidExercise = weightliftingTerms.some(keyword =>
-      keyword.toLowerCase() === formData.desiredExercise.toLowerCase()
-    );
-
-    if (!isValidExercise) {
-      toast.error('Invalid exercise entered. Please enter a valid exercise.');
-      return;
-    }
-
     setLoading(true);
-    const loadingToastId = toast.loading('Creating lifting plan...');
-
+    const loadingToastId = toast.loading('Creating calisthenics plan...');
+  
     try {
-      const liftingPlanData: LiftingPlanData = {
+      const formattedData = {
+        ...formData,
         height: Number(formData.height),
         weight: Number(formData.weight),
-        experienceLevel: formData.experienceLevel,
-        gender: formData.gender,
-        desiredExercise: formData.desiredExercise,
-        targetWeight: Number(formData.targetWeight),
+        repsGoal: Number(formData.repsGoal),
         numberOfWeeks: Number(formData.numberOfWeeks),
       };
-
-      console.log('Form Data:', liftingPlanData); // Log form data before sending
-      //@ts-ignore
-      const response = await createLiftingPlan(liftingPlanData);
-
-      console.log('Lifting plan created successfully:', response);
+  
+       await createCalisthenicsPlan(formattedData); // Pass formatted data to the API communicator
       toast.dismiss(loadingToastId);
-      toast.success('Lifting plan created successfully!');
-      navigate('/lifting-plan-response');
-    } catch (error: any) {
-      console.error('Error creating lifting plan:', error);
+      toast.success('Calisthenics plan created successfully!');
+      navigate('/calisthenics-plan-response');
+    } catch (error) {
       toast.dismiss(loadingToastId);
-      toast.error('Failed to create lifting plan');
+      toast.error('Failed to create calisthenics plan');
     } finally {
       setLoading(false);
     }
@@ -166,12 +81,12 @@ const LiftingPlanSurvey: React.FC = () => {
     <Grid container spacing={2} alignItems="center" justifyContent="center" sx={{ mt: 4 }}>
       <Grid item xs={12} md={6}>
         <Box display="flex" justifyContent="center">
-          <img src="./LiftingPlan.png" alt="Lifting Plan" style={{ width: '100%', maxWidth: '2000px' }} />
+          <img src="./CalisthenicsPlan.png" alt="Calisthenics Plan" style={{ width: '100%', maxWidth: '2000px' }} />
         </Box>
       </Grid>
       <Grid item xs={12} md={6}>
         <Box sx={{ width: '100%', maxWidth: 500, p: 2, border: '1px solid gold', borderRadius: 2 }}>
-          <Typography variant="h4" gutterBottom>Lifting Plan Form</Typography>
+          <Typography variant="h4" gutterBottom>Calisthenics Plan Form</Typography>
           <form onSubmit={handleSubmit}>
             <Box mb={3}>
               <Typography>Input your height in Inches (e.g., 5'8" would be 68 inches)</Typography>
@@ -240,22 +155,22 @@ const LiftingPlanSurvey: React.FC = () => {
               </Box>
             </Box>
             <Box mb={3}>
-              <Typography>Input the exercise you want a plan for (e.g., Barbell Squat)</Typography>
+              <Typography>Input the movement you want a plan for (e.g., Pull-up)</Typography>
               <CustomTextField
                 type="text"
-                name="desiredExercise"
-                value={formData.desiredExercise}
+                name="desiredMovement"
+                value={formData.desiredMovement}
                 onChange={handleChange}
                 fullWidth
                 disabled={loading}
               />
             </Box>
             <Box mb={3}>
-              <Typography>Input your target weight for the exercise in Pounds</Typography>
+              <Typography>Input your target repetitions or the number of seconds you would like to hold something for</Typography>
               <CustomTextField
                 type="number"
-                name="targetWeight"
-                value={formData.targetWeight}
+                name="repsGoal"
+                value={formData.repsGoal}
                 onChange={handleChange}
                 fullWidth
                 disabled={loading}
@@ -298,4 +213,4 @@ const LiftingPlanSurvey: React.FC = () => {
   );
 };
 
-export default LiftingPlanSurvey;
+export default CalisthenicsPlanSurvey;
