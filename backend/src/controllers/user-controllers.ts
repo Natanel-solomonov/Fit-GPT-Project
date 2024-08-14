@@ -98,7 +98,7 @@ export const userLogin = async (
       
       secure:true,
       sameSite: 'none',
-      domain: "localhost",
+      domain: ".fitsgpt.com",
      signed: true,
      path: "/",
       

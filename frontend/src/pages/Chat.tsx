@@ -88,22 +88,25 @@ const Chat = () => {
         height: '100%',
         mt: 3,
         gap: 3,
-        flexDirection: { xs: 'column', md: 'row' },
+        flexDirection: { xs: 'column-reverse', md: 'row' }, // Column-reverse on mobile to bring the clear conversation box above the chat section
         transform: 'scale(0.95)'
       }}
     >
       <Box
         sx={{
-          display: { md: 'flex', xs: 'none', sm: 'none' },
+          display: { md: 'flex', xs: 'flex', sm: 'flex' }, // Ensure it displays on mobile too
           flex: 0.2,
           flexDirection: 'column',
+          order: { xs: 2, md: 1 }, // Change order on mobile
+          mb: { xs: 2, md: 0 }, // Add margin below on mobile
+          ml: { md: 0, xs: 0 }, // Align to left on larger screens
         }}
       >
         <Box
           sx={{
             display: 'flex',
             width: '100%',
-            height: '60vh',
+            height: 'auto', // Auto height on mobile to prevent overflow
             bgcolor: '#1C1C1C',
             borderRadius: 5,
             border: '2px solid gold',
@@ -178,10 +181,11 @@ const Chat = () => {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'flex-start',
-          ml: 5,
+          ml: { md: 0, xs: 0 }, // Remove margin-left on mobile
           mt: 0,
-          pl: 3,
+          pl: { md: 3, xs: 0 }, // Add padding only on larger screens
         }}
+        id="chatBox" // Add an ID for scrolling into view
       >
         <Typography
           sx={{
@@ -231,7 +235,7 @@ const Chat = () => {
           <input
             ref={inputRef}
             type="text"
-            onKeyDown={handleKeyDown} // Add onKeyDown event listener
+            onKeyDown={handleKeyDown}
             style={{
               width: "100%",
               backgroundColor: "transparent",
@@ -249,6 +253,9 @@ const Chat = () => {
       </Box>
     </Box>
   );
+  
+  
+  
 };
 
 export default Chat;

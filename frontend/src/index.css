@@ -55,4 +55,9 @@ html, body {
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 10px;
   }
+  @media (max-width: 600px) {
+    .typing-animation {
+      font-size: 1.8rem; /* Significantly smaller font size for mobile */
+    }
+  }
 }

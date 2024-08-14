@@ -78,7 +78,18 @@ const ChatItem = ({
   return (
     <>
       {role === 'assistant' ? (
-        <Box sx={{ display: 'flex', p: 2, bgcolor: '#004d5612', my: 2, gap: 2, ml: -1, borderRadius: 2 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            p: 2,
+            bgcolor: '#004d5612',
+            my: 2,
+            gap: 2,
+            ml: -1,
+            borderRadius: 2,
+            flexDirection: { xs: 'column', md: 'row' }, // Ensure proper layout on mobile and desktop
+          }}
+        >
           <Avatar sx={{ m1: '0' }}>
             <img src="Dumbell_Icon.png" alt="Dumbell_Icon" width={"30px"} />
           </Avatar>
@@ -90,11 +101,12 @@ const ChatItem = ({
                   marginTop: '20px',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 2
+                  gap: 2,
+                  flexDirection: { xs: 'column', md: 'row' }, // Adjust direction on mobile
                 }}
               >
                 <iframe
-                  width="300"
+                  width="100%"
                   height="200"
                   src={`https://www.youtube.com/embed/${videoId}`}
                   frameBorder="0"
