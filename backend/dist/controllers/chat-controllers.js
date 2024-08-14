@@ -33,10 +33,11 @@ export const generateChatCompletion = async (req, res, next) => {
                 model: "gpt-3.5-turbo",
                 messages: [
                     { role: "system", content: "You are an assistant that helps users with fitness-related queries." },
-                    { role: "user", content: `Please analyze this message: "${message}". Extract and return the most relevant keyword or phrase that is important for the query. Keep in mind that this extracted keyword/phrase will be used to search youtube with that phrase so try and make it as applicable to the user question as possible` }
+                    { role: "user", content: `Please analyze this message: "${message}". Extract and return only the most relevant keyword or phrase that is important for the query.` }
                 ],
             });
-            ExtractedKeyword = keywordExtractionResponse.choices[0].message.content.trim();
+            // Ensure only the extracted keyword or phrase is assigned
+            ExtractedKeyword = keywordExtractionResponse.choices[0].message.content.trim().replace(/^The most relevant keyword or phrase that is important for the query is\s+/i, '').replace(/^\s*"(.*)"\s*$/, '$1');
         }
         // Log the extracted keyword to the console for debugging purposes
         console.log("Extracted Keyword:", ExtractedKeyword);
