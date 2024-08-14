@@ -73,7 +73,7 @@ export const userLogin = async (req, res, next) => {
             httpOnly: true,
             secure: true,
             sameSite: 'none',
-            domain: ".fitsgpt.com",
+            domain: "localhost",
             signed: true,
             path: "/",
         });

@@ -79,64 +79,88 @@ const Login = () => {
                     left: "-410px",
                     '@media (max-width: 600px)': {
                         position: "static",
-                        width: "100%",
+                        width: "80%",
                         mb: 2,
+                        height: "120%"
                     }
                 }}
             >
                 <form
-                    onSubmit={handleSubmit}
-                    style={{
-                        margin: 'auto',
-                        padding: '30px',
-                        boxShadow: "0 0 20px rgba(255,255,255,1)",
-                        borderRadius: '10px',
-                        border: "none",
-                        maxWidth: "400px",
-                        width: "100%",
-                    }}
-                >
-                    <Box sx={{
-                        display: 'flex',
-                        flexDirection: "column",
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    }}>
-                        <Typography
-                            variant='h4'
-                            textAlign="center"
-                            padding={2}
-                            fontWeight={600}
-                            sx={{
-                                fontSize: { xs: '1.5rem', md: '2.125rem' },
-                            }}
-                        >
-                            Login & Get Fit!
-                        </Typography>
-                        <CustomizedInput type="email" name="email" label="Email" />
-                        <CustomizedInput type="password" name="password" label="Password" />
-                        <Button
-                            type="submit"
-                            sx={{
-                                px: 2,
-                                py: 1,
-                                mt: 2,
-                                width: "100%",
-                                borderRadius: 2,
-                                bgcolor: "gold",
-                                color: "black",
-                                ":hover": {
-                                    bgcolor: 'white',
-                                    color: 'black',
-                                },
-                                maxWidth: "400px"
-                            }}
-                            endIcon={<IoIosLogIn />}
-                        >
-                            Login
-                        </Button>
-                    </Box>
-                </form>
+    onSubmit={handleSubmit}
+    style={{
+        margin: 'auto',
+        padding: '20px', // Adjusted padding if necessary to fit the inputs
+        boxShadow: "0 0 20px rgba(255,255,255,1)",
+        borderRadius: '10px',
+        border: "none",
+        maxWidth: "400px",
+        width: "100%",
+        height: "100%", // Ensure height is 100% of the container
+    }}
+>
+    <Box sx={{
+        display: 'flex',
+        flexDirection: "column",
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: "100%", // Ensure height is 100% of the container
+    }}>
+        <Typography
+            variant='h4'
+            textAlign="center"
+            padding={2}
+            fontWeight={600}
+            sx={{
+                fontSize: { xs: '1.5rem', md: '2.125rem' },
+            }}
+        >
+            Login & Get Fit!
+        </Typography>
+        <CustomizedInput 
+            type="email" 
+            name="email" 
+            label="Email"
+            sx={{
+                width: '100%', // Default width
+                '@media (max-width: 600px)': {
+                    width: '80%', // Reduce width by 20% on mobile devices
+                }
+            }}
+        />
+        <CustomizedInput 
+            type="password" 
+            name="password" 
+            label="Password"
+            sx={{
+                width: '100%', // Default width
+                '@media (max-width: 600px)': {
+                    width: '80%', // Reduce width by 20% on mobile devices
+                }
+            }}
+        />
+        <Button
+            type="submit"
+            sx={{
+                px: 2,
+                py: 1,
+                mt: 2,
+                width: "100%",
+                borderRadius: 2,
+                bgcolor: "gold",
+                color: "black",
+                ":hover": {
+                    bgcolor: 'white',
+                    color: 'black',
+                },
+                maxWidth: "400px"
+            }}
+            endIcon={<IoIosLogIn />}
+        >
+            Login
+        </Button>
+    </Box>
+</form>
+
             </Box>
             <Box
                 padding={8}

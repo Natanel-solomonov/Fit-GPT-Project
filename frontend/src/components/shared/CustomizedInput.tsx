@@ -1,10 +1,11 @@
-import { TextField } from '@mui/material';
-
+import { TextField, SxProps } from '@mui/material';
+import { Theme } from '@mui/system';
 
 type Props = {
     name: string;
     type: string;
     label: string;
+    sx?: SxProps<Theme>; // Add the sx prop with the correct type
 };
 
 const CustomizedInput = (props: Props) => {
@@ -14,9 +15,17 @@ const CustomizedInput = (props: Props) => {
             name={props.name}
             label={props.label}
             type={props.type}
-            InputProps={{style:{width: "400px", borderRadius: 10, fontSize:20, color:'white'}}}
+            InputProps={{
+                style: {
+                    fontSize: 20,
+                    color: 'white',
+                },
+            }}
             sx={{
+                width: "400px",
+                borderRadius: 4, // Slightly rounded corners
                 '& .MuiOutlinedInput-root': {
+                    borderRadius: 4, // Slightly rounded corners for input field
                     '& fieldset': {
                         borderColor: 'yellow', // Default border color
                     },
@@ -29,12 +38,22 @@ const CustomizedInput = (props: Props) => {
                 },
                 '& .MuiInputLabel-root': {
                     color: 'white', // Default label color
+                    '&.Mui-focused': {
+                        color: 'white', // Label color when focused (remains white)
+                    },
+                    '@media (max-width: 600px)': {
+                        fontSize: 16, // Adjust label font size for mobile
+                    },
                 },
-                '& .MuiInputLabel-root.Mui-focused': {
-                    color: 'white', // Label color when focused
+                '& .MuiInputBase-input': {
+                    fontSize: 20, // Input text font size
+                    '@media (max-width: 600px)': {
+                        fontSize: 16, // Adjust input text font size for mobile
+                        height: "45px", // Adjust input height on mobile
+                    },
                 },
+                ...props.sx, // Apply any custom sx passed in from props
             }}
-           
         />
     );
 };
