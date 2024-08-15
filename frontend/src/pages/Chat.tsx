@@ -89,7 +89,9 @@ const Chat = () => {
         mt: 3,
         gap: 3,
         flexDirection: { xs: 'column-reverse', md: 'row' }, // Column-reverse on mobile to bring the clear conversation box above the chat section
-        transform: 'scale(0.95)'
+        alignItems: 'center', // Center align the items
+        justifyContent: 'center',
+        transform: 'scale(0.95)',
       }}
     >
       <Box
@@ -99,7 +101,7 @@ const Chat = () => {
           flexDirection: 'column',
           order: { xs: 2, md: 1 }, // Change order on mobile
           mb: { xs: 2, md: 0 }, // Add margin below on mobile
-          ml: { md: 0, xs: 0 }, // Align to left on larger screens
+          alignItems: 'center', // Center align the button box
         }}
       >
         <Box
@@ -184,9 +186,10 @@ const Chat = () => {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'flex-start',
-          ml: { md: 0, xs: 0 }, // Remove margin-left on mobile
           mt: 0,
           pl: { md: 3, xs: 0 }, // Add padding only on larger screens
+          marginLeft: 'auto', // Ensure proper alignment on mobile
+          marginRight: 'auto',
         }}
         id="chatBox" // Add an ID for scrolling into view
       >
@@ -215,6 +218,7 @@ const Chat = () => {
             backgroundColor: '#2E2E2E',
             padding: 2,
             border: '2px solid white',
+            paddingBottom: '60px'
           }}
         >
           {chatMessages.map((chat, index) => (
@@ -233,6 +237,12 @@ const Chat = () => {
             margin: "auto",
             mt: 2,
             border: '2px solid gold',
+            position: 'fixed',
+            bottom: 0, // Keep the input box above the keyboard
+            left: 0,
+            right: 0,
+            zIndex: 10,
+            paddingBottom: { xs: 'env(safe-area-inset-bottom)', sm: '10px' }, // For iOS safe area
           }}
         >
           <input
@@ -256,9 +266,6 @@ const Chat = () => {
       </Box>
     </Box>
   );
-  
-  
-  
 };
 
 export default Chat;

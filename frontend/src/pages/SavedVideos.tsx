@@ -10,7 +10,7 @@ import {
   WhatsappShareButton, WhatsappIcon,
   EmailShareButton, EmailIcon
 } from 'react-share';
-import {  FaSms } from 'react-icons/fa'; // Updated to use FaSms for iMessage icon
+import {  FaSms } from 'react-icons/fa';
 
 interface Video {
   title: string;
@@ -19,12 +19,8 @@ interface Video {
 
 export const fetchSavedVideos = async () => {
   try {
-    console.log('Fetching saved videos from /chat/saved-videos endpoint');
     const response = await axios.get('/chat/saved-videos');
-    console.log('Received response from /chat/saved-videos:', response);
-
     if (response.data && Array.isArray(response.data.videos)) {
-      console.log('Response data is in the expected format:', response.data.videos);
       return response.data.videos;
     } else {
       console.error('Invalid response format:', response.data);
@@ -54,7 +50,7 @@ const SavedVideos: React.FC = () => {
     try {
       const response = await axios.delete('/chat/clear-saved-videos');
       if (response.status === 200) {
-        setVideos([]); // Clear the videos from state
+        setVideos([]); 
         toast.success("All Saved Videos Cleared")
       } else {
         toast.error("Error Clearing Videos");
@@ -87,25 +83,24 @@ const SavedVideos: React.FC = () => {
     }));
   };
 
-  
-
   const shareToIMessage = (url: string, message: string) => {
     window.open(`sms:&body=${encodeURIComponent(message + " " + url)}`, '_blank');
   };
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'black' }}>
-      <Box sx={{ flex: 1, maxWidth: '55%', height: '100vh', overflowY: 'scroll' }}>
-        <Box sx={{ position: 'sticky', top: 0, bgcolor: 'black', zIndex: 1, p: 3 }}>
-          <Typography variant="h4" color="white" gutterBottom>
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'black', flexDirection: { xs: 'column', md: 'row' } }}>
+      <Box sx={{ flex: 1, maxWidth: { xs: '100%', md: '55%' }, height: { xs: 'auto', md: '100vh' }, overflowY: 'scroll' }}>
+        <Box sx={{ position: 'sticky', top: 0, bgcolor: 'black', zIndex: 1, p: 2 }}>
+          <Typography variant="h5" color="white" gutterBottom sx={{ fontSize: { xs: '1.5rem', md: '2rem' } }}>
             Saved Videos
-            <CiSaveDown2 color="gold" size={30} style={{ marginTop: '-20px', marginLeft: '10px' }} />
+            <CiSaveDown2 color="gold" size={25} style={{ marginTop: '-15px', marginLeft: '10px' }} />
           </Typography>
           <Button 
             variant="contained" 
             sx={{
               backgroundColor: 'gold',
               color: 'black',
+              fontSize: { xs: '0.8rem', md: '1rem' },
               '&:hover': {
                 backgroundColor: 'goldenrod',
               }
@@ -115,28 +110,28 @@ const SavedVideos: React.FC = () => {
             Clear All Saved Videos
           </Button>
         </Box>
-        <Grid container spacing={3} sx={{ mt: 3 }}>
+        <Grid container spacing={2} sx={{ mt: 2 }}>
           {videos.map((video, index) => (
-            <Grid item xs={12} sm={6} md={6} key={index}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', bgcolor: 'black' }}>
+            <Grid item xs={12} sm={6} key={index}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', bgcolor: 'black', flexDirection: 'column' }}>
                 <Card className="golden-border" sx={{ bgcolor: 'black', flex: 1 }}>
                   <CardMedia
                     component="iframe"
                     src={`https://www.youtube.com/embed/${new URL(video.url).searchParams.get('v')}`}
                     title={video.title}
-                    sx={{ height: 200 }}
+                    sx={{ height: { xs: 150, sm: 200 } }}
                     allowFullScreen
                   />
-                  <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography variant="h6" color="white">
+                  <Box sx={{ p: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography variant="body1" color="white" sx={{ fontSize: { xs: '0.9rem', md: '1.1rem' } }}>
                       {video.title}
                     </Typography>
                     <Box>
                       <IconButton onClick={() => deleteSavedVideo(new URL(video.url).searchParams.get('v') || '')}>
-                        <FaTrashAlt color="white" />
+                        <FaTrashAlt color="white" size={20} />
                       </IconButton>
                       <IconButton onClick={() => toggleShareButtons(index)}>
-                        <FaShare color="white" />
+                        <FaShare color="white" size={20} />
                       </IconButton>
                     </Box>
                   </Box>
@@ -145,29 +140,28 @@ const SavedVideos: React.FC = () => {
                   <Box
                     sx={{
                       bgcolor: 'white',
-                      p: 2,
+                      p: 1,
                       borderRadius: 1,
                       display: 'grid',
                       gridTemplateColumns: 'repeat(3, 1fr)',
                       gap: 1,
-                      ml: 2, // Add margin-left to separate from the video card
+                      mt: 1,
                     }}
                   >
-                    <FacebookShareButton url={video.url} title="Hey! Check out this fitness Video that Fit GPT recommended me">
-                      <FacebookIcon size={32} round />
+                    <FacebookShareButton url={video.url} title="Check out this fitness video">
+                      <FacebookIcon size={28} round />
                     </FacebookShareButton>
-                    <TwitterShareButton url={video.url} title="Hey! Check out this fitness Video that Fit GPT recommended me">
-                      <TwitterIcon size={32} round />
+                    <TwitterShareButton url={video.url} title="Check out this fitness video">
+                      <TwitterIcon size={28} round />
                     </TwitterShareButton>
-                    <WhatsappShareButton url={video.url} title="Hey! Check out this fitness Video that Fit GPT recommended me">
-                      <WhatsappIcon size={32} round />
+                    <WhatsappShareButton url={video.url} title="Check out this fitness video">
+                      <WhatsappIcon size={28} round />
                     </WhatsappShareButton>
-                    <EmailShareButton url={video.url} subject="Fitness Video Recommendation" body="Hey! Check out this fitness Video that Fit GPT recommended me">
-                      <EmailIcon size={32} round />
+                    <EmailShareButton url={video.url} subject="Fitness Video Recommendation" body="Check out this fitness video">
+                      <EmailIcon size={28} round />
                     </EmailShareButton>
-                   
-                    <IconButton onClick={() => shareToIMessage(video.url, "Hey! Check out this fitness Video that Fit GPT recommended me")}>
-                      <FaSms color="green" size={32} />
+                    <IconButton onClick={() => shareToIMessage(video.url, "Check out this fitness video")}>
+                      <FaSms color="green" size={28} />
                     </IconButton>
                   </Box>
                 )}
@@ -176,7 +170,7 @@ const SavedVideos: React.FC = () => {
           ))}
         </Grid>
       </Box>
-      <Box sx={{ flex: 1, display: 'flex', justifyContent: 'top', alignItems: 'top', height: '100vh' }}>
+      <Box sx={{ flex: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
         <img src="deadlift.png" alt="deadlift" style={{ maxWidth: '100%', height: 'auto' }} />
       </Box>
     </Box>

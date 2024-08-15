@@ -103,6 +103,7 @@ const ChatItem = ({
                   alignItems: 'center',
                   gap: 2,
                   flexDirection: { xs: 'column', md: 'row' }, // Adjust direction on mobile
+                  width: { xs: '100%', md: 'auto' }, // Adjust width based on screen size
                 }}
               >
                 <iframe
@@ -112,6 +113,7 @@ const ChatItem = ({
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
+                  style={{ maxWidth: '600px' }} // Prevent stretching on larger screens
                 ></iframe>
                 <IconButton
                   sx={{

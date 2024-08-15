@@ -1,4 +1,4 @@
-import  { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Avatar, Box, Typography, Button } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
@@ -40,9 +40,8 @@ const LiftingPlanResponse = () => {
 
   const handleSaveLiftingPlan = async () => {
     try {
-      const response = await saveLiftingPlan(liftingPlanId); // Use the stored liftingPlanId
+       await saveLiftingPlan(liftingPlanId); // Use the stored liftingPlanId
       toast.success("Lifting plan saved successfully");
-      console.log("Saved Lifting Plan ID:", response.liftingPlanId); // Log the ID of the saved plan
     } catch (error) {
       toast.error("Failed to save lifting plan");
     }
@@ -61,22 +60,27 @@ const LiftingPlanResponse = () => {
         height: '100%',
         mt: 3,
         gap: 3,
-        flexDirection: { xs: 'column', md: 'row' },
-        transform: 'scale(0.95)'
+        flexDirection: { xs: 'column-reverse', md: 'row' }, // Reverse column order on mobile to place text box above lifting plan
+        alignItems: 'center', // Center align on mobile and larger screens
+        justifyContent: 'center',
+        transform: 'scale(0.95)',
       }}
     >
       <Box
         sx={{
-          display: { md: 'flex', xs: 'none', sm: 'none' },
+          display: { md: 'flex', xs: 'flex', sm: 'flex' }, // Display on all screen sizes
           flex: 0.2,
           flexDirection: 'column',
+          order: { xs: 2, md: 1 }, // Order change on mobile to place above lifting plan
+          mb: { xs: 2, md: 0 }, // Add margin below on mobile
+          alignItems: 'center', // Center align the text box
         }}
       >
         <Box
           sx={{
             display: 'flex',
             width: '100%',
-            height: '60vh',
+            height: 'auto', // Auto height to prevent overflow
             bgcolor: '#1C1C1C',
             borderRadius: 5,
             border: '2px solid gold',
@@ -103,25 +107,30 @@ const LiftingPlanResponse = () => {
               fontFamily: 'Work Sans',
               textAlign: 'center',
               color: 'white',
-              mt: 2
+              mt: 2,
             }}
           >
-            Custom Fitness Plan
+            Custom Lifting Plan
           </Typography>
           <Typography
-            sx={{
-              mx: 'auto',
-              fontFamily: 'Work Sans',
-              my: 4,
-              p: 3,
-              textAlign: 'center',
-              color: 'white'
-            }}
-          >
-            In this tab, your personal AI Fitness Assistant will help you devise a plan to get stronger with an exercise you specified 
+              component="div" 
+              sx={{
+                mx: 'auto',
+                fontFamily: 'Work Sans',
+                my: 4,
+                p: 3,
+                textAlign: 'center',
+                color: 'white',
+              }}
+            >
+              In this tab, your personal AI Fitness Assistant will help you devise a plan to get stronger with an exercise you specified.<br />
+              Scroll to the bottom of the plan in order to have the option to save it.<br />
+              If you are on mobile, scroll down to see your lifting plan.
           </Typography>
+
         </Box>
       </Box>
+
       <Box
         sx={{
           display: 'flex',
@@ -130,9 +139,10 @@ const LiftingPlanResponse = () => {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'flex-start',
-          ml: 5,
           mt: 0,
-          pl: 3,
+          pl: { md: 3, xs: 0 }, // Add padding only on larger screens
+          ml: { xs: 'auto', md: '0' }, // Ensure proper alignment on all screen sizes
+          mr: { xs: 'auto', md: '0' }, 
         }}
       >
         <Typography
@@ -145,21 +155,24 @@ const LiftingPlanResponse = () => {
             fontWeight: "600",
           }}
         >
-          Custom Lifting Plans
+          🏋️‍♀️Custom Lifting Plans🏋️‍♀️
         </Typography>
         <Box
           sx={{
             width: "100%",
-            height: "60vh",
+            height: "60vh", // Maintain the scrollable area on larger screens
+            maxHeight: { xs: "60vh", md: "60vh" }, // Ensure content doesn't exceed this height
             borderRadius: 3,
             mx: 'auto',
             display: 'flex',
             flexDirection: "column",
-            overflow: 'auto',
+            overflowY: 'auto', // Enable vertical scrolling
+            overflowX: 'hidden', // Prevent horizontal scrolling
             scrollBehavior: "smooth",
             backgroundColor: '#2E2E2E',
             padding: 2,
             border: '2px solid white',
+            boxSizing: 'border-box', // Ensure padding and border don't cut off content
           }}
         >
           <Box sx={{ display: 'flex', p: 2, bgcolor: '#004d5612', my: 2, gap: 2, ml: -1, borderRadius: 2 }}>
@@ -189,6 +202,7 @@ const LiftingPlanResponse = () => {
               '&:hover': {
                 bgcolor: 'darkgoldenrod',
               },
+              alignSelf: 'center', // Center the button within the box
             }}
           >
             Save Lifting Plan

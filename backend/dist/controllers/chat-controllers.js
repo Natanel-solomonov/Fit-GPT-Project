@@ -57,34 +57,43 @@ export const generateChatCompletion = async (req, res, next) => {
         });
         user.chats.push(chatResponse.choices[0].message);
         if (ExtractedKeyword) {
-            const videos = await searchYouTube(ExtractedKeyword);
-            const videoMessages = videos.slice(0, 3).map((video, index) => {
-                let content;
-                switch (index) {
-                    case 0:
-                        content = `I found a video regarding your ${ExtractedKeyword} query.\nYou can click the download button to save the video.`;
-                        break;
-                    case 1:
-                        content = `Here's a second video in case the first one didn't meet your needs.\nYou can click the download button to save the video.`;
-                        break;
-                    case 2:
-                        content = `And here's another option for you to consider.\nYou can click the download button to save the video.`;
-                        break;
-                    default:
-                        content = `I found another video for you.\nYou can click the download button to save the video.`;
-                        break;
-                }
-                return {
+            try {
+                const videos = await searchYouTube(ExtractedKeyword);
+                const videoMessages = videos.slice(0, 3).map((video, index) => {
+                    let content;
+                    switch (index) {
+                        case 0:
+                            content = `I found a video regarding your ${ExtractedKeyword} query.\nYou can click the download button to save the video.`;
+                            break;
+                        case 1:
+                            content = `Here's a second video in case the first one didn't meet your needs.\nYou can click the download button to save the video.`;
+                            break;
+                        case 2:
+                            content = `And here's another option for you to consider.\nYou can click the download button to save the video.`;
+                            break;
+                        default:
+                            content = `I found another video for you.\nYou can click the download button to save the video.`;
+                            break;
+                    }
+                    return {
+                        role: "assistant",
+                        content,
+                        videoId: video.id.videoId
+                    };
+                });
+                videoMessages.push({
                     role: "assistant",
-                    content,
-                    videoId: video.id.videoId
-                };
-            });
-            videoMessages.push({
-                role: "assistant",
-                content: "If these videos were not what you were looking for, I apologize, I am still being trained as a model. If you are unsatisfied with your video generation, and would like to help train me better, email fit.gpts@gmail.com with your video outputs along with what types of videos you were expecting."
-            });
-            user.chats.push(...videoMessages);
+                    content: "If these videos were not what you were looking for, I apologize, I am still being trained as a model. If you are unsatisfied with your video generation, and would like to help train me better, email fit.gpts@gmail.com with your video outputs along with what types of videos you were expecting."
+                });
+                user.chats.push(...videoMessages);
+            }
+            catch (error) {
+                console.error('Error with YouTube API:', error);
+                user.chats.push({
+                    role: "assistant",
+                    content: "I couldn't retrieve any videos at the moment because of an internal issue with the youtube API. Fit GPT is currently working on increasing its quota limit for the youtube api, for now please continue to enjoy our chat responses and fitness plans, and try again tommorow with video generation."
+                });
+            }
         }
         else {
             const noVideoMessage = {
