@@ -167,7 +167,7 @@ const EndurancePlanSurvey: React.FC = () => {
               />
             </Box>
             <Box mb={3}>
-              <Typography>Input your distance goal in miles/kilometers</Typography>
+              <Typography>Input your distance goal in Miles</Typography>
               <CustomTextField
                 type="number"
                 name="distanceGoal"
