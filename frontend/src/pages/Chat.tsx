@@ -242,7 +242,7 @@ const Chat = () => {
             left: 0,
             right: 0,
             zIndex: 10,
-            paddingBottom: { xs: 'env(safe-area-inset-bottom)', sm: '20px' }, // For iOS safe area
+            paddingBottom: { xs: 'env(safe-area-inset-bottom)', sm: '-20px' }, // For iOS safe area
           }}
         >
           <input
