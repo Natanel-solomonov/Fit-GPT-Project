@@ -153,6 +153,9 @@ const Chat = () => {
             <div style={{ textAlign: 'center' }}>
               Example: How do I do a proper Push Up?
             </div>
+            <div style={{ textAlign: 'center' }}>
+             If you are on mobile, scroll down to see the chat window
+            </div>
           </Typography>
           <Button
             onClick={handleDeleteChats}

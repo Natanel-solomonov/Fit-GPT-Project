@@ -10,7 +10,7 @@ export const searchYouTube = async (ExtractedKeyword) => {
     const filteredResults = data.items.filter(item => {
         const title = item.snippet.title.toLowerCase();
         const description = item.snippet.description.toLowerCase();
-        return title.includes(ExtractedKeyword.toLowerCase()) || description.includes(ExtractedKeyword.toLowerCase());
+        return title.includes(ExtractedKeyword.toLowerCase());
     });
     return filteredResults.length > 0 ? filteredResults : data.items;
 };
