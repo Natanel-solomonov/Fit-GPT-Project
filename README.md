@@ -13,3 +13,5 @@ Exercise Tracking: Track goals and save preferred exercises.
 Visual and Interactive Elements: Includes exercise image generation and YouTube video integration.
 Modern UI/UX Design: User-friendly interface with a sleek purple and white theme.
 Robust Backend: Efficient data management with Node.js/Express and MongoDB.
+
+Click here to access the full completed website for this project: https://www.fitsgpt.com/
